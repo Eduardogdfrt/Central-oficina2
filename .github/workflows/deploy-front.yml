@@ -2,6 +2,8 @@ name: Deploy Front-end
 
 on:
   push:
+    branches:
+      - Release # Dispara apenas para mudanças na branch Release
     paths:
       - 'front-end/**' # Dispara apenas para mudanças na pasta front-end
 

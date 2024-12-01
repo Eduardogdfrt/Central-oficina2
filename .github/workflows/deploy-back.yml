@@ -2,6 +2,8 @@ name: Deploy Back-end
 
 on:
   push:
+    branches:
+      - Release # Dispara apenas para mudanças na branch Release
     paths:
       - 'Back/**' # Dispara apenas para mudanças na pasta Back
 

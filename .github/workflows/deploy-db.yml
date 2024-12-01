@@ -2,6 +2,8 @@ name: Deploy Database
 
 on:
   push:
+    branches:
+      - Release # Dispara apenas para mudanças na branch Release
     paths:
       - 'db/**' # Dispara apenas para mudanças na pasta db
 
