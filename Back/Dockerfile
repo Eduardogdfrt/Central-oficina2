@@ -13,17 +13,17 @@ COPY . .
 WORKDIR "/src/WebApia"
 RUN dotnet build "Ellp.Api.Webapi.csproj" -c Release -o /app/build
 
-
+# Estágio de publicação
 FROM build AS publish
 RUN dotnet publish "Ellp.Api.Webapi.csproj" -c Release -o /app/publish
 
+# Estágio final
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
 # Definir a porta que a aplicação irá escutar
-EXPOSE 5000
-EXPOSE 443
+EXPOSE 7777
 
 # Comando para iniciar a aplicação
 ENTRYPOINT ["dotnet", "Ellp.Api.Webapi.dll"]
