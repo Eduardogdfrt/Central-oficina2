@@ -1,14 +1,24 @@
+# Utiliza a imagem base do .NET 8 SDK para construir a aplicação
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+# Copia todos os arquivos de solução e restaura as dependências
+COPY ["WebApia/Ellp.Api.Webapi.csproj", "WebApia/"]
+COPY ["ellp.api.application/Ellp.Api.Application.csproj", "ellp.api.application/"]
+COPY ["Ellp.Infra.SqlServer/Ellp.Api.Infra.SqlServer.csproj", "Ellp.Infra.SqlServer/"]
+COPY ["Ellp.api.Domain/Ellp.api.Domain.csproj", "Ellp.api.Domain/"]
+
+RUN dotnet restore "WebApia/Ellp.Api.Webapi.csproj"
+
+# Copia todo o restante do código e publica a aplicação
+COPY . .
+WORKDIR "/src/WebApia"
+RUN dotnet publish "Ellp.Api.Webapi.csproj" -c Release -o /app/publish
+
+# Utiliza a imagem base do .NET 8 Runtime para executar a aplicação
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
-
-COPY ./Entrypoint/WebApi/WebApi.csproj ./Entrypoint/WebApi/
-RUN dotnet restore ./Entrypoint/WebApi/WebApi.cspro
-
-COPY ./ . 
-RUN dotnet publish ./Entrypoint/WebApi/WebApi.csproj -c Release -o /app/out
-
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
-WORKDIR /app
-COPY --from=build /app/out .
-
-ENTRYPOINT ["dotnet", "WebApi.dll"]
+COPY --from=build /app/publish .
+ENV ASPNETCORE_URLS=http://+:5000
+EXPOSE 5000
+ENTRYPOINT ["dotnet", "Ellp.Api.Webapi.dll"]
