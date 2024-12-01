@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Ellp.Api.Webapi.props" />
+</Project>
