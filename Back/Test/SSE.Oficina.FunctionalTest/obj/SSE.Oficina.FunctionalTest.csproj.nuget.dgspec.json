@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\edufr\\Documents\\GitHub\\Oficina2\\Back\\Test\\SSE.Oficina.FunctionalTest\\SSE.Oficina.FunctionalTest.csproj": {}
+    "C:\\Users\\fnjun\\Documents\\Central-oficina2\\Back\\Test\\SSE.Oficina.FunctionalTest\\SSE.Oficina.FunctionalTest.csproj": {}
   },
   "projects": {
-    "C:\\Users\\edufr\\Documents\\GitHub\\Oficina2\\Back\\Test\\SSE.Oficina.FunctionalTest\\SSE.Oficina.FunctionalTest.csproj": {
+    "C:\\Users\\fnjun\\Documents\\Central-oficina2\\Back\\Test\\SSE.Oficina.FunctionalTest\\SSE.Oficina.FunctionalTest.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\edufr\\Documents\\GitHub\\Oficina2\\Back\\Test\\SSE.Oficina.FunctionalTest\\SSE.Oficina.FunctionalTest.csproj",
+        "projectUniqueName": "C:\\Users\\fnjun\\Documents\\Central-oficina2\\Back\\Test\\SSE.Oficina.FunctionalTest\\SSE.Oficina.FunctionalTest.csproj",
         "projectName": "SSE.Oficina.FunctionalTest",
-        "projectPath": "C:\\Users\\edufr\\Documents\\GitHub\\Oficina2\\Back\\Test\\SSE.Oficina.FunctionalTest\\SSE.Oficina.FunctionalTest.csproj",
-        "packagesPath": "C:\\Users\\edufr\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\edufr\\Documents\\GitHub\\Oficina2\\Back\\Test\\SSE.Oficina.FunctionalTest\\obj\\",
+        "projectPath": "C:\\Users\\fnjun\\Documents\\Central-oficina2\\Back\\Test\\SSE.Oficina.FunctionalTest\\SSE.Oficina.FunctionalTest.csproj",
+        "packagesPath": "C:\\Users\\fnjun\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\fnjun\\Documents\\Central-oficina2\\Back\\Test\\SSE.Oficina.FunctionalTest\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\edufr\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\fnjun\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -42,9 +43,8 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "all"
-        },
-        "SdkAnalysisLevel": "9.0.100"
+          "auditMode": "direct"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -87,7 +87,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

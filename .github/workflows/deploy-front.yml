@@ -1,0 +1,31 @@
+name: Deploy Front-end
+
+on:
+  push:
+    paths:
+      - 'front-end/**' # Dispara apenas para mudanças na pasta front-end
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Build and Push Front-end Docker Image
+        run: |
+          az acr login --name centraloficina2acr
+          docker build -t centraloficina2acr.azurecr.io/centraloficina2-front:${{ github.sha }} -f ./front-end/Dockerfile .
+          docker push centraloficina2acr.azurecr.io/centraloficina2-front:${{ github.sha }}
+
+      - name: Deploy to App Service
+        run: |
+          az webapp config container set \
+            --name CentralOficina2-Dev \
+            --resource-group CentralOficina2-Dev \
+            --docker-custom-image-name centraloficina2acr.azurecr.io/centraloficina2-front:${{ github.sha }}
