@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\buildMultiTargeting\Ellp.Api.Webapi.props" />
-</Project>
