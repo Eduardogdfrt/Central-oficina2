@@ -1,12 +1,13 @@
-﻿using Ellp.Api.Application.Interfaces;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Ellp.Api.Domain.Entities;
 
-public interface IStudentRepository : IRepository<Student>
+namespace Ellp.Api.Application.Interfaces
 {
-    Task<Student> GetStudentByEmailAsync(string email);
-    Task<Student> GetStudentByEmailAndPasswordAsync(string email, string password);
+    public interface IStudentRepository
+    {
+        Task AddAsync(Student student);
+        Task<Student> GetStudentByEmailAsync(string email);
+        Task<Student> GetStudentByEmailAndPasswordAsync(string email, string password);
+    }
 }
-
-
-
-

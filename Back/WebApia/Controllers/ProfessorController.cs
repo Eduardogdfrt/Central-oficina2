@@ -28,7 +28,7 @@ namespace Ellp.Api.WebApi.Controllers
         {
             var response = await _mediator.Send(input, cancellationToken);
 
-            if (response.Message == "Professor criado com sucesso")
+            if (response.Message == "Professor "+ input.Name + "Foi criado com sucesso seu ID é" + input.ProfessorId)
             {
                 return StatusCode(StatusCodes.Status201Created, response);
             }

@@ -2,6 +2,8 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginStudent;
+using Ellp.Api.Application.UseCases.AddParticipantUsecases.AddNewProfessorUseCases;
+using Ellp.Api.Application.UseCases.AddParticipantUsecases.AddNewStudentUseCases;
 
 namespace Ellp.Api.WebApi.Controllers
 {
@@ -48,6 +50,35 @@ namespace Ellp.Api.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ocorreu um erro ao processar a solicitação de login.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Message = "Ocorreu um erro durante o processamento" });
+            }
+        }
+        [HttpPost("add")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> AddNewStudent([FromBody] AddNewStudentInput input, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var response = await _mediator.Send(input, cancellationToken);
+
+                if (response.Message == "Estudante criado com sucesso")
+                {
+                    return StatusCode(StatusCodes.Status201Created, response);
+                }
+                else if (response.Message == "Email já está em uso")
+                {
+                    return BadRequest(response);
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, response);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ocorreu um erro ao adicionar um novo estudante.");
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Message = "Ocorreu um erro durante o processamento" });
             }
         }
