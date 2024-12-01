@@ -1,0 +1,13 @@
+C:\Users\Pichau\Documents\Programação\reptask-front\reptask\teste\Central-oficina2\Back\Ellp.api.Domain\bin\Debug\net8.0\Ellp.Api.Domain.deps.json
+C:\Users\Pichau\Documents\Programação\reptask-front\reptask\teste\Central-oficina2\Back\Ellp.api.Domain\bin\Debug\net8.0\Ellp.Api.Domain.dll
+C:\Users\Pichau\Documents\Programação\reptask-front\reptask\teste\Central-oficina2\Back\Ellp.api.Domain\bin\Debug\net8.0\Ellp.Api.Domain.pdb
+C:\Users\Pichau\Documents\Programação\reptask-front\reptask\teste\Central-oficina2\Back\Ellp.api.Domain\obj\Debug\net8.0\Ellp.Api.Domain.csproj.AssemblyReference.cache
+C:\Users\Pichau\Documents\Programação\reptask-front\reptask\teste\Central-oficina2\Back\Ellp.api.Domain\obj\Debug\net8.0\Ellp.Api.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Pichau\Documents\Programação\reptask-front\reptask\teste\Central-oficina2\Back\Ellp.api.Domain\obj\Debug\net8.0\Ellp.Api.Domain.AssemblyInfoInputs.cache
+C:\Users\Pichau\Documents\Programação\reptask-front\reptask\teste\Central-oficina2\Back\Ellp.api.Domain\obj\Debug\net8.0\Ellp.Api.Domain.AssemblyInfo.cs
+C:\Users\Pichau\Documents\Programação\reptask-front\reptask\teste\Central-oficina2\Back\Ellp.api.Domain\obj\Debug\net8.0\Ellp.Api.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Pichau\Documents\Programação\reptask-front\reptask\teste\Central-oficina2\Back\Ellp.api.Domain\obj\Debug\net8.0\Ellp.Api.Domain.sourcelink.json
+C:\Users\Pichau\Documents\Programação\reptask-front\reptask\teste\Central-oficina2\Back\Ellp.api.Domain\obj\Debug\net8.0\Ellp.Api.Domain.dll
+C:\Users\Pichau\Documents\Programação\reptask-front\reptask\teste\Central-oficina2\Back\Ellp.api.Domain\obj\Debug\net8.0\refint\Ellp.Api.Domain.dll
+C:\Users\Pichau\Documents\Programação\reptask-front\reptask\teste\Central-oficina2\Back\Ellp.api.Domain\obj\Debug\net8.0\Ellp.Api.Domain.pdb
+C:\Users\Pichau\Documents\Programação\reptask-front\reptask\teste\Central-oficina2\Back\Ellp.api.Domain\obj\Debug\net8.0\ref\Ellp.Api.Domain.dll

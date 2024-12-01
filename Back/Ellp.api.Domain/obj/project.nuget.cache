@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "g9L80zuHTfw=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Pichau\\Documents\\Programação\\reptask-front\\reptask\\teste\\Central-oficina2\\Back\\Ellp.api.Domain\\Ellp.Api.Domain.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Pichau\\.nuget\\packages\\mediatr\\12.4.1\\mediatr.12.4.1.nupkg.sha512",
+    "C:\\Users\\Pichau\\.nuget\\packages\\mediatr.contracts\\2.0.1\\mediatr.contracts.2.0.1.nupkg.sha512",
+    "C:\\Users\\Pichau\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0\\microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
