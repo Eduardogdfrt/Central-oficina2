@@ -3,31 +3,27 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Copiar os arquivos de projeto e restaurar as dependências
-COPY ["WebApia/WebApia.csproj", "WebApia/"]
-COPY ["Ellp.Infra.SqlServer/Ellp.Infra.SqlServer.csproj", "Ellp.Infra.SqlServer/"]
-COPY ["Ellp.Api.Application/Ellp.Api.Application.csproj", "Ellp.Api.Application/"]
-COPY ["Ellp.Api.Domain/Ellp.Api.Domain.csproj", "Ellp.Api.Domain/"]
-COPY ["Ellp.Api.Application.Utilities/Ellp.Api.Application.Utilities.csproj", "Ellp.Api.Application.Utilities/"]
+COPY ["WebApia/Ellp.Api.Webapi.csproj", "WebApia/"]
+COPY ["Ellp.Infra.SqlServer/Ellp.Api.Infra.SqlServer.csproj", "Ellp.Infra.SqlServer/"]
+COPY ["ellp.api.application/Ellp.Api.Application.csproj", "Ellp.Api.Application/"]
+COPY ["Ellp.api.Domain/Ellp.Api.Domain.csproj", "Ellp.Api.Domain/"]
 
-RUN dotnet restore "WebApia/WebApia.csproj"
-
-# Copiar todo o código e construir o projeto
+RUN dotnet restore "WebApia/Ellp.Api.Webapi.csproj"
 COPY . .
 WORKDIR "/src/WebApia"
-RUN dotnet build "WebApia.csproj" -c Release -o /app/build
+RUN dotnet build "Ellp.Api.Webapi.csproj" -c Release -o /app/build
 
-# Publicar a aplicação
+
 FROM build AS publish
-RUN dotnet publish "WebApia.csproj" -c Release -o /app/publish
+RUN dotnet publish "Ellp.Api.Webapi.csproj" -c Release -o /app/publish
 
-# Estágio de runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
 # Definir a porta que a aplicação irá escutar
-EXPOSE 80
+EXPOSE 5000
 EXPOSE 443
 
 # Comando para iniciar a aplicação
-ENTRYPOINT ["dotnet", "WebApia.dll"]
+ENTRYPOINT ["dotnet", "Ellp.Api.Webapi.dll"]

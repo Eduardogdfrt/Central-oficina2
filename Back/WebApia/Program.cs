@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Ellp.Api.Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -9,24 +8,24 @@ using Ellp.Api.Application.UseCases;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Carrega as configurações do appsettings.json
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+// Carrega as configurações do appsettings.{Environment}.json
+builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true);
+
+// Carrega variáveis de ambiente
+builder.Configuration.AddEnvironmentVariables();
 
 if (builder.Environment.IsDevelopment())
 {
     builder.Configuration.AddUserSecrets<Program>();
 }
 
-var isInContainer = builder.Environment.IsEnvironment("Docker");
-
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
-    if (isInContainer)
-    {
-        serverOptions.ListenAnyIP(80);
-    }
-    else
-    {
-        serverOptions.ListenLocalhost(5000);
-    }
+    // Escutar na porta 8080 para todas as interfaces
+    serverOptions.ListenAnyIP(8080);
 });
 
 builder.Services.AddControllers();
@@ -36,10 +35,11 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api Oficina 2", Version = "v1" });
 });
 
+// Configura o DbContext para usar a string de conexão do appsettings ou de variáveis de ambiente
+var connectionString = builder.Configuration.GetConnectionString("DbConnectionString") ?? builder.Configuration["ConnectionStrings:DbConnectionString"];
 
 builder.Services.AddDbContext<SqlServerDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionString")));
-
+    options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IProfessorRepository, ProfessorRepository>();
@@ -49,7 +49,7 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
     typeof(Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginProfessor.GetLoginProfessorUseCase).Assembly
 ));
 
-//Merda do cors
+// Configuração do CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowedOrigins", policy =>
@@ -61,7 +61,6 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
-
 
 if (app.Environment.IsDevelopment())
 {
@@ -80,28 +79,4 @@ app.UseCors("AllowedOrigins");
 
 app.MapControllers();
 
-if (!isInContainer)
-{
-    var url = "http://localhost:5000/swagger";
-    Task.Run(() =>
-    {
-        try
-        {
-            var psi = new ProcessStartInfo
-            {
-                FileName = "msedge",
-                Arguments = url,
-                UseShellExecute = true
-            };
-            Process.Start(psi);
-        }
-        catch (Exception ex)
-        {
-
-            Console.WriteLine($"Erro ao abrir o navegador: {ex.Message}");
-        }
-    });
-}
-
 app.Run();
-
