@@ -5,15 +5,10 @@ using MediatR;
 using Ellp.Api.Infra.SqlServer.Repository;
 using Ellp.Api.Infra.SqlServer;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-
 builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true);
-
-
 builder.Configuration.AddEnvironmentVariables();
 
 if (builder.Environment.IsDevelopment())
@@ -23,7 +18,7 @@ if (builder.Environment.IsDevelopment())
 
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
-    // Escutar na porta 8080 para todas as interfaces
+    // Escutar na porta 5000 para todas as interfaces
     serverOptions.ListenAnyIP(5000);
 });
 
@@ -44,7 +39,8 @@ builder.Services.AddScoped<IProfessorRepository, ProfessorRepository>();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
     typeof(Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginStudent.GetLoginStudentUseCase).Assembly,
-    typeof(Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginProfessor.GetLoginProfessorUseCase).Assembly
+    typeof(Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginProfessor.GetLoginProfessorUseCase).Assembly,
+    typeof(Ellp.Api.Application.UseCases.AddParticipantUsecases.AddNewStudentUseCases.AddNewStudentUseCase).Assembly
 ));
 
 // Configuração do CORS
@@ -52,7 +48,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowedOrigins", policy =>
     {
-        policy.WithOrigins("https://localhost:7172")
+        policy.WithOrigins("https://localhost:7172", "https://localhost:3000", "https://localhost:5000")
               .AllowAnyMethod()
               .AllowAnyHeader();
     });
@@ -72,9 +68,6 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseAuthorization();
-
 app.UseCors("AllowedOrigins");
-
 app.MapControllers();
-
 app.Run();
