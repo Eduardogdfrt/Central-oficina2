@@ -1,10 +1,13 @@
-﻿using Ellp.Api.Application.Interfaces;
-using Ellp.Api.Domain.Entities;
+﻿using Ellp.Api.Domain.Entities;
+using System.Threading.Tasks;
 
-
-public interface IProfessorRepository : IRepository<Professor>
+namespace Ellp.Api.Application.Interfaces
 {
-    Task<Professor> GetAllProfessorInfosAsync(int professorId, string password);
-
-
+    public interface IProfessorRepository : IRepository<Professor>
+    {
+        Task<Professor> GetAllProfessorInfosAsync(int professorId, string password);
+        Task AddNewProfessorAsync(Professor professor);
+        Task<Professor> GetByEmailAsync(string email);
+    }
 }
+

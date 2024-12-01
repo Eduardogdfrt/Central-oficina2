@@ -12,12 +12,19 @@ namespace Ellp.Api.Infra.SqlServer.Repository
 
         public async Task<Professor> GetAllProfessorInfosAsync(int professorId, string password)
         {
-            var professor = await _context.Professors.FirstOrDefaultAsync(p => p.ProfessorId == professorId && p.Password == password);
-            return professor;
+            return await _context.Professors.FirstOrDefaultAsync(p => p.ProfessorId == professorId && p.Password == password);
+        }
+
+        public async Task AddNewProfessorAsync(Professor professor)
+        {
+            await _context.Professors.AddAsync(professor);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<Professor> GetByEmailAsync(string email)
+        {
+            return await _context.Professors.FirstOrDefaultAsync(p => p.Email == email);
         }
     }
 }
-
-
-
 

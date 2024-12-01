@@ -1,21 +1,33 @@
 # Estágio de build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /app
+WORKDIR /src
 
-# Copiar o arquivo de projeto e restaurar dependências
-COPY WebApplication5/WebApplication5.csproj ./WebApplication5/
-RUN dotnet restore ./WebApplication5/WebApplication5.csproj
+# Copiar os arquivos de projeto e restaurar as dependências
+COPY ["WebApia/WebApia.csproj", "WebApia/"]
+COPY ["Ellp.Infra.SqlServer/Ellp.Infra.SqlServer.csproj", "Ellp.Infra.SqlServer/"]
+COPY ["Ellp.Api.Application/Ellp.Api.Application.csproj", "Ellp.Api.Application/"]
+COPY ["Ellp.Api.Domain/Ellp.Api.Domain.csproj", "Ellp.Api.Domain/"]
+COPY ["Ellp.Api.Application.Utilities/Ellp.Api.Application.Utilities.csproj", "Ellp.Api.Application.Utilities/"]
 
-# Copiar o restante do código e compilar a aplicação
-COPY WebApplication5/ ./WebApplication5/
-WORKDIR /app/WebApplication5
-RUN dotnet publish -c Release -o out
+RUN dotnet restore "WebApia/WebApia.csproj"
+
+# Copiar todo o código e construir o projeto
+COPY . .
+WORKDIR "/src/WebApia"
+RUN dotnet build "WebApia.csproj" -c Release -o /app/build
+
+# Publicar a aplicação
+FROM build AS publish
+RUN dotnet publish "WebApia.csproj" -c Release -o /app/publish
 
 # Estágio de runtime
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
-COPY --from=build /app/WebApplication5/out ./
-ENTRYPOINT ["dotnet", "WebApplication5.dll"]
+COPY --from=publish /app/publish .
 
-# Expor a porta necessária
+# Definir a porta que a aplicação irá escutar
 EXPOSE 80
+EXPOSE 443
+
+# Comando para iniciar a aplicação
+ENTRYPOINT ["dotnet", "WebApia.dll"]

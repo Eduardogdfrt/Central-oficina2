@@ -1,26 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using MediatR;
-using System.ComponentModel.DataAnnotations;
+using Ellp.Api.Application.Utilities;
 
 namespace Ellp.Api.Application.UseCases.AddParticipantUsecases.AddNewProfessorUseCases
 {
-    public class AddNewProfessorInput : IRequest<AddNewProfessorMapper>
+    public class AddNewProfessorInput : IRequest<Response>
     {
         [Required]
+        public int ProfessorId { get; set; }
+        [Required]
         public string Name { get; set; }
-
         [Required]
         [EmailAddress]
         public string Email { get; set; }
-
         [Required]
         public string Password { get; set; }
-
         public string Specialty { get; set; }
     }
 }
-
