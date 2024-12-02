@@ -1,0 +1,23 @@
+.custom-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border-color: transparent;
+    border-bottom: 1.8px solid #CECECE;
+    outline: none;
+    margin: 5px 0;
+    background-color: transparent;
+    color: #CECECE;
+  }
+
+  .custom-input::placeholder {
+    color: #CECECE; 
+    opacity: 1; 
+  }
+  
+  .custom-input:focus {
+    outline: none;
+    border-color: transparent;
+    border-bottom: 1.8px solid #CECECE;
+  }
+  

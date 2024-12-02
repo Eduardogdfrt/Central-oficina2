@@ -1,0 +1,18 @@
+.title {
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    color: #CECECE; 
+    display: flex;
+    align-items: center;
+    margin: 10px 0px 2px 0px;
+  }
+  
+  .special-char {
+    color: #1F1F71; 
+    font-weight: bold;
+    margin-right: 0.5rem; 
+  }
+  
+  .rest-text {
+    color: #CECECE; 
+  }
