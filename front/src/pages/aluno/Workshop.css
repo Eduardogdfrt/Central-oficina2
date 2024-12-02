@@ -1,0 +1,7 @@
+.content-workshop {
+    display: flex;
+    flex-direction: row;
+    margin-top: 3.5rem;
+    justify-content: center;
+    align-items: center;
+  }
