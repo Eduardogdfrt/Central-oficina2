@@ -21,7 +21,7 @@ namespace Ellp.Api.WebApi.Controllers
         }
 
         // Rota para login de estudante
-        [HttpGet("login")]
+        [HttpGet("login/")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -53,7 +53,7 @@ namespace Ellp.Api.WebApi.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Message = "Ocorreu um erro durante o processamento" });
             }
         }
-        [HttpPost("add")]
+        [HttpPost("add/")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

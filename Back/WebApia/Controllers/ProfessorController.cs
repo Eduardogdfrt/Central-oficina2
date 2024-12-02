@@ -20,7 +20,7 @@ namespace Ellp.Api.WebApi.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost("add")]
+        [HttpPost("add/")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -41,7 +41,7 @@ namespace Ellp.Api.WebApi.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
         }
-        [HttpGet("login")]
+        [HttpGet("login/")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
