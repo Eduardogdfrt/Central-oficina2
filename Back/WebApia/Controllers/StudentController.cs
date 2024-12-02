@@ -20,7 +20,7 @@ namespace Ellp.Api.WebApi.Controllers
             _mediator = mediator;
         }
 
-        // Rota para login de estudante
+    
         [HttpGet("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
