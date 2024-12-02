@@ -1,51 +1,50 @@
+/node_modules
+# Node modules
+/node_modules/
+
 # Logs
-logs
 *.log
+
+# Arquivos de ambiente
+.env
+.env.local
+.env.*.local
+
+# Pasta de build
+/build
+/dist
+/target
+
+# Dependências do npm
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Diretórios do Sistema Operacional
+# IDEs e editores de código
+.vscode/
+.idea/
+
+# Sistema de pacotes do Visual Studio
+.vs/
+.vs2019/
+.vs2017/
+
+# Arquivos de configuração do sistema operacional
 .DS_Store
 Thumbs.db
 
-# Dependências
-/node_modules
-/.pnp
-.pnp.js
+# Arquivos gerados pelo sistema
+*.swp
+*.swo
 
-# Builds
-/dist
-/build
-/out
+# Arquivos temporários do editor
+*.sublime-workspace
+*.sublime-project
 
-# Produção
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+# Arquivos do Mac
+.AppleDouble
+.LSOverride
 
-# Teste
-/coverage
-*.lcov
-
-# Vscode
-.vscode/
-
-# Editor directories and files
-.idea/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-
-# Outros arquivos de cache ou compilação
-.cache
-.next
-.nuxt
-
-# Relatórios
-npm-debug.log
-yarn-error.log
-lerna-debug.log
+# Arquivos de cache
+.cache/
+.pnpm-debug.log

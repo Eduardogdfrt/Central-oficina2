@@ -1,10 +1,5 @@
 import React, {useState} from "react";
-<<<<<<< Updated upstream
 import "../../pages/professor/Home.css"
-=======
-import { useNavigate } from 'react-router-dom';
-import "../../pages/aluno/Home.css"
->>>>>>> Stashed changes
 import Title from "../../components/title/Title";
 import Header from "../../components/header/Header";
 import Input from "../../components/input/Input";
@@ -14,16 +9,6 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-<<<<<<< Updated upstream
-=======
-    const navigate = useNavigate(); 
-
-    const handleClick = () => {
-
-        navigate('/workshops');
-    };
-
->>>>>>> Stashed changes
     return (
         <div className="page">
             <Header title="CADASTRO"/>
@@ -43,21 +28,12 @@ const Login = () => {
                     <Input
                     type="password"
                     placeholder="Digite sua senha"
-<<<<<<< Updated upstream
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    customStyle={{ marginBottom: '10px', padding: '10px', fontSize: '16px' }}
-                    />
-                </div>
-                <Button text="ENTRAR"/>
-=======
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     customStyle={{ marginBottom: '10px', padding: '10px', fontSize: '16px' }}
                     />
                 </div>
                 <Button text="ENTRAR" onClick={handleClick}/>
->>>>>>> Stashed changes
             </div>
         </div>
     

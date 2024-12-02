@@ -1,30 +1,15 @@
 import React, {useState} from "react";
-<<<<<<< Updated upstream
-=======
 import { useNavigate } from 'react-router-dom';
->>>>>>> Stashed changes
+import "../../pages/aluno/Home.css"
 import Title from "../../components/title/Title";
 import Header from "../../components/header/Header";
 import Input from "../../components/input/Input";
 import Button from "../../components/button/Button";
-import ImageButton from "../../components/image-button/ImageButton";
-import "../../pages/professor/Workshop.css"
 
-const WorkshopCadastro = () => {
-    const [name, setName] = useState('');
-<<<<<<< Updated upstream
-=======
-    const [descricao, setDescricao] = useState('');
->>>>>>> Stashed changes
-    const [selectedImage, setSelectedImage] = useState(null);
+const Login = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-    const handleImageSelect = (image) => {
-      setSelectedImage(image);
-      console.log("Imagem selecionada:", image);
-    };
-
-<<<<<<< Updated upstream
-=======
     const navigate = useNavigate(); 
 
     const handleClick = () => {
@@ -32,45 +17,35 @@ const WorkshopCadastro = () => {
         navigate('/workshops');
     };
 
->>>>>>> Stashed changes
-    return(
+    return (
         <div className="page">
-        <Header title="SAIR"/>
-        <div className="content">
-          <Title text="NOVO WORKSHOP" fontSize="3.5rem" />
-          <div className="inputs">
-            <p className="text">Nome</p>
-            <Input
-            type="name"
-            placeholder=""
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            customStyle={{ marginBottom: '10px', padding: '10px', fontSize: '16px' }}
-            />
-            <p className="text">Descrição</p>
-            <Input
-            type="name"
-            placeholder=""
-<<<<<<< Updated upstream
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-=======
-            value={descricao}
-            onChange={(e) => setDescricao(e.target.value)}
->>>>>>> Stashed changes
-            customStyle={{ marginBottom: '10px', padding: '10px', fontSize: '16px' }}
-            />
-            <p className="text">Ícone</p>
-            <ImageButton/>
+            <Header title="CADASTRO"/>
+            <div className="content login">
+                <Title text="LOGIN" fontSize="3.5rem" margin="0px"/>
+                <p className="text">Faça login para registrar sua presença</p>
+                <div className="inputs">
+                    <p className="text no-width">Email</p>
+                    <Input
+                    type="email"
+                    placeholder="Digite seu e-mail"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    customStyle={{ marginBottom: '10px', padding: '10px', fontSize: '16px' }}
+                    />
+                    <p className="text no-width">Senha</p>
+                    <Input
+                    type="password"
+                    placeholder="Digite sua senha"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    customStyle={{ marginBottom: '10px', padding: '10px', fontSize: '16px' }}
+                    />
+                </div>
+                <Button text="ENTRAR" onClick={handleClick}/>
+            </div>
         </div>
-<<<<<<< Updated upstream
-        <Button text="Salvar"/>
-=======
-        <Button text="Salvar" onClick={handleClick}/>
->>>>>>> Stashed changes
-        </div>
-        </div>
+
     );
 };
 
-export default WorkshopCadastro;
+export default Login;

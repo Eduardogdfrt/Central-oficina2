@@ -1,26 +1,13 @@
 import React from 'react';
-<<<<<<< Updated upstream
-=======
 import { Link, useLocation } from 'react-router-dom';
->>>>>>> Stashed changes
 import './Header.css';
 import logo from '../../assets/images/logo.png';
 import Title from '../title/Title';
 
-<<<<<<< Updated upstream
-
-const Header = ({ title }) => {
-  return (
-    <header className="header">
-      <div className="header-logo">
-      <img src={logo} alt="Logo" className="img-logo"/>
-      </div>
-      <Title text={title} fontSize="1.6rem" />
-=======
 const Header = () => {
   const location = useLocation(); 
 
-  
+
   let titleText = '';
   let linkTo = '';
 
@@ -50,7 +37,6 @@ const Header = () => {
       <Link to={linkTo} className="header-link">
         <Title text={titleText} fontSize="1.6rem" />
       </Link>
->>>>>>> Stashed changes
     </header>
   );
 };

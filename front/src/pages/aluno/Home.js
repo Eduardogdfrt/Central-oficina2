@@ -1,9 +1,5 @@
 import React from "react";
-<<<<<<< Updated upstream
-import "../../pages/professor/Home.css"
-=======
 import "../../pages/aluno/Home.css"
->>>>>>> Stashed changes
 import Title from "../../components/title/Title";
 import Header from "../../components/header/Header";
 import qr from "../../assets/images/qr.png";

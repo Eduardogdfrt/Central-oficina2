@@ -48,9 +48,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowedOrigins", policy =>
     {
-        policy.WithOrigins("https://localhost:7172", "https://localhost:3000", "https://localhost:5000")
+        policy.WithOrigins("http://localhost:7172", "http://localhost:3000", "http://localhost:5000")
               .AllowAnyMethod()
-              .AllowAnyHeader();
+              .AllowAnyHeader()
+              .AllowCredentials(); // Adicionado para permitir credenciais
     });
 });
 
@@ -67,7 +68,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 
+app.UseCors("AllowedOrigins"); // Certifique-se de que UseCors seja chamado antes de UseAuthorization
 app.UseAuthorization();
-app.UseCors("AllowedOrigins");
 app.MapControllers();
 app.Run();

@@ -10,15 +10,9 @@ const App = () => {
     return (
         <Router>
             <Routes>
-<<<<<<< Updated upstream
-                <Route path="/" element={<Login />} />
-                <Route path="/cadastro" element={<Cadastro />} />
-                <Route path="/home" element={<Home />} />
-=======
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/cadastro" element={<Cadastro />} />
->>>>>>> Stashed changes
                 <Route path="/workshops" element={<Workshops />} />
                 <Route path="/workshop-cadastro" element={<WorkshopCadastro />} />
             </Routes>
