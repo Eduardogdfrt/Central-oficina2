@@ -1,4 +1,4 @@
-﻿using System;
+﻿
 
 namespace Ellp.Api.Domain.Entities
 {

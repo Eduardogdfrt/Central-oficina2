@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
+﻿
 namespace Ellp.Api.Domain.Entities
 {
     public class Workshop

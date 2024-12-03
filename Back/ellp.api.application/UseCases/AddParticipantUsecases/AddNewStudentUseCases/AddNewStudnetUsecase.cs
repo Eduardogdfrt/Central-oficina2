@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
-using Ellp.Api.Domain.Entities;
+﻿using MediatR;
 using Ellp.Api.Application.Interfaces;
 using Ellp.Api.Application.Utilities;
 using Microsoft.Extensions.Logging;
