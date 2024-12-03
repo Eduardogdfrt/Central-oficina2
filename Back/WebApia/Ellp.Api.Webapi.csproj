@@ -13,7 +13,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\ellp.api.application\Ellp.Api.Application.csproj" />
+		<ProjectReference Include="..\Ellp.Api.Application\Ellp.Api.Application.csproj" />
 		<ProjectReference Include="..\Ellp.Infra.SqlServer\Ellp.Api.Infra.SqlServer.csproj" />
 	</ItemGroup>
 
