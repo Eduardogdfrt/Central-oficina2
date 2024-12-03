@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+﻿
 using Ellp.Api.Application.Interfaces;
 using Ellp.Api.Domain.Entities;
 using Microsoft.EntityFrameworkCore;

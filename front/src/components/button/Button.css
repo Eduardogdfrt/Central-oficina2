@@ -1,0 +1,18 @@
+.button {
+  background: linear-gradient(130deg, #1A1A4C 0%, #10102f 100%);
+  color: #CECECE;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  transition: background 0.3s;
+  margin-top: 3.5rem;
+  width: 15%;
+}

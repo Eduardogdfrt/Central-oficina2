@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ellp.Api.Application", "ell
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ellp.Api.Webapi", "WebApia\Ellp.Api.Webapi.csproj", "{A18BB455-0F3E-4973-AEC4-F4459AD8B9A6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NewFolder1", "NewFolder1", "{BA900A32-565D-4DD3-B3BD-D88D87FDF5D7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ellp.Api.Infra.SqlServer", "Ellp.Infra.SqlServer\Ellp.Api.Infra.SqlServer.csproj", "{20877317-27DC-4350-89AF-AE1F1392D1B8}"
 EndProject
 Global
