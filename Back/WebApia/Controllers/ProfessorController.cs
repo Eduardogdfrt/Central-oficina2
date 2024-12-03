@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Ellp.Api.Application.UseCases.AddParticipantUsecases.AddNewProfessorUseCases;
-using Ellp.Api.Application.Utilities;
 using Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginProfessor;
 
 namespace Ellp.Api.WebApi.Controllers
