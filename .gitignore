@@ -9,3 +9,10 @@ Back/.vs/SSE.Oficina/FileContentIndex/a1282e33-ec57-4454-9cb3-81650ed3174c.vsidx
 
 .vs/
 
+
+node_modules/
+
+
+dist/
+.DS_Store
+.env
