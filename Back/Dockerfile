@@ -2,11 +2,11 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copia todos os arquivos de solução e restaura as dependências
+# Copia os arquivos de projeto e restaura as dependências
 COPY ["WebApia/Ellp.Api.Webapi.csproj", "WebApia/"]
 COPY ["ellp.api.application/Ellp.Api.Application.csproj", "ellp.api.application/"]
 COPY ["Ellp.Infra.SqlServer/Ellp.Api.Infra.SqlServer.csproj", "Ellp.Infra.SqlServer/"]
-COPY ["Ellp.api.Domain/Ellp.api.Domain.csproj", "Ellp.api.Domain/"]
+COPY ["Ellp.Api.Domain/Ellp.Api.Domain.csproj", "Ellp.api.Domain/"]
 
 RUN dotnet restore "WebApia/Ellp.Api.Webapi.csproj"
 
