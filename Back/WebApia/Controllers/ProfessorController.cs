@@ -28,7 +28,7 @@ namespace Ellp.Api.WebApi.Controllers
         {
             var response = await _mediator.Send(input, cancellationToken);
 
-            if (response.Message == "Professor "+ input.Name + "Foi criado com sucesso seu ID é" + input.ProfessorId)
+            if (response.Message == "Professor " + input.Name + "Foi criado com sucesso seu ID é" + input.ProfessorId)
             {
                 return StatusCode(StatusCodes.Status201Created, response);
             }
@@ -41,6 +41,7 @@ namespace Ellp.Api.WebApi.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
         }
+
         [HttpGet("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -57,11 +58,11 @@ namespace Ellp.Api.WebApi.Controllers
 
                 if (result.Success)
                 {
-                    return Ok(result);
+                    return Ok(result); // Explicitamente retorna OkObjectResult
                 }
                 else
                 {
-                    return BadRequest(new Response { Message = result.Message });
+                    return BadRequest(new Response { Message = result.Message }); // Explicitamente retorna BadRequestObjectResult
                 }
             }
             catch (Exception ex)

@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ellp.Api.Infra.SqlServer", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testes", "Testes", "{E6C3A038-28D8-45F8-9A32-BD72A10BB64C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestesUnitarios", "TestProject1\TestesUnitarios.csproj", "{45D4DF22-F529-4B08-870E-3C0C650928DE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ellp.Api.UnitTest", "TestProject1\Ellp.Api.UnitTest.csproj", "{45D4DF22-F529-4B08-870E-3C0C650928DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
