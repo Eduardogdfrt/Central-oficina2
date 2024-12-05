@@ -7,7 +7,6 @@ COPY ["Ellp.Api.Application/Ellp.Api.Application.csproj", "Ellp.Api.Application/
 COPY ["Ellp.Infra.SqlServer/Ellp.Api.Infra.SqlServer.csproj", "Ellp.Infra.SqlServer/"]
 COPY ["Ellp.Api.Domain/Ellp.Api.Domain.csproj", "Ellp.Api.Domain/"]
 
-
 RUN dotnet restore "WebApia/Ellp.Api.Webapi.csproj"
 
 # Copia todo o restante do c digo e publica a aplica  o
