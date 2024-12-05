@@ -9,9 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ellp.Api.Application", "ell
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ellp.Api.Webapi", "WebApia\Ellp.Api.Webapi.csproj", "{A18BB455-0F3E-4973-AEC4-F4459AD8B9A6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NewFolder1", "NewFolder1", "{BA900A32-565D-4DD3-B3BD-D88D87FDF5D7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ellp.Api.Infra.SqlServer", "Ellp.Infra.SqlServer\Ellp.Api.Infra.SqlServer.csproj", "{20877317-27DC-4350-89AF-AE1F1392D1B8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testes", "Testes", "{E6C3A038-28D8-45F8-9A32-BD72A10BB64C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestesUnitarios", "TestProject1\TestesUnitarios.csproj", "{45D4DF22-F529-4B08-870E-3C0C650928DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,8 +37,15 @@ Global
 		{20877317-27DC-4350-89AF-AE1F1392D1B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20877317-27DC-4350-89AF-AE1F1392D1B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20877317-27DC-4350-89AF-AE1F1392D1B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45D4DF22-F529-4B08-870E-3C0C650928DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45D4DF22-F529-4B08-870E-3C0C650928DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45D4DF22-F529-4B08-870E-3C0C650928DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45D4DF22-F529-4B08-870E-3C0C650928DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{45D4DF22-F529-4B08-870E-3C0C650928DE} = {E6C3A038-28D8-45F8-9A32-BD72A10BB64C}
 	EndGlobalSection
 EndGlobal
