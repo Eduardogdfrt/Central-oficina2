@@ -5,10 +5,7 @@ WORKDIR /src
 COPY ["WebApia/Ellp.Api.Webapi.csproj", "WebApia/"]
 COPY ["Ellp.Api.Application/Ellp.Api.Application.csproj", "Ellp.Api.Application/"]
 COPY ["Ellp.Infra.SqlServer/Ellp.Api.Infra.SqlServer.csproj", "Ellp.Infra.SqlServer/"]
-<<<<<<< Updated upstream
-=======
 COPY ["Ellp.Api.Domain/Ellp.Api.Domain.csproj", "Ellp.Api.Domain/"]
->>>>>>> Stashed changes
 
 RUN dotnet restore "WebApia/Ellp.Api.Webapi.csproj"
 
