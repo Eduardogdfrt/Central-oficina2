@@ -113,5 +113,35 @@ namespace Ellp.Api.UnitTest.Controllers
                     It.IsAny<Func<It.IsAnyType, Exception, string>>()),
                 Times.Once);
         }
+        [Fact]
+        public async Task AddNewProfessor_ShouldReturnCreated_WhenProfessorIsAddedSuccessfully()
+        {
+            // Arrange
+            var input = new AddNewProfessorInput
+            {
+                ProfessorId = 12345678,
+                Name = "Alice Smith",
+                Email = "alice.smith@example.com",
+                Password = "SecurePass456",
+                Specialty = "Mathematics"
+            };
+
+            var response = new UtilitiesResponse { Message = "Professor criado com sucesso" };
+
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<AddNewProfessorInput>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(response); // Retorna UtilitiesResponse
+
+            // Act
+            var result = await _controller.AddNewProfessor(input, CancellationToken.None);
+
+            // Assert
+            var createdAtActionResult = Assert.IsType<CreatedAtActionResult>(result);
+            Assert.Equal(StatusCodes.Status201Created, createdAtActionResult.StatusCode);
+            Assert.Equal(response, createdAtActionResult.Value);
+            Assert.Equal(nameof(ProfessorController.GetLoginProfessor), createdAtActionResult.ActionName);
+            Assert.NotNull(createdAtActionResult.RouteValues);
+            Assert.Equal(input.ProfessorId, createdAtActionResult.RouteValues["professorId"]);
+        }
     }
 }

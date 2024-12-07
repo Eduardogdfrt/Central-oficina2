@@ -10,6 +10,8 @@ using MediatR;
 using Ellp.Api.WebApi.Controllers;
 using Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginStudent;
 using Ellp.Api.Application.UseCases.AddParticipantUsecases.AddNewStudentUseCases;
+using AppResponse = Ellp.Api.Application.Utilities.Response;
+
 
 namespace Ellp.Api.UnitTest.Controllers
 {
@@ -84,38 +86,78 @@ namespace Ellp.Api.UnitTest.Controllers
             Assert.Equal("Email ou senha inválidos", responseValue.Message);
         }
 
+
+        #endregion
+
+        #region AddNewStudent Tests
         [Fact]
-        public async Task GetLoginStudent_ShouldReturnInternalServerError_WhenExceptionIsThrown()
+        public async Task AddNewStudent_ShouldReturnCreated_WhenStudentIsAddedSuccessfully()
         {
             // Arrange
-            var email = "student@example.com";
-            var password = "anyPassword";
+            var input = new AddNewStudentInput
+            {
+                Name = "John Smith",
+                Email = "john.smith@example.com",
+                Password = "SecurePassword123",
+                BirthDate = new DateTime(1998, 4, 23)
+            };
+
+            var response = new AppResponse { Message = "Estudante criado com sucesso" };
 
             _mediatorMock
-                .Setup(m => m.Send(It.IsAny<GetLoginStudentInput>(), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.IsAny<AddNewStudentInput>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(response); // Retorna AppResponse
+
+            // Act
+            var result = await _controller.AddNewStudent(input, CancellationToken.None);
+
+            // Assert
+            var createdAtActionResult = Assert.IsType<CreatedAtActionResult>(result);
+            Assert.Equal(StatusCodes.Status201Created, createdAtActionResult.StatusCode);
+            Assert.Equal(response, createdAtActionResult.Value);
+            Assert.Equal(nameof(StudentController.GetLoginStudent), createdAtActionResult.ActionName);
+            Assert.NotNull(createdAtActionResult.RouteValues);
+            Assert.Equal(input.Email, createdAtActionResult.RouteValues["email"]);
+        }
+
+        [Fact]
+        public async Task AddNewStudent_ShouldReturnInternalServerError_WhenExceptionIsThrown()
+        {
+            // Arrange
+            var input = new AddNewStudentInput
+            {
+                Name = "John Smith",
+                Email = "john.smith@example.com",
+                Password = "SecurePassword123",
+                BirthDate = new DateTime(1998, 4, 23)
+            };
+
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<AddNewStudentInput>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new Exception("Database error"));
 
             // Act
-            var response = await _controller.GetLoginStudent(email, password, CancellationToken.None);
+            var result = await _controller.AddNewStudent(input, CancellationToken.None);
 
             // Assert
-            var objectResult = Assert.IsType<ObjectResult>(response);
+            var objectResult = Assert.IsType<ObjectResult>(result);
             Assert.Equal(StatusCodes.Status500InternalServerError, objectResult.StatusCode);
 
-            var responseValue = Assert.IsType<Response>(objectResult.Value);
+            var responseValue = Assert.IsType<AppResponse>(objectResult.Value);
             Assert.Equal("Ocorreu um erro durante o processamento", responseValue.Message);
 
             _loggerMock.Verify(
                 x => x.Log(
                     LogLevel.Error,
                     It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Ocorreu um erro ao processar a solicitação de login.")),
+                    It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Ocorreu um erro ao adicionar um novo estudante.")),
                     It.IsAny<Exception>(),
                     It.IsAny<Func<It.IsAnyType, Exception, string>>()),
                 Times.Once);
         }
 
         #endregion
-
     }
 }
+
+

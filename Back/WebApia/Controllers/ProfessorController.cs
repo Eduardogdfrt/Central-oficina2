@@ -25,19 +25,31 @@ namespace Ellp.Api.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> AddNewProfessor([FromBody] AddNewProfessorInput input, CancellationToken cancellationToken)
         {
-            var response = await _mediator.Send(input, cancellationToken);
+            try
+            {
+                var response = await _mediator.Send(input, cancellationToken);
 
-            if (response.Message == "Professor " + input.Name + "Foi criado com sucesso seu ID é" + input.ProfessorId)
-            {
-                return StatusCode(StatusCodes.Status201Created, response);
+                if (response.Message == "Professor criado com sucesso")
+                {
+                    // Retorna CreatedAtAction para apontar para o método GetLoginProfessor
+                    return CreatedAtAction(
+                        nameof(GetLoginProfessor),
+                        new { professorId = input.ProfessorId },
+                        response);
+                }
+                else if (response.Message == "Email já está em uso")
+                {
+                    return BadRequest(response);
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, response);
+                }
             }
-            else if (response.Message == "Email já está em uso")
+            catch (Exception ex)
             {
-                return BadRequest(response);
-            }
-            else
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, response);
+                _logger.LogError(ex, "Ocorreu um erro ao adicionar um novo professor.");
+               return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
