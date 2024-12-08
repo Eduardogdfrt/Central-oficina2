@@ -11,7 +11,7 @@ namespace Ellp.Api.Infra.SqlServer.Configurations
             builder.ToTable("Workshop");
             builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.Nome)
+            builder.Property(x => x.Name)
                 .HasColumnName("Nome")
                 .IsRequired()
                 .HasMaxLength(255);
