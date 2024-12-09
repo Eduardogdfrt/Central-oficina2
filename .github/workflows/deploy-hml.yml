@@ -49,7 +49,12 @@ jobs:
 
       - name: Login to ACR
         run: |
-          echo ${{ secrets.ACR_PASSWORD }} | docker login ${{ secrets.ACR_LOGIN_SERVER }} -u ${{ secrets.ACR_USERNAME }} --password-stdin
+          if [ -z "${{ secrets.ACR_PASSWORD }}" ]; then
+            echo "ERROR: ACR_PASSWORD is empty or not set."
+            exit 1
+          fi
+          echo "${{ secrets.ACR_PASSWORD }}" | docker login "${{ secrets.ACR_LOGIN_SERVER }}" -u "${{ secrets.ACR_USERNAME }}" --password-stdin
+
 
       - name: Push Docker image to ACR
         run: |
