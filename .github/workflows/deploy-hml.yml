@@ -25,43 +25,52 @@ jobs:
 
       - name: Restore .NET dependencies
         run: |
+          echo "Restoring .NET dependencies..."
           dotnet restore Back/WebApia/
 
       - name: Build .NET project
         run: |
+          echo "Building .NET project..."
           dotnet build Back/WebApia/ --configuration release
 
       - name: Debugging Step - Check Dockerfile Path
         run: |
-          echo "Verifying Dockerfile path:"
+          echo "Verifying Dockerfile path..."
           ls -al Back/
+          if [ ! -f "Back/Dockerfile" ]; then
+            echo "ERROR: Dockerfile not found in the expected path."
+            exit 1
+          fi
 
       - name: Build Docker image
         run: |
+          echo "Building Docker image..."
           docker build -f Back/Dockerfile -t ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml ./Back
 
       - name: Debugging Step - Validate Variables
         run: |
-          echo "Validating variables:"
+          echo "Validating variables..."
           echo "ACR_LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }}"
           echo "ACR_USERNAME: ${{ secrets.ACR_USERNAME }}"
-          # ACR_PASSWORD is not echoed for security reasons
+          # Do not echo ACR_PASSWORD for security reasons.
 
       - name: Login to ACR
         run: |
+          echo "Logging in to ACR..."
           if [ -z "${{ secrets.ACR_PASSWORD }}" ]; then
             echo "ERROR: ACR_PASSWORD is empty or not set."
             exit 1
           fi
           echo "${{ secrets.ACR_PASSWORD }}" | docker login "${{ secrets.ACR_LOGIN_SERVER }}" -u "${{ secrets.ACR_USERNAME }}" --password-stdin
 
-
       - name: Push Docker image to ACR
         run: |
+          echo "Pushing Docker image to ACR..."
           docker push ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml
 
       - name: Configure Hml App Service to use ACR image
         run: |
+          echo "Configuring Hml App Service to use ACR image..."
           az webapp config container set \
             --name centralOficina2-Hml \
             --resource-group CentralOficina2-RG \
@@ -69,3 +78,8 @@ jobs:
             --docker-registry-server-url https://${{ secrets.ACR_LOGIN_SERVER }} \
             --docker-registry-server-user ${{ secrets.ACR_USERNAME }} \
             --docker-registry-server-password ${{ secrets.ACR_PASSWORD }}
+
+      - name: Validate Deployment
+        run: |
+          echo "Validating deployment..."
+          az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-RG --query state
