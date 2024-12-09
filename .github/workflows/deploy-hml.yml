@@ -29,7 +29,7 @@ jobs:
 
       - name: Build .NET project
         run: |
-          dotnet build Back\WebApia\ --configuration Release
+          dotnet build Back\WebApia\Ellp.Api.Webapi.csproj --configuration Release
 
       - name: Build Docker image
         run: |
