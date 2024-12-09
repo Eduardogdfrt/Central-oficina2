@@ -31,10 +31,21 @@ jobs:
         run: |
           dotnet build Back/WebApia/ --configuration release
 
+      - name: Debugging Step - Check Dockerfile Path
+        run: |
+          echo "Verifying Dockerfile path:"
+          ls -al Back/
+
       - name: Build Docker image
         run: |
           docker build -f Back/Dockerfile -t ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml ./Back
 
+      - name: Debugging Step - Validate Variables
+        run: |
+          echo "Validating variables:"
+          echo "ACR_LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }}"
+          echo "ACR_USERNAME: ${{ secrets.ACR_USERNAME }}"
+          # ACR_PASSWORD is not echoed for security reasons
 
       - name: Login to ACR
         run: |
