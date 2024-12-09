@@ -33,7 +33,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -f Back\Dockerfile -t ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml ./Back
+          docker build -f Back/Dockerfile -t ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml ./Back
 
 
       - name: Login to ACR
