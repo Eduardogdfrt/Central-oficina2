@@ -1,54 +1,65 @@
-name: Deploy to Hml on Release Changes
+name: Build and deploy ASP.Net Core app to Azure Web App - ELLPDSV
 
 on:
   push:
     branches:
       - release
+  workflow_dispatch:
 
 jobs:
-  deploy-to-hml:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: windows-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Setup .NET
+      - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '8.x'
 
-      - name: Restore .NET dependencies
-        run: |
-          dotnet restore Back/WebApia/Ellp.Api.Webapi.csproj
+      - name: Build with dotnet
+        run: dotnet build --configuration Release
 
-      - name: Build .NET project
-        run: |
-          dotnet build Back/WebApia/Ellp.Api.Webapi.csproj --configuration Release
+      - name: dotnet publish
+        run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
 
-      - name: Build Docker image
-        run: |
-          docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml .
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: .net-app
+          path: ${{env.DOTNET_ROOT}}/myapp
 
-      - name: Login to ACR
-        run: |
-          echo ${{ secrets.ACR_PASSWORD }} | docker login ${{ secrets.ACR_LOGIN_SERVER }} -u ${{ secrets.ACR_USERNAME }} --password-stdin
+  deploy:
+    runs-on: windows-latest
+    needs: build
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    permissions:
+      id-token: write #This is required for requesting the JWT
 
-      - name: Push Docker image to ACR
-        run: |
-          docker push ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: .net-app
 
-      - name: Configure Hml App Service to use ACR image
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_A3F197F0430B4AA08E7166072BD16DAD }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_7F6ACF4F0F554570989E3830EB1999C0 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_2640AE1780624A07B30EEDC4FEE1E876 }}
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'ELLPDSV'
+          slot-name: 'Production'
+          package: .
+
+      - name: Deploy with Docker Compose
         run: |
-          az webapp config container set \
-            --name centralOficina2-Hml \
-            --resource-group CentralOficina2-RG \
-            --docker-custom-image-name ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml \
-            --docker-registry-server-url https://${{ secrets.ACR_LOGIN_SERVER }} \
-            --docker-registry-server-user ${{ secrets.ACR_USERNAME }} \
-            --docker-registry-server-password ${{ secrets.ACR_PASSWORD }}
+          docker-compose -f ./docker-compose.yml up -d
