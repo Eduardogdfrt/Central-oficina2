@@ -19,5 +19,5 @@
 	  <ProjectReference Include="..\Ellp.Api.Application\Ellp.Api.Application.csproj" />
 	  <ProjectReference Include="..\Ellp.Api.Domain\Ellp.Api.Domain.csproj" />
 	</ItemGroup>
-
+	<!--adasds-->
 </Project>
