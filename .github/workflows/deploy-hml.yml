@@ -3,7 +3,7 @@ name: Deploy to Hml on Release Changes
 on:
   push:
     branches:
-      - Release
+      - release
 
 jobs:
   deploy-to-hml:
@@ -25,11 +25,11 @@ jobs:
 
       - name: Restore .NET dependencies
         run: |
-          dotnet restore Back\WebApia\
+          dotnet restore Back/WebApia/
 
       - name: Build .NET project
         run: |
-          dotnet build Back\WebApia\ --configuration Release
+          dotnet build Back/WebApia/ --configuration release
 
       - name: Build Docker image
         run: |
