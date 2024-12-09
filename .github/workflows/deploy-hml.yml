@@ -25,11 +25,11 @@ jobs:
 
       - name: Restore .NET dependencies
         run: |
-          dotnet restore Back\WebApia
+          dotnet restore Back\Ellp.Api.Application\Ellp.Api.Application.csproj
 
       - name: Build .NET project
         run: |
-          dotnet build Back\WebApia --configuration Release
+          dotnet build Back\Ellp.Api.Application\Ellp.Api.Application.csproj --configuration Release
 
       - name: Build Docker image
         run: |
