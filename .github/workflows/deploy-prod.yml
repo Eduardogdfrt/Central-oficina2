@@ -1,0 +1,39 @@
+name: Manual Deploy to Production
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-to-prod:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Build Docker image (Production)
+        run: |
+          docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:prod .
+
+      - name: Login to ACR
+        run: |
+          echo ${{ secrets.ACR_PASSWORD }} | docker login ${{ secrets.ACR_LOGIN_SERVER }} -u ${{ secrets.ACR_USERNAME }} --password-stdin
+
+      - name: Push Docker image to ACR
+        run: |
+          docker push ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:prod
+
+      - name: Configure App Service to use ACR image
+        run: |
+          az webapp config container set \
+            --name CentralOficina2-Prod \
+            --resource-group CentralOficina2-RG \
+            --docker-custom-image-name ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:prod \
+            --docker-registry-server-url https://${{ secrets.ACR_LOGIN_SERVER }} \
+            --docker-registry-server-user ${{ secrets.ACR_USERNAME }} \
+            --docker-registry-server-password ${{ secrets.ACR_PASSWORD }}
