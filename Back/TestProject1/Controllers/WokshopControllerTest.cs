@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Moq;
 using Xunit;
-using Ellp.Api.Application.UseCases.AddWorkshops;
 using Ellp.Api.Application.Utilities;
 using Ellp.Api.WebApi.Controllers;
+using Ellp.Api.Application.UseCases.Workshops.AddWorkshops;
 
 namespace Ellp.Api.UnitTest.Controllers
 {

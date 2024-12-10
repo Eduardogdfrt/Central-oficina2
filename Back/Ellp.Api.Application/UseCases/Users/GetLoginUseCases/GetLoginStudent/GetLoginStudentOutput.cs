@@ -1,8 +1,8 @@
 ﻿using Ellp.Api.Domain.Entities;
 
-namespace Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginStudent
+namespace Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginStudent
 {
-    public class GetLoginStudentMapper
+    public class GetLoginStudentOutput
     {
         public bool Success { get; set; }
         public string Message { get; set; }
@@ -10,9 +10,9 @@ namespace Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginStudent
         public string Email { get; set; }
         public string Name { get; set; }
 
-        public static GetLoginStudentMapper ToLoginOutput(Student student)
+        public static GetLoginStudentOutput ToLoginOutput(Student student)
         {
-            return new GetLoginStudentMapper
+            return new GetLoginStudentOutput
             {
                 Success = true,
                 Message = "Login successful",
@@ -21,9 +21,9 @@ namespace Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginStudent
                 Name = student.Name
             };
         }
-        public static GetLoginStudentMapper ToLoginOutputIfInvalid(Student student)
+        public static GetLoginStudentOutput ToLoginOutputIfInvalid(Student student)
         {
-            return new GetLoginStudentMapper
+            return new GetLoginStudentOutput
             {
                 Success = false,
                 Message = "Login Failed",

@@ -1,8 +1,8 @@
 ﻿using Ellp.Api.Domain.Entities;
 
-namespace Ellp.Api.Application.UseCases.AddParticipantUsecases.AddNewProfessorUseCases
+namespace Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewProfessorUseCases
 {
-    public class AddNewProfessorMapper
+    public class AddNewProfessorOutput
     {
         public static AddNewProfessorInput ToInput(Professor professor, string password)
         {

@@ -7,7 +7,7 @@ using Ellp.Api.Application.Interfaces;
 using Ellp.Api.Application.Utilities;
 using Microsoft.Extensions.Logging;
 
-namespace Ellp.Api.Application.UseCases.AddWorkshops
+namespace Ellp.Api.Application.UseCases.Workshops.AddWorkshops
 {
     public class AddWorkshopUseCase : IRequestHandler<AddWorkshopInput, Response>
     {

@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using MediatR;
 using Ellp.Api.Application.Utilities;
-namespace Ellp.Api.Application.UseCases.AddParticipantUsecases.AddNewStudentUseCases
+namespace Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewStudentUseCases
 {
     public class AddNewStudentInput : IRequest<Response>
     {

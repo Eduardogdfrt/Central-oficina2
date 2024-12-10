@@ -1,7 +1,7 @@
 ﻿using Ellp.Api.Domain.Entities;
 using Ellp.Api.Application.Utilities;
 
-namespace Ellp.Api.Application.UseCases.AddWorkshops
+namespace Ellp.Api.Application.UseCases.Workshops.AddWorkshops
 {
     public static class AddWorkshopMapper
     {

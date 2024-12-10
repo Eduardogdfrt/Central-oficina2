@@ -8,6 +8,7 @@ using Ellp.Api.Application.UseCases.AddParticipantUsecases.AddNewProfessorUseCas
 using Ellp.Api.Application.Interfaces;
 using Ellp.Api.Domain.Entities;
 using Ellp.Api.Application.Utilities;
+using Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewProfessorUseCases;
 
 namespace Ellp.Api.UnitTest.UseCases.AddParticipantUsecases.AddNewProfessorUseCases
 {

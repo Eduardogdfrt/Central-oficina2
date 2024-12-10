@@ -3,7 +3,7 @@ using Ellp.Api.Application.Interfaces;
 using Ellp.Api.Application.Utilities;
 using Microsoft.Extensions.Logging;
 
-namespace Ellp.Api.Application.UseCases.AddParticipantUsecases.AddNewStudentUseCases
+namespace Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewStudentUseCases
 {
     public class AddNewStudentUseCase : IRequestHandler<AddNewStudentInput, Response>
     {
@@ -20,7 +20,7 @@ namespace Ellp.Api.Application.UseCases.AddParticipantUsecases.AddNewStudentUseC
         {
             try
             {
-    
+
                 var existingStudent = await _studentRepository.GetStudentByEmailAsync(request.Email);
                 if (existingStudent != null)
                 {
@@ -28,9 +28,9 @@ namespace Ellp.Api.Application.UseCases.AddParticipantUsecases.AddNewStudentUseC
                 }
 
 
-                var newStudent = AddNewStudentMapper.ToEntity(request);
+                var newStudent = AddNewStudentOutput.ToEntity(request);
 
-  
+
                 await _studentRepository.AddAsync(newStudent);
 
                 return new Response { Message = "Estudante criado com sucesso" };

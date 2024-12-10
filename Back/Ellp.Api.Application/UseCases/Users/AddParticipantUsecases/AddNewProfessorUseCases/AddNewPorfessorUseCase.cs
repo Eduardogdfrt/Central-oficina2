@@ -4,7 +4,7 @@ using Ellp.Api.Application.Interfaces;
 using Ellp.Api.Domain.Entities;
 using Ellp.Api.Application.Utilities;
 
-namespace Ellp.Api.Application.UseCases.AddParticipantUsecases.AddNewProfessorUseCases
+namespace Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewProfessorUseCases
 {
     public class AddNewProfessorUseCase : IRequestHandler<AddNewProfessorInput, Response>
     {

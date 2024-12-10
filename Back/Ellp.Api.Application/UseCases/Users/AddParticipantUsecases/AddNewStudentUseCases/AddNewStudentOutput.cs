@@ -1,9 +1,9 @@
 ﻿using Ellp.Api.Domain.Entities;
 using Ellp.Api.Application.Utilities;
 
-namespace Ellp.Api.Application.UseCases.AddParticipantUsecases.AddNewStudentUseCases
+namespace Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewStudentUseCases
 {
-    public static class AddNewStudentMapper
+    public static class AddNewStudentOutput
     {
         public static Student ToEntity(AddNewStudentInput input)
         {

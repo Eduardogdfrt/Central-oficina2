@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using Ellp.Api.Application.UseCases.AddWorkshops;
 using Ellp.Api.Application.Utilities;
+using Ellp.Api.Application.UseCases.Workshops.AddWorkshops;
 
 namespace Ellp.Api.WebApi.Controllers
 {

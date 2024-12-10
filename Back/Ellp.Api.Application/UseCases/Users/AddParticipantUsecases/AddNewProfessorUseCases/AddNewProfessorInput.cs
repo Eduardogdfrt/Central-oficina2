@@ -2,7 +2,7 @@
 using MediatR;
 using Ellp.Api.Application.Utilities;
 
-namespace Ellp.Api.Application.UseCases.AddParticipantUsecases.AddNewProfessorUseCases
+namespace Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewProfessorUseCases
 {
     public class AddNewProfessorInput : IRequest<Response>
     {

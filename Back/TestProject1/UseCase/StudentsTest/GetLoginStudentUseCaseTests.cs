@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
-using Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginStudent;
 using Ellp.Api.Application.Interfaces;
 using Ellp.Api.Domain.Entities;
+using Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginStudent;
 
 namespace Ellp.Api.UnitTest.UseCase.StudentsTests
 {

@@ -2,9 +2,9 @@
 using Microsoft.Extensions.Logging;
 using Ellp.Api.Application.Interfaces;
 
-namespace Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginProfessor
+namespace Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginProfessor
 {
-    public class GetLoginProfessorUseCase : IRequestHandler<GetLoginProfessorInput, GetLoginProfessorMapper>
+    public class GetLoginProfessorUseCase : IRequestHandler<GetLoginProfessorInput, GetLoginProfessorOutput>
     {
         private readonly ILogger<GetLoginProfessorUseCase> _logger;
         private readonly IProfessorRepository _professorRepository;
@@ -15,22 +15,22 @@ namespace Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginProfessor
             _professorRepository = professorRepository;
         }
 
-        public async Task<GetLoginProfessorMapper> Handle(GetLoginProfessorInput request, CancellationToken cancellationToken)
+        public async Task<GetLoginProfessorOutput> Handle(GetLoginProfessorInput request, CancellationToken cancellationToken)
         {
             try
             {
                 var professor = await _professorRepository.GetAllProfessorInfosAsync(request.ProfessorId, request.Password);
                 if (professor == null)
                 {
-                    return new GetLoginProfessorMapper { Success = false, Message = "Invalid professor ID or password" };
+                    return new GetLoginProfessorOutput { Success = false, Message = "Invalid professor ID or password" };
                 }
 
-                return GetLoginProfessorMapper.ToLoginOutput(professor);
+                return GetLoginProfessorOutput.ToLoginOutput(professor);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while processing the login request.");
-                return new GetLoginProfessorMapper { Success = false, Message = "An error occurred" };
+                return new GetLoginProfessorOutput { Success = false, Message = "An error occurred" };
             }
         }
     }

@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MediatR;
 
-namespace Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginStudent
+namespace Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginStudent
 {
-    public class GetLoginStudentInput : IRequest<GetLoginStudentMapper>
+    public class GetLoginStudentInput : IRequest<GetLoginStudentOutput>
     {
         [Required]
         public string Email { get; set; }

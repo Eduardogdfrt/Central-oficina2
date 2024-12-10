@@ -1,6 +1,6 @@
 ﻿using Ellp.Api.Domain.Entities;
 
-namespace Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginProfessor
+namespace Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginProfessor
 {
     public class GetLoginProfessorMapper
     {

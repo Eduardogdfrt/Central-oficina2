@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginStudent;
-using Ellp.Api.Application.UseCases.AddParticipantUsecases.AddNewStudentUseCases;
-using AppResponse = Ellp.Api.Application.Utilities.Response; // Alias para evitar ambiguidades
+using AppResponse = Ellp.Api.Application.Utilities.Response;
+using Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewStudentUseCases;
+using Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginStudent; // Alias para evitar ambiguidades
 
 namespace Ellp.Api.WebApi.Controllers
 {

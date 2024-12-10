@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using MediatR;
 using Ellp.Api.Application.Utilities;
 
-namespace Ellp.Api.Application.UseCases.AddWorkshops
+namespace Ellp.Api.Application.UseCases.Workshops.AddWorkshops
 {
     public class AddWorkshopInput : IRequest<Response>
     {

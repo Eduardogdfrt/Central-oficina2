@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginProfessor
+namespace Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginProfessor
 {
     public class GetLoginProfessorInput : IRequest<GetLoginProfessorMapper>
     {

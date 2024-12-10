@@ -4,6 +4,10 @@ using Microsoft.OpenApi.Models;
 using MediatR;
 using Ellp.Api.Infra.SqlServer.Repository;
 using Ellp.Api.Infra.SqlServer;
+using Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewStudentUseCases;
+using Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginProfessor;
+using Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginStudent;
+using Ellp.Api.Application.UseCases.Workshops.AddWorkshops;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,10 +43,10 @@ builder.Services.AddScoped<IProfessorRepository, ProfessorRepository>();
 builder.Services.AddScoped<IWorkshopRepository, WorkshopRepository>();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
-    typeof(Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginStudent.GetLoginStudentUseCase).Assembly,
-    typeof(Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginProfessor.GetLoginProfessorUseCase).Assembly,
-    typeof(Ellp.Api.Application.UseCases.AddParticipantUsecases.AddNewStudentUseCases.AddNewStudentUseCase).Assembly,
-    typeof(Ellp.Api.Application.UseCases.AddWorkshops.AddWorkshopUseCase).Assembly
+    typeof(GetLoginStudentUseCase).Assembly,
+    typeof(GetLoginProfessorUseCase).Assembly,
+    typeof(AddNewStudentUseCase).Assembly,
+    typeof(AddWorkshopUseCase).Assembly
 ));
 
 // Configuração do CORS

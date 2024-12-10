@@ -1,9 +1,9 @@
 ﻿using Moq;
 using Microsoft.Extensions.Logging;
 using Ellp.Api.Application.Interfaces;
-using Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginProfessor;
 using Ellp.Api.Domain.Entities;
 using Xunit;
+using Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginProfessor;
 
 namespace Ellp.Api.UnitTest.UseCase.ProfessorTest
 {

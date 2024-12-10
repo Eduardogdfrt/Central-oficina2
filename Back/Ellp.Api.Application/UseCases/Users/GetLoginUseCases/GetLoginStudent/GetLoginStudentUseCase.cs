@@ -6,9 +6,9 @@ using Microsoft.Extensions.Logging;
 using Ellp.Api.Application.Interfaces;
 using Ellp.Api.Domain.Entities;
 
-namespace Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginStudent
+namespace Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginStudent
 {
-    public class GetLoginStudentUseCase : IRequestHandler<GetLoginStudentInput, GetLoginStudentMapper>
+    public class GetLoginStudentUseCase : IRequestHandler<GetLoginStudentInput, GetLoginStudentOutput>
     {
         private readonly ILogger<GetLoginStudentUseCase> _logger;
         private readonly IStudentRepository _studentRepository;
@@ -19,7 +19,7 @@ namespace Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginStudent
             _studentRepository = studentRepository;
         }
 
-        public async Task<GetLoginStudentMapper> Handle(GetLoginStudentInput request, CancellationToken cancellationToken)
+        public async Task<GetLoginStudentOutput> Handle(GetLoginStudentInput request, CancellationToken cancellationToken)
         {
             try
             {
@@ -27,7 +27,7 @@ namespace Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginStudent
 
                 if (student == null)
                 {
-                    return new GetLoginStudentMapper
+                    return new GetLoginStudentOutput
                     {
                         Success = false,
                         Message = "Email inválido ou não autenticado"
@@ -38,7 +38,7 @@ namespace Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginStudent
                 {
                     if (string.IsNullOrEmpty(request.Password))
                     {
-                        return new GetLoginStudentMapper
+                        return new GetLoginStudentOutput
                         {
                             Success = false,
                             Message = "Senha é obrigatória para login"
@@ -47,23 +47,23 @@ namespace Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginStudent
                     student = await _studentRepository.GetStudentByEmailAndPasswordAsync(request.Email, request.Password);
                     if (student == null)
                     {
-                        return new GetLoginStudentMapper
+                        return new GetLoginStudentOutput
                         {
                             Success = false,
                             Message = "Email ou senha inválidos"
                         };
                     }
-                    return GetLoginStudentMapper.ToLoginOutput(student);
+                    return GetLoginStudentOutput.ToLoginOutput(student);
                 }
                 else
                 {
-                    return GetLoginStudentMapper.ToLoginOutput(student);
+                    return GetLoginStudentOutput.ToLoginOutput(student);
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ocorreu um erro ao processar a solicitação de login.");
-                return new GetLoginStudentMapper
+                return new GetLoginStudentOutput
                 {
                     Success = false,
                     Message = "Ocorreu um erro durante o processamento"
