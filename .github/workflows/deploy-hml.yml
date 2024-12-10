@@ -48,13 +48,15 @@ jobs:
           PROJECT_NAME=$(basename $(pwd) | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
           echo "Project name: $PROJECT_NAME"
           
-          # Build and tag the frontend
+          # Build the frontend
           docker-compose build front
+          # Tag the frontend image correctly
           docker tag ${PROJECT_NAME}_front:latest centraloficina2acr.azurecr.io/central-oficina2-frontend:hml
           docker push centraloficina2acr.azurecr.io/central-oficina2-frontend:hml
 
-          # Build and tag the backend
+          # Build the backend
           docker-compose build back
+          # Tag the backend image with the correct existing image name
           docker tag ${PROJECT_NAME}_back:latest centraloficina2acr.azurecr.io/central-oficina2:hml
           docker push centraloficina2acr.azurecr.io/central-oficina2:hml
 
