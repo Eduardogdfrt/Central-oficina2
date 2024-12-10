@@ -5,6 +5,10 @@ on:
     branches:
       - release
       - Feature/Fabio
+    paths:
+      - 'Back/**'
+      - 'front/**'
+      - '.github/workflows/deploy-hml.yml'
 
 jobs:
   deploy-to-hml:
@@ -29,56 +33,31 @@ jobs:
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
-      # Backend deployment steps
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-
-      - name: Restore .NET dependencies
-        run: |
-          echo "Restoring .NET dependencies..."
-          dotnet restore Back/WebApia/
-
-      - name: Build .NET project
-        run: |
-          echo "Building .NET project..."
-          dotnet build Back/WebApia/ --configuration release
-
-      - name: Verify project structure
-        run: |
-          echo "Verifying project structure..."
-          ls -R Back/
-          if [ ! -f "Back/Dockerfile" ]; then
-            echo "ERROR: Dockerfile not found in Back directory"
-            exit 1
-          fi
-
-      - name: Build and Push Backend Docker image
+      - name: Build and Push Combined Docker image
         uses: docker/build-push-action@v5
         with:
-          context: ./Back
+          context: .  # Usando o contexto raiz
           file: ./Back/Dockerfile
           push: true
           tags: ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml
           cache-from: type=registry,ref=${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml
           cache-to: type=inline
 
-      - name: Verify Backend App Service exists
+      - name: Verify App Service exists
         run: |
           echo "Verifying App Service exists..."
           if ! az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-Hml &>/dev/null; then
-            echo "App Service 'centralOficina2-Hml' not found. Creating it..."
+            echo "App Service not found. Creating it..."
             az webapp create \
               --name centralOficina2-Hml \
               --resource-group CentralOficina2-Hml \
               --plan CentralOficina2Plan \
-              --runtime "DOCKER"
+              --runtime "DOCKER|linux"
           fi
 
-      - name: Configure Backend App Service
+      - name: Configure App Service
         run: |
-          echo "Configuring Backend App Service..."
+          echo "Configuring App Service..."
           az webapp config container set \
             --name centralOficina2-Hml \
             --resource-group CentralOficina2-Hml \
@@ -87,97 +66,59 @@ jobs:
             --container-registry-user ${{ secrets.ACR_USERNAME }} \
             --container-registry-password ${{ secrets.ACR_PASSWORD }}
 
-      - name: Restart Backend App Service
+      - name: Configure App Settings
         run: |
-          echo "Restarting Backend App Service..."
+          echo "Configuring App Settings..."
+          az webapp config appsettings set \
+            --name centralOficina2-Hml \
+            --resource-group CentralOficina2-Hml \
+            --settings \
+            WEBSITES_PORT=5000 \
+            ASPNETCORE_ENVIRONMENT=Development \
+            ASPNETCORE_URLS=http://+:5000
+
+      - name: Configure CORS
+        run: |
+          echo "Configuring CORS..."
+          az webapp cors add \
+            --name centralOficina2-Hml \
+            --resource-group CentralOficina2-Hml \
+            --allowed-origins "*"
+
+      - name: Restart App Service
+        run: |
+          echo "Restarting App Service..."
           az webapp restart --name centralOficina2-Hml --resource-group CentralOficina2-Hml
 
-      # Frontend deployment steps
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-
-      - name: Install Frontend Dependencies
+      - name: Wait for App Service to Start
         run: |
-          echo "Installing frontend dependencies..."
-          cd front
-          npm install
-          npm install --save-dev @babel/plugin-proposal-private-property-in-object
+          echo "Waiting for App Service to start..."
+          sleep 30  # Aguarda 30 segundos para o serviço inicializar
 
-      - name: Build Frontend
+      - name: Validate Deployment
         run: |
-          echo "Building frontend..."
-          cd front
-          export CI=false
-          npm run build
-          
-      - name: Build and Push Frontend Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./front
-          file: ./front/Dockerfile
-          push: true
-          tags: ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2-frontend:hml
-          cache-from: type=registry,ref=${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2-frontend:hml
-          cache-to: type=inline
-
-      - name: Verify Frontend App Service exists
-        run: |
-          echo "Verifying Frontend App Service exists..."
-          if ! az webapp show --name centralOficina2-frontend-hml --resource-group CentralOficina2-Hml &>/dev/null; then
-            echo "Frontend App Service not found. Creating it..."
-            az webapp create \
-              --name centralOficina2-frontend-hml \
-              --resource-group CentralOficina2-Hml \
-              --plan CentralOficina2Plan \
-              --runtime "DOCKER"
-          fi
-
-      - name: Configure Frontend App Service
-        run: |
-          echo "Configuring Frontend App Service..."
-          az webapp config container set \
-            --name centralOficina2-frontend-hml \
-            --resource-group CentralOficina2-Hml \
-            --container-image-name ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2-frontend:hml \
-            --container-registry-url https://${{ secrets.ACR_LOGIN_SERVER }} \
-            --container-registry-user ${{ secrets.ACR_USERNAME }} \
-            --container-registry-password ${{ secrets.ACR_PASSWORD }}
-
-      - name: Restart Frontend App Service
-        run: |
-          echo "Restarting Frontend App Service..."
-          az webapp restart --name centralOficina2-frontend-hml --resource-group CentralOficina2-Hml
-
-      - name: Validate Deployments
-        run: |
-          echo "Validating deployments..."
-          
-          # Validate Backend
-          backend_status=$(az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-Hml --query state -o tsv)
-          echo "Backend Deployment Status: $backend_status"
-          if [ "$backend_status" != "Running" ]; then
-            echo "WARNING: Backend App Service is not in Running state"
+          echo "Validating deployment..."
+          deployment_status=$(az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-Hml --query state -o tsv)
+          echo "Deployment Status: $deployment_status"
+          if [ "$deployment_status" != "Running" ]; then
+            echo "WARNING: App Service is not in Running state"
             exit 1
           fi
-          
-          # Validate Frontend
-          frontend_status=$(az webapp show --name centralOficina2-frontend-hml --resource-group CentralOficina2-Hml --query state -o tsv)
-          echo "Frontend Deployment Status: $frontend_status"
-          if [ "$frontend_status" != "Running" ]; then
-            echo "WARNING: Frontend App Service is not in Running state"
+
+      - name: Check App Service Health
+        run: |
+          echo "Checking App Service health..."
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://centraloficina2-hml.azurewebsites.net/health)
+          if [ "$response" != "200" ]; then
+            echo "WARNING: Health check failed with status code $response"
             exit 1
           fi
 
       - name: Deployment Summary
         run: |
           echo "Deployment Summary:"
-          echo "Backend:"
           echo "- Image: ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml"
           echo "- App Service: centralOficina2-Hml"
-          echo "Frontend:"
-          echo "- Image: ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2-frontend:hml"
-          echo "- App Service: centralOficina2-frontend-hml"
-          echo "Resource Group: CentralOficina2-Hml"
+          echo "- Resource Group: CentralOficina2-Hml"
+          echo "- URL: https://centraloficina2-hml.azurewebsites.net"
           echo "Status: Success"
