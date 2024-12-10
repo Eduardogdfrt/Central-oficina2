@@ -6,7 +6,7 @@ WORKDIR /src
 COPY ["Back/WebApia/Ellp.Api.Webapi.csproj", "WebApia/"]
 COPY ["Back/Ellp.Api.Application/Ellp.Api.Application.csproj", "Ellp.Api.Application/"]
 COPY ["Back/Ellp.Infra.SqlServer/Ellp.Api.Infra.SqlServer.csproj", "Ellp.Infra.SqlServer/"]
-COPY ["Back/Ellp.Api.Domain/Ellp.Api.Domain.csproj", "Ellp.Api.Domain/"]
+COPY ["Ellp.Api.Domain/Ellp.Api.Domain.csproj", "Ellp.Api.Domain/"]
 
 # Executa o dotnet restore
 RUN dotnet restore "WebApia/Ellp.Api.Webapi.csproj"
