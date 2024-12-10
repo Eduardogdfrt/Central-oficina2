@@ -18,7 +18,6 @@ if (builder.Environment.IsDevelopment())
 
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
-    // Escutar na porta 5000 para todas as interfaces
     serverOptions.ListenAnyIP(5000);
 });
 
@@ -45,7 +44,7 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
     typeof(Ellp.Api.Application.UseCases.AddWorkshops.AddWorkshopUseCase).Assembly
 ));
 
-// Configura��o do CORS
+// Configuração do CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowedOrigins", policy =>
@@ -53,7 +52,7 @@ builder.Services.AddCors(options =>
         policy.WithOrigins("http://localhost:7172", "http://localhost:3000", "http://localhost:5000")
               .AllowAnyMethod()
               .AllowAnyHeader()
-              .AllowCredentials(); // Adicionado para permitir credenciais
+              .AllowCredentials();
     });
 });
 
@@ -70,7 +69,18 @@ if (!app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 
-app.UseCors("AllowedOrigins"); // Certifique-se de que UseCors seja chamado antes de UseAuthorization
+// Adiciona suporte a arquivos estáticos
+app.UseDefaultFiles(); // Permite servir index.html por padrão
+app.UseStaticFiles();  // Habilita o serviço de arquivos estáticos
+
+app.UseRouting();
+app.UseCors("AllowedOrigins");
 app.UseAuthorization();
+
+// Mapeia as rotas da API
 app.MapControllers();
+
+// Adiciona suporte ao roteamento do SPA
+app.MapFallbackToFile("index.html"); // Redireciona todas as rotas não-API para o index.html do React
+
 app.Run();
