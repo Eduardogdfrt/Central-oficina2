@@ -6,7 +6,8 @@ COPY ["WebApia/Ellp.Api.Webapi.csproj", "WebApia/"]
 COPY ["Ellp.Api.Application/Ellp.Api.Application.csproj", "Ellp.Api.Application/"]
 COPY ["Ellp.Infra.SqlServer/Ellp.Api.Infra.SqlServer.csproj", "Ellp.Infra.SqlServer/"]
 COPY ["Ellp.Api.Domain/Ellp.Api.Domain.csproj", "Ellp.Api.Domain/"]
-
+COPY ["Ellp.Api.FunctionalTest/Ellp.Api.FunctionalTest.csproj", "Ellp.Api.FunctionalTes.Domain/"]
+COPY ["TestProject1/Ellp.Api.UnitTest.csproj", "Ellp.Api.Domain/"]
 # Executa o dotnet restore
 RUN dotnet restore "WebApia/Ellp.Api.Webapi.csproj"
 
