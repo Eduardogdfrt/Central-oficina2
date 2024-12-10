@@ -5,6 +5,11 @@ on:
     branches:
       - release
       - Feature/Fabio
+    paths:
+      - 'Back/**'
+      - 'front/**'
+      - '.github/workflows/deploy-hml.yml'
+      - 'docker-compose.yml'
 
 jobs:
   deploy-to-hml:
@@ -29,56 +34,34 @@ jobs:
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
-      # Backend deployment steps
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-
-      - name: Restore .NET dependencies
+      # Build e Push das imagens usando docker-compose
+      - name: Build and Push Images
         run: |
-          echo "Restoring .NET dependencies..."
-          dotnet restore Back/WebApia/
+          # Primeiro, construir o frontend
+          docker-compose build front
+          docker tag central-oficina2_front:latest ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2-frontend:hml
+          docker push ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2-frontend:hml
 
-      - name: Build .NET project
-        run: |
-          echo "Building .NET project..."
-          dotnet build Back/WebApia/ --configuration release
+          # Depois, construir o backend
+          docker-compose build back
+          docker tag central-oficina2_back:latest ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml
+          docker push ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml
 
-      - name: Verify project structure
-        run: |
-          echo "Verifying project structure..."
-          ls -R Back/
-          if [ ! -f "Back/Dockerfile" ]; then
-            echo "ERROR: Dockerfile not found in Back directory"
-            exit 1
-          fi
-
-      - name: Build and Push Backend Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./Back
-          file: ./Back/Dockerfile
-          push: true
-          tags: ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml
-          cache-from: type=registry,ref=${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml
-          cache-to: type=inline
-
-      - name: Verify Backend App Service exists
+      - name: Verify App Service exists
         run: |
           echo "Verifying App Service exists..."
           if ! az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-Hml &>/dev/null; then
-            echo "App Service 'centralOficina2-Hml' not found. Creating it..."
+            echo "App Service not found. Creating it..."
             az webapp create \
               --name centralOficina2-Hml \
               --resource-group CentralOficina2-Hml \
               --plan CentralOficina2Plan \
-              --runtime "DOCKER"
+              --runtime "DOCKER|linux"
           fi
 
-      - name: Configure Backend App Service
+      - name: Configure App Service
         run: |
-          echo "Configuring Backend App Service..."
+          echo "Configuring App Service..."
           az webapp config container set \
             --name centralOficina2-Hml \
             --resource-group CentralOficina2-Hml \
@@ -86,69 +69,6 @@ jobs:
             --container-registry-url https://${{ secrets.ACR_LOGIN_SERVER }} \
             --container-registry-user ${{ secrets.ACR_USERNAME }} \
             --container-registry-password ${{ secrets.ACR_PASSWORD }}
-
-      - name: Restart Backend App Service
-        run: |
-          echo "Restarting Backend App Service..."
-          az webapp restart --name centralOficina2-Hml --resource-group CentralOficina2-Hml
-
-      # Frontend deployment steps
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-
-      - name: Install Frontend Dependencies
-        run: |
-          echo "Installing frontend dependencies..."
-          cd front
-          npm install
-          npm install --save-dev @babel/plugin-proposal-private-property-in-object
-
-      - name: Build Frontend
-        run: |
-          echo "Building frontend..."
-          cd front
-          export CI=false
-          npm run build
-          
-      - name: Build and Push Frontend Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./front
-          file: ./front/Dockerfile
-          push: true
-          tags: ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2-frontend:hml
-          cache-from: type=registry,ref=${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2-frontend:hml
-          cache-to: type=inline
-
-      - name: Verify Frontend App Service exists
-        run: |
-          echo "Verifying Frontend App Service exists..."
-          if ! az webapp show --name centralOficina2-frontend-hml --resource-group CentralOficina2-Hml &>/dev/null; then
-            echo "Frontend App Service not found. Creating it..."
-            az webapp create \
-              --name centralOficina2-frontend-hml \
-              --resource-group CentralOficina2-Hml \
-              --plan CentralOficina2Plan \
-              --runtime "DOCKER"
-          fi
-
-      - name: Configure Frontend App Service
-        run: |
-          echo "Configuring Frontend App Service..."
-          az webapp config container set \
-            --name centralOficina2-frontend-hml \
-            --resource-group CentralOficina2-Hml \
-            --container-image-name ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2-frontend:hml \
-            --container-registry-url https://${{ secrets.ACR_LOGIN_SERVER }} \
-            --container-registry-user ${{ secrets.ACR_USERNAME }} \
-            --container-registry-password ${{ secrets.ACR_PASSWORD }}
-
-      - name: Restart Frontend App Service
-        run: |
-          echo "Restarting Frontend App Service..."
-          az webapp restart --name centralOficina2-frontend-hml --resource-group CentralOficina2-Hml
 
       - name: Validate Deployments
         run: |
@@ -181,8 +101,3 @@ jobs:
           echo "- App Service: centralOficina2-frontend-hml"
           echo "Resource Group: CentralOficina2-Hml"
           echo "Status: Success"
-
-      - name: Verify Container Contents
-        run: |
-          echo "Verifying container contents..."
-          az webapp ssh --name centralOficina2-Hml --resource-group CentralOficina2-Hml --command "ls -la /app/wwwroot"

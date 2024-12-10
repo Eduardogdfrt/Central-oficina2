@@ -1,6 +1,18 @@
 version: '3.8'
 
 services:
+  back:
+    build:
+      context: ./Back
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_URLS=http://+:5000
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ./front/build:/app/wwwroot  # Monta o build do frontend no wwwroot do backend
+
   front:
     build:
       context: ./front
@@ -9,10 +21,5 @@ services:
       - "3000:80"
     depends_on:
       - back
-
-  back:
-    build:
-      context: ./back
-      dockerfile: Dockerfile
-    ports:
-      - "5000:5000"
+    environment:
+      - REACT_APP_API_URL=/api
