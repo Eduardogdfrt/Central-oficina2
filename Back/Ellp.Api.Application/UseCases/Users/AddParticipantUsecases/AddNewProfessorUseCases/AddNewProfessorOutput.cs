@@ -4,6 +4,11 @@ namespace Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewProfe
 {
     public class AddNewProfessorOutput
     {
+        public int ProfessorId { get; set; }
+        public string Name { get; set; }
+        public string Password { get; set; }
+        public string Message { get; set; }
+
         public static AddNewProfessorInput ToInput(Professor professor, string password)
         {
             return new AddNewProfessorInput
@@ -17,3 +22,4 @@ namespace Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewProfe
         }
     }
 }
+

@@ -1,10 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using MediatR;
-using Ellp.Api.Application.Utilities;
+﻿using MediatR;
+using System.ComponentModel.DataAnnotations;
 
 namespace Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewProfessorUseCases
 {
-    public class AddNewProfessorInput : IRequest<Response>
+    public class AddNewProfessorInput : IRequest<AddNewProfessorOutput>
     {
         [Required]
         public int ProfessorId { get; set; }
@@ -18,3 +17,5 @@ namespace Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewProfe
         public string Specialty { get; set; }
     }
 }
+
+
