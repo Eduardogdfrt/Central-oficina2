@@ -5,6 +5,21 @@ Sistema de gerenciamento de presença dos alunos do projeto de extensão ELLP (E
 - Fabio Nascimento Dos Santos Junior
 - Eduardo Gabriel De Freitas
 - Jéssica Mota Pereira
+## Como rodar via Docker
+
+Para rodar o projeto utilizando Docker, siga os passos abaixo:
+
+1- Certifique-se de ter o Docker e o Docker Compose instalados em sua máquina.
+
+2- Navegue até o diretório raiz do projeto onde o arquivo docker-compose.yml está localizado.
+
+3- Execute o seguinte comando no terminal na raiz do projeto para iniciar todos os serviços definidos no docker-compose.yml:
+
+docker-compose up
+
+4- O Docker Compose irá construir as imagens (se necessário) e iniciar os containers definidos no arquivo.
+
+OBS: No futuro, as rotas de homologação (HML) e produção (PRD) estarão configuradas no ambiente da Azure. Isso permitirá uma maior escalabilidade e gestão centralizada das aplicações.
 ## 1. Requisitos Funcionais
 
 | ID | FUNCIONALIDADE |
