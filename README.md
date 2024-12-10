@@ -23,7 +23,10 @@ OBS: No futuro, as rotas de homologação (HML) e produção (PRD) estarão conf
 
 Aproveito para deixar abaixo O ideal de como as pipelines terão que rodar:
               
-![image](https://github.com/user-attachments/assets/9f9d49ad-ff0e-45c5-b264-50afc9b10ec4)
+![image](https://github.com/user-attachments/assets/98cbee2c-c751-4607-b66e-e200e67f8663)
+
+
+
 
 ## Como funciona o repositorio referente ao deploy
 O projeto utiliza um fluxo de trabalho baseado no GitFlow com cinco branches principais:
