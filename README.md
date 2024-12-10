@@ -20,6 +20,30 @@ docker-compose up
 4- O Docker Compose irá construir as imagens (se necessário) e iniciar os containers definidos no arquivo.
 
 OBS: No futuro, as rotas de homologação (HML) e produção (PRD) estarão configuradas no ambiente da Azure. Isso permitirá uma maior escalabilidade e gestão centralizada das aplicações.
+
+Aproveito para deixar abaixo O ideal de como as pipelines terão que rodar:
+![image](https://github.com/user-attachments/assets/9f9d49ad-ff0e-45c5-b264-50afc9b10ec4)
+
+## Como funciona o repositorio referente ao deploy
+O projeto utiliza um fluxo de trabalho baseado no GitFlow com cinco branches principais:
+
+front: Branch dedicada ao desenvolvimento do frontend.
+back: Branch dedicada ao desenvolvimento do backend.
+teste: Branch utilizada para integração e testes contínuos.
+release: Branch usada para preparar uma nova versão para deploy.
+prd: Branch principal que representa a versão de produção.
+
+## Processo de Deploy
+Desenvolvimento: O trabalho de desenvolvimento ocorre nas branches front e back, onde novas funcionalidades e correções são implementadas.
+
+Testes: Após a conclusão do desenvolvimento, as mudanças são integradas na branch teste para realização de testes contínuos e integração.
+
+Release: Quando a versão está pronta para ser lançada, as alterações são mescladas na branch release. Esta branch é responsável por subir a versão recente para os ambientes de desenvolvimento (DSV) e homologação (HML).
+
+Produção: Após a validação nos ambientes de desenvolvimento e homologação, a versão é finalmente mesclada na branch prd, que representa a versão estável de produção do sistema.
+
+Este fluxo de trabalho garante uma gestão eficiente das diferentes etapas do desenvolvimento, testes e deploy, promovendo uma maior organização e controle sobre o ciclo de vida do software
+
 ## 1. Requisitos Funcionais
 
 | ID | FUNCIONALIDADE |
