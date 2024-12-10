@@ -8,10 +8,10 @@ using Moq;
 using Xunit;
 using MediatR;
 using Ellp.Api.WebApi.Controllers;
-using Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginStudent;
+using Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginStudent;
 using AppResponse = Ellp.Api.Application.Utilities.Response;
 using Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewStudentUseCases;
-using Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginStudent;
+
 
 
 namespace Ellp.Api.UnitTest.Controllers

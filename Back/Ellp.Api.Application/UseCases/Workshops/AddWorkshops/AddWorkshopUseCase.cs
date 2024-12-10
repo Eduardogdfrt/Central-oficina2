@@ -24,7 +24,7 @@ namespace Ellp.Api.Application.UseCases.Workshops.AddWorkshops
         {
             try
             {
-                var newWorkshop = AddWorkshopMapper.ToEntity(request);
+                var newWorkshop = AddWorkshopOutput.ToEntity(request);
 
                 await _workshopRepository.AddAsync(newWorkshop);
 

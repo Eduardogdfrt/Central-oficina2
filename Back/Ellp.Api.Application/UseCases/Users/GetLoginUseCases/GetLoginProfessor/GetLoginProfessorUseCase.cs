@@ -1,6 +1,9 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using Ellp.Api.Application.Interfaces;
+using Ellp.Api.Application.Utilities;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginProfessor
 {
@@ -20,7 +23,7 @@ namespace Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginProfessor
             try
             {
                 var professor = await _professorRepository.GetAllProfessorInfosAsync(request.ProfessorId, request.Password);
-                if (professor == null)
+                if (professor == null || !PasswordHasher.VerifyPassword(request.Password, professor.Password))
                 {
                     return new GetLoginProfessorOutput { Success = false, Message = "Invalid professor ID or password" };
                 }
@@ -35,5 +38,3 @@ namespace Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginProfessor
         }
     }
 }
-
-

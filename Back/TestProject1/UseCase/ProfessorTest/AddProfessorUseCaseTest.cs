@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
-using Ellp.Api.Application.UseCases.AddParticipantUsecases.AddNewProfessorUseCases;
 using Ellp.Api.Application.Interfaces;
 using Ellp.Api.Domain.Entities;
 using Ellp.Api.Application.Utilities;

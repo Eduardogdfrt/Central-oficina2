@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 using MediatR;
-using Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginProfessor;
+using Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginProfessor;
 using Ellp.Api.WebApi.Controllers;
 using Ellp.Api.Application.Utilities;
 

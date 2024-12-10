@@ -21,8 +21,5 @@
     <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.0" />
     <PackageReference Include="Microsoft.IdentityModel.Logging" Version="8.2.1" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UseCases\Workshops\GetWorkshopById\" />
-  </ItemGroup>
 
 </Project>

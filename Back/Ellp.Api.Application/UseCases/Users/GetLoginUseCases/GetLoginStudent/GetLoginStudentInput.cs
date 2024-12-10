@@ -7,6 +7,6 @@ namespace Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginStudent
     {
         [Required]
         public string Email { get; set; }
-        public string? Password { get; set; } // Permitir valores nulos
+        public string? Password { get; set; } 
     }
 }

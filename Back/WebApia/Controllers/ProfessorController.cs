@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginProfessor;
+using Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginProfessor;
 using Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewProfessorUseCases;
 
 namespace Ellp.Api.WebApi.Controllers
