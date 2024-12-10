@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="12.4.1" />
+    <PackageReference Include="SpecFlow" Version="3.9.74" />
   </ItemGroup>
 
 </Project>
