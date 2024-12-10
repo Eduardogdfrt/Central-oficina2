@@ -103,11 +103,13 @@ jobs:
           echo "Installing frontend dependencies..."
           cd front
           npm install
+          npm install --save-dev @babel/plugin-proposal-private-property-in-object
 
       - name: Build Frontend
         run: |
           echo "Building frontend..."
           cd front
+          export CI=false
           npm run build
           
       - name: Build and Push Frontend Docker image
