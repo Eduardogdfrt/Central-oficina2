@@ -5,6 +5,15 @@ Sistema de gerenciamento de presença dos alunos do projeto de extensão ELLP (E
 - Fabio Nascimento Dos Santos Junior
 - Eduardo Gabriel De Freitas
 - Jéssica Mota Pereira
+
+## URL DE HML
+1- Back end  ( sem UI somente rotas como o postman )
+http://centraloficina2-hml.azurewebsites.net
+
+exemplo de como usar 
+2- Front-end
+https://centraloficina2-hml.azurewebsites.net/Student/login?email=problemaesonamangueira@gmail.com&password=123
+
 ## Como rodar via Docker
 
 Para rodar o projeto utilizando Docker, siga os passos abaixo (DSV): 
