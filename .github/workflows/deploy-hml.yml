@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - release
+      - Feature/Fabio
 
 jobs:
   deploy-to-hml:
@@ -13,10 +14,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
       - name: Login to Azure
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Login to Azure Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -33,53 +44,67 @@ jobs:
           echo "Building .NET project..."
           dotnet build Back/WebApia/ --configuration release
 
-      - name: Debugging Step - Check Dockerfile Path
+      - name: Verify project structure
         run: |
-          echo "Verifying Dockerfile path..."
-          ls -al Back/
+          echo "Verifying project structure..."
+          ls -R Back/
           if [ ! -f "Back/Dockerfile" ]; then
-            echo "ERROR: Dockerfile not found in the expected path."
+            echo "ERROR: Dockerfile not found in Back directory"
             exit 1
           fi
 
-      - name: Build Docker image
-        run: |
-          echo "Building Docker image..."
-          docker build -f Back/Dockerfile -t ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml ./Back
+      - name: Build and Push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./Back
+          file: ./Back/Dockerfile
+          push: true
+          tags: ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml
+          cache-from: type=registry,ref=${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml
+          cache-to: type=inline
 
-      - name: Debugging Step - Validate Variables
+      - name: Verify App Service exists
         run: |
-          echo "Validating variables..."
-          echo "ACR_LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }}"
-          echo "ACR_USERNAME: ${{ secrets.ACR_USERNAME }}"
-          # Do not echo ACR_PASSWORD for security reasons.
-
-      - name: Login to ACR
-        run: |
-          echo "Logging in to ACR..."
-          if [ -z "${{ secrets.ACR_PASSWORD }}" ]; then
-            echo "ERROR: ACR_PASSWORD is empty or not set."
-            exit 1
+          echo "Verifying App Service exists..."
+          if ! az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-Hml &>/dev/null; then
+            echo "App Service 'centralOficina2-Hml' not found. Creating it..."
+            az webapp create \
+              --name centralOficina2-Hml \
+              --resource-group CentralOficina2-Hml \
+              --plan CentralOficina2Plan \
+              --runtime "DOCKER|microsoft/dotnet:8.0"
           fi
-          echo "${{ secrets.ACR_PASSWORD }}" | docker login "${{ secrets.ACR_LOGIN_SERVER }}" -u "${{ secrets.ACR_USERNAME }}" --password-stdin
 
-      - name: Push Docker image to ACR
+      - name: Configure Hml App Service
         run: |
-          echo "Pushing Docker image to ACR..."
-          docker push ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml
-
-      - name: Configure Hml App Service to use ACR image
-        run: |
-          echo "Configuring Hml App Service to use ACR image..."
+          echo "Configuring Hml App Service..."
           az webapp config container set \
             --name centralOficina2-Hml \
-            --resource-group CentralOficina2-Dev \
-            --docker-custom-image-name ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml \
-            --docker-registry-server-url https://${{ secrets.ACR_LOGIN_SERVER }} \
-            --docker-registry-server-user ${{ secrets.ACR_USERNAME }} \
-            --docker-registry-server-password ${{ secrets.ACR_PASSWORD }}
+            --resource-group CentralOficina2-Hml \
+            --container-image-name ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml \
+            --container-registry-url https://${{ secrets.ACR_LOGIN_SERVER }} \
+            --container-registry-user ${{ secrets.ACR_USERNAME }} \
+            --container-registry-password ${{ secrets.ACR_PASSWORD }}
+
+      - name: Restart App Service
+        run: |
+          echo "Restarting App Service..."
+          az webapp restart --name centralOficina2-Hml --resource-group CentralOficina2-Hml
 
       - name: Validate Deployment
         run: |
           echo "Validating deployment..."
-          az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-Dev --query state
+          deployment_status=$(az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-Hml --query state -o tsv)
+          echo "Deployment Status: $deployment_status"
+          if [ "$deployment_status" != "Running" ]; then
+            echo "WARNING: App Service is not in Running state"
+            exit 1
+          fi
+
+      - name: Deployment Summary
+        run: |
+          echo "Deployment Summary:"
+          echo "- Image: ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml"
+          echo "- App Service: centralOficina2-Hml"
+          echo "- Resource Group: CentralOficina2-Hml"
+          echo "- Status: Success"
