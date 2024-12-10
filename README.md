@@ -22,6 +22,7 @@ docker-compose up
 OBS: No futuro, as rotas de homologação (HML) e produção (PRD) estarão configuradas no ambiente da Azure. Isso permitirá uma maior escalabilidade e gestão centralizada das aplicações.
 
 Aproveito para deixar abaixo O ideal de como as pipelines terão que rodar:
+              
 ![image](https://github.com/user-attachments/assets/9f9d49ad-ff0e-45c5-b264-50afc9b10ec4)
 
 ## Como funciona o repositorio referente ao deploy
