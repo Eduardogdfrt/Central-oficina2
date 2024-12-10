@@ -29,6 +29,7 @@ jobs:
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
+      # Backend deployment steps
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
@@ -53,7 +54,7 @@ jobs:
             exit 1
           fi
 
-      - name: Build and Push Docker image
+      - name: Build and Push Backend Docker image
         uses: docker/build-push-action@v5
         with:
           context: ./Back
@@ -63,7 +64,7 @@ jobs:
           cache-from: type=registry,ref=${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml
           cache-to: type=inline
 
-      - name: Verify App Service exists
+      - name: Verify Backend App Service exists
         run: |
           echo "Verifying App Service exists..."
           if ! az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-Hml &>/dev/null; then
@@ -75,9 +76,9 @@ jobs:
               --runtime "DOCKER|microsoft/dotnet:8.0"
           fi
 
-      - name: Configure Hml App Service
+      - name: Configure Backend App Service
         run: |
-          echo "Configuring Hml App Service..."
+          echo "Configuring Backend App Service..."
           az webapp config container set \
             --name centralOficina2-Hml \
             --resource-group CentralOficina2-Hml \
@@ -86,25 +87,95 @@ jobs:
             --container-registry-user ${{ secrets.ACR_USERNAME }} \
             --container-registry-password ${{ secrets.ACR_PASSWORD }}
 
-      - name: Restart App Service
+      - name: Restart Backend App Service
         run: |
-          echo "Restarting App Service..."
+          echo "Restarting Backend App Service..."
           az webapp restart --name centralOficina2-Hml --resource-group CentralOficina2-Hml
 
-      - name: Validate Deployment
+      # Frontend deployment steps
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install Frontend Dependencies
         run: |
-          echo "Validating deployment..."
-          deployment_status=$(az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-Hml --query state -o tsv)
-          echo "Deployment Status: $deployment_status"
-          if [ "$deployment_status" != "Running" ]; then
-            echo "WARNING: App Service is not in Running state"
+          echo "Installing frontend dependencies..."
+          cd front
+          npm install
+
+      - name: Build Frontend
+        run: |
+          echo "Building frontend..."
+          cd front
+          npm run build
+          
+      - name: Build and Push Frontend Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./front
+          file: ./front/Dockerfile
+          push: true
+          tags: ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2-frontend:hml
+          cache-from: type=registry,ref=${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2-frontend:hml
+          cache-to: type=inline
+
+      - name: Verify Frontend App Service exists
+        run: |
+          echo "Verifying Frontend App Service exists..."
+          if ! az webapp show --name centralOficina2-frontend-hml --resource-group CentralOficina2-Hml &>/dev/null; then
+            echo "Frontend App Service not found. Creating it..."
+            az webapp create \
+              --name centralOficina2-frontend-hml \
+              --resource-group CentralOficina2-Hml \
+              --plan CentralOficina2Plan \
+              --runtime "DOCKER|node:16"
+          fi
+
+      - name: Configure Frontend App Service
+        run: |
+          echo "Configuring Frontend App Service..."
+          az webapp config container set \
+            --name centralOficina2-frontend-hml \
+            --resource-group CentralOficina2-Hml \
+            --container-image-name ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2-frontend:hml \
+            --container-registry-url https://${{ secrets.ACR_LOGIN_SERVER }} \
+            --container-registry-user ${{ secrets.ACR_USERNAME }} \
+            --container-registry-password ${{ secrets.ACR_PASSWORD }}
+
+      - name: Restart Frontend App Service
+        run: |
+          echo "Restarting Frontend App Service..."
+          az webapp restart --name centralOficina2-frontend-hml --resource-group CentralOficina2-Hml
+
+      - name: Validate Deployments
+        run: |
+          echo "Validating deployments..."
+          
+          # Validate Backend
+          backend_status=$(az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-Hml --query state -o tsv)
+          echo "Backend Deployment Status: $backend_status"
+          if [ "$backend_status" != "Running" ]; then
+            echo "WARNING: Backend App Service is not in Running state"
+            exit 1
+          fi
+          
+          # Validate Frontend
+          frontend_status=$(az webapp show --name centralOficina2-frontend-hml --resource-group CentralOficina2-Hml --query state -o tsv)
+          echo "Frontend Deployment Status: $frontend_status"
+          if [ "$frontend_status" != "Running" ]; then
+            echo "WARNING: Frontend App Service is not in Running state"
             exit 1
           fi
 
       - name: Deployment Summary
         run: |
           echo "Deployment Summary:"
+          echo "Backend:"
           echo "- Image: ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml"
           echo "- App Service: centralOficina2-Hml"
-          echo "- Resource Group: CentralOficina2-Hml"
-          echo "- Status: Success"
+          echo "Frontend:"
+          echo "- Image: ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2-frontend:hml"
+          echo "- App Service: centralOficina2-frontend-hml"
+          echo "Resource Group: CentralOficina2-Hml"
+          echo "Status: Success"
