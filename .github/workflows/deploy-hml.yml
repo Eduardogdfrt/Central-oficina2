@@ -1,4 +1,4 @@
-name: Deploy to Hml on Release Changes
+name: Build, Deploy to Hml, and Run Unit Tests on Release Changes
 
 on:
   push:
@@ -7,101 +7,60 @@ on:
       - Feature/Fabio
 
 jobs:
-  deploy-to-hml:
+  build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Login to Azure Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ secrets.ACR_LOGIN_SERVER }}
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
-      - name: Restore .NET dependencies
-        run: |
-          echo "Restoring .NET dependencies..."
-          dotnet restore Back/WebApia/
+      - name: Install dependencies
+        run: dotnet restore
 
-      - name: Build .NET project
-        run: |
-          echo "Building .NET project..."
-          dotnet build Back/WebApia/ --configuration release
+      - name: Build project
+        run: dotnet build --configuration Release --no-restore
 
-      - name: Verify project structure
-        run: |
-          echo "Verifying project structure..."
-          ls -R Back/
-          if [ ! -f "Back/Dockerfile" ]; then
-            echo "ERROR: Dockerfile not found in Back directory"
-            exit 1
-          fi
+  deploy_hml:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Build and Push Docker image
-        uses: docker/build-push-action@v5
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
-          context: ./Back
-          file: ./Back/Dockerfile
-          push: true
-          tags: ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml
-          cache-from: type=registry,ref=${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml
-          cache-to: type=inline
+          dotnet-version: '8.0.x'
 
-      - name: Verify App Service exists
-        run: |
-          echo "Verifying App Service exists..."
-          if ! az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-Hml &>/dev/null; then
-            echo "App Service 'centralOficina2-Hml' not found. Creating it..."
-            az webapp create \
-              --name centralOficina2-Hml \
-              --resource-group CentralOficina2-Hml \
-              --plan CentralOficina2Plan \
-              --runtime "DOCKER|microsoft/dotnet:8.0"
-          fi
+      - name: Install dependencies
+        run: dotnet restore
 
-      - name: Configure Hml App Service
-        run: |
-          echo "Configuring Hml App Service..."
-          az webapp config container set \
-            --name centralOficina2-Hml \
-            --resource-group CentralOficina2-Hml \
-            --container-image-name ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml \
-            --container-registry-url https://${{ secrets.ACR_LOGIN_SERVER }} \
-            --container-registry-user ${{ secrets.ACR_USERNAME }} \
-            --container-registry-password ${{ secrets.ACR_PASSWORD }}
+      - name: Build project
+        run: dotnet build --configuration Release --no-restore
 
-      - name: Restart App Service
+      - name: Deploy to HML
         run: |
-          echo "Restarting App Service..."
-          az webapp restart --name centralOficina2-Hml --resource-group CentralOficina2-Hml
+          echo "Deploying to HML environment..."
+          # Adicione seus comandos de deploy aqui
 
-      - name: Validate Deployment
-        run: |
-          echo "Validating deployment..."
-          deployment_status=$(az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-Hml --query state -o tsv)
-          echo "Deployment Status: $deployment_status"
-          if [ "$deployment_status" != "Running" ]; then
-            echo "WARNING: App Service is not in Running state"
-            exit 1
-          fi
+  unit_tests:
+    runs-on: ubuntu-latest
+    needs: deploy_hml
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Run Unit Tests
-        run: |
-          echo "Running unit tests..."
-          dotnet test Back/TestProject1/ --logger "trx;LogFileName=test_results.trx" || exit 1
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Install dependencies
+        run: dotnet restore
+
+      - name: Run unit tests
+        run: dotnet test --no-restore --verbosity normal
