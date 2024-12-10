@@ -5,13 +5,15 @@ services:
     build:
       context: ./Back
       dockerfile: Dockerfile
+      args:
+        FRONTEND_BUILD_PATH: ./front/build
     ports:
       - "5000:5000"
     environment:
       - ASPNETCORE_URLS=http://+:5000
-      - ASPNETCORE_ENVIRONMENT=Development
-    volumes:
-      - ./front/build:/app/wwwroot  # Monta o build do frontend no wwwroot do backend
+      - ASPNETCORE_ENVIRONMENT=Production
+    networks:
+      - central-network
 
   front:
     build:
@@ -23,3 +25,9 @@ services:
       - back
     environment:
       - REACT_APP_API_URL=/api
+    networks:
+      - central-network
+
+networks:
+  central-network:
+    driver: bridge

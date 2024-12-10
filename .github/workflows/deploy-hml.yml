@@ -22,7 +22,6 @@ jobs:
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      # Install Docker Compose
       - name: Install Docker Compose
         run: |
           sudo curl -L "https://github.com/docker/compose/releases/download/v2.23.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
@@ -41,22 +40,19 @@ jobs:
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
-      # Build and Push Images using docker-compose
       - name: Build and Push Images
         run: |
           # Get the project name for tagging
           PROJECT_NAME=$(basename $(pwd) | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
           echo "Project name: $PROJECT_NAME"
-          
-          # Build the frontend
+
+          # Build and tag frontend image
           docker-compose build front
-          # Tag the frontend image correctly
           docker tag ${PROJECT_NAME}_front:latest centraloficina2acr.azurecr.io/central-oficina2-frontend:hml
           docker push centraloficina2acr.azurecr.io/central-oficina2-frontend:hml
 
-          # Build the backend
+          # Build and tag backend image
           docker-compose build back
-          # Tag the backend image with the correct existing image name
           docker tag ${PROJECT_NAME}_back:latest centraloficina2acr.azurecr.io/central-oficina2:hml
           docker push centraloficina2acr.azurecr.io/central-oficina2:hml
 
@@ -70,11 +66,13 @@ jobs:
               --resource-group CentralOficina2-Hml \
               --plan CentralOficina2Plan \
               --runtime "DOCKER|linux"
+          else
+            echo "App Service centralOficina2-Hml already exists."
           fi
 
-      - name: Configure App Service
+      - name: Configure Backend App Service
         run: |
-          echo "Configuring App Service..."
+          echo "Configuring Backend App Service..."
           az webapp config container set \
             --name centralOficina2-Hml \
             --resource-group CentralOficina2-Hml \
@@ -83,25 +81,54 @@ jobs:
             --container-registry-user ${{ secrets.ACR_USERNAME }} \
             --container-registry-password ${{ secrets.ACR_PASSWORD }}
 
+      - name: Configure Frontend App Service
+        run: |
+          echo "Configuring Frontend App Service..."
+          if ! az webapp show --name centralOficina2-frontend-hml --resource-group CentralOficina2-Hml &>/dev/null; then
+            echo "Frontend App Service not found. Creating it..."
+            az webapp create \
+              --name centralOficina2-frontend-hml \
+              --resource-group CentralOficina2-Hml \
+              --plan CentralOficina2Plan \
+              --runtime "DOCKER|linux"
+          fi
+          az webapp config container set \
+            --name centralOficina2-frontend-hml \
+            --resource-group CentralOficina2-Hml \
+            --container-image-name centraloficina2acr.azurecr.io/central-oficina2-frontend:hml \
+            --container-registry-url https://centraloficina2acr.azurecr.io \
+            --container-registry-user ${{ secrets.ACR_USERNAME }} \
+            --container-registry-password ${{ secrets.ACR_PASSWORD }}
+
       - name: Validate Deployments
         run: |
           echo "Validating deployments..."
-          
+
           # Validate Backend
-          backend_status=$(az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-Hml --query state -o tsv)
-          echo "Backend Deployment Status: $backend_status"
-          if [ "$backend_status" != "Running" ]; then
-            echo "WARNING: Backend App Service is not in Running state"
-            exit 1
-          fi
-          
+          max_retries=10
+          sleep_time=15
+          retries=0
+          while [ "$(az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-Hml --query state -o tsv)" != "Running" ]; do
+            echo "Waiting for backend to be in Running state..."
+            sleep $sleep_time
+            retries=$((retries + 1))
+            if [ "$retries" -ge "$max_retries" ]; then
+              echo "Backend did not reach Running state within expected time."
+              exit 1
+            fi
+          done
+
           # Validate Frontend
-          frontend_status=$(az webapp show --name centralOficina2-frontend-hml --resource-group CentralOficina2-Hml --query state -o tsv)
-          echo "Frontend Deployment Status: $frontend_status"
-          if [ "$frontend_status" != "Running" ]; then
-            echo "WARNING: Frontend App Service is not in Running state"
-            exit 1
-          fi
+          retries=0
+          while [ "$(az webapp show --name centralOficina2-frontend-hml --resource-group CentralOficina2-Hml --query state -o tsv)" != "Running" ]; do
+            echo "Waiting for frontend to be in Running state..."
+            sleep $sleep_time
+            retries=$((retries + 1))
+            if [ "$retries" -ge "$max_retries" ]; then
+              echo "Frontend did not reach Running state within expected time."
+              exit 1
+            fi
+          done
 
       - name: Deployment Summary
         run: |
