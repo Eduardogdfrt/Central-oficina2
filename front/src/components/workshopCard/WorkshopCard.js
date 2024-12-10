@@ -1,13 +1,13 @@
 import React from "react";
 import "./WorkshopCard.css";
 
-const WorkshopCard = ({ image, text }) => {
+const WorkshopCard = ({ text, link }) => {
   return (
     <div className="card-container">
       <div className="card">
-        <img src={image} alt="workshop" className="img-card" />
+        <p className="text-card">{text}</p>
       </div>
-      <p className="text-card">{text}</p>
+      <a href={link} className="card-link">Ver detalhes</a>
     </div>
   );
 };
