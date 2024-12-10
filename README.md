@@ -7,7 +7,7 @@ Sistema de gerenciamento de presença dos alunos do projeto de extensão ELLP (E
 - Jéssica Mota Pereira
 ## Como rodar via Docker
 
-Para rodar o projeto utilizando Docker, siga os passos abaixo:
+Para rodar o projeto utilizando Docker, siga os passos abaixo (DSV): 
 
 1- Certifique-se de ter o Docker e o Docker Compose instalados em sua máquina.
 
@@ -37,7 +37,7 @@ teste: Branch utilizada para integração e testes contínuos.
 release: Branch usada para preparar uma nova versão para deploy.
 prd: Branch principal que representa a versão de produção.
 
-## Processo de Deploy
+## Processo de Deploy (HML e PRD)
 Desenvolvimento: O trabalho de desenvolvimento ocorre nas branches front e back, onde novas funcionalidades e correções são implementadas.
 
 Testes: Após a conclusão do desenvolvimento, as mudanças são integradas na branch teste para realização de testes contínuos e integração.
