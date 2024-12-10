@@ -73,7 +73,7 @@ jobs:
           echo "Configuring Hml App Service to use ACR image..."
           az webapp config container set \
             --name centralOficina2-Hml \
-            --resource-group CentralOficina2-RG \
+            --resource-group CentralOficina2-Dev \
             --docker-custom-image-name ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml \
             --docker-registry-server-url https://${{ secrets.ACR_LOGIN_SERVER }} \
             --docker-registry-server-user ${{ secrets.ACR_USERNAME }} \
@@ -82,4 +82,4 @@ jobs:
       - name: Validate Deployment
         run: |
           echo "Validating deployment..."
-          az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-RG --query state
+          az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-Dev --query state
