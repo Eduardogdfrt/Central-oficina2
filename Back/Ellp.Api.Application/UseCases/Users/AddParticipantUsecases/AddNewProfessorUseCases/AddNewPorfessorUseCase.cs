@@ -21,29 +21,27 @@ namespace Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewProfe
         {
             try
             {
-                // Verificar se o email já está cadastrado
+
                 var existingProfessor = await _professorRepository.GetByEmailAsync(request.Email);
                 if (existingProfessor != null)
                 {
                     return new Response { Message = "Email já está em uso" };
                 }
 
-                // Hashear a senha
-                string hashedPassword = PasswordHasher.HashPassword(request.Password);
+      
 
-                // Criar uma nova instância de Professor usando o construtor
+        
                 var newProfessor = new Professor(
-                    professorId: request.ProfessorId, // Usar o ID fornecido
+                    professorId: request.ProfessorId, 
                     name: request.Name,
                     specialty: request.Specialty,
-                    password: hashedPassword,
+                    password: request.Password,
                     email: request.Email
                 );
 
-                // Adicionar ao repositório
                 await _professorRepository.AddNewProfessorAsync(newProfessor);
 
-                return new Response { Message = "Professor criado com sucesso" };
+                return new Response { Message = "Professor criado com  ID "+ newProfessor.ProfessorId+ " criado com sucesso" };
             }
             catch (Exception ex)
             {

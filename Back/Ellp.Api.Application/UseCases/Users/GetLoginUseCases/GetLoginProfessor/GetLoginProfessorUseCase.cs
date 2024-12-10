@@ -23,7 +23,7 @@ namespace Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginProfessor
             try
             {
                 var professor = await _professorRepository.GetAllProfessorInfosAsync(request.ProfessorId, request.Password);
-                if (professor == null || !PasswordHasher.VerifyPassword(request.Password, professor.Password))
+                if (professor == null)
                 {
                     return new GetLoginProfessorOutput { Success = false, Message = "Invalid professor ID or password" };
                 }

@@ -8,12 +8,12 @@ namespace Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewStude
         public static Student ToEntity(AddNewStudentInput input)
         {
             return new Student(
-                id: 0, // Supondo que o ID será gerado automaticamente pelo banco de dados
+                id: 0,
                 name: input.Name,
                 email: input.Email,
-                password: PasswordHasher.HashPassword(input.Password), // Hashear a senha recebida
+                password: input.Password, 
                 BirthDate: input.BirthDate,
-                IsAuthenticated: false // Valor padrão
+                IsAuthenticated: false 
             );
         }
     }
