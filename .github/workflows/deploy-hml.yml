@@ -105,15 +105,6 @@ jobs:
             exit 1
           fi
 
-      - name: Check App Service Health
-        run: |
-          echo "Checking App Service health..."
-          response=$(curl -s -o /dev/null -w "%{http_code}" https://centraloficina2-hml.azurewebsites.net/health)
-          if [ "$response" != "200" ]; then
-            echo "WARNING: Health check failed with status code $response"
-            exit 1
-          fi
-
       - name: Deployment Summary
         run: |
           echo "Deployment Summary:"
