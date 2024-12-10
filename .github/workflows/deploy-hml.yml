@@ -40,21 +40,11 @@ jobs:
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
-      - name: Build and Push Images
+      - name: Use Existing Image
         run: |
-          # Get the project name for tagging
-          PROJECT_NAME=$(basename $(pwd) | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
-          echo "Project name: $PROJECT_NAME"
-
-          # Build and tag frontend image
-          docker-compose build front
-          docker tag ${PROJECT_NAME}_front:latest centraloficina2acr.azurecr.io/central-oficina2-frontend:hml
+          echo "Using existing image for deployment..."
+          docker tag centraloficina2acr.azurecr.io/central-oficina2:hml centraloficina2acr.azurecr.io/central-oficina2-frontend:hml
           docker push centraloficina2acr.azurecr.io/central-oficina2-frontend:hml
-
-          # Build and tag backend image
-          docker-compose build back
-          docker tag ${PROJECT_NAME}_back:latest centraloficina2acr.azurecr.io/central-oficina2:hml
-          docker push centraloficina2acr.azurecr.io/central-oficina2:hml
 
       - name: Verify App Service exists
         run: |
@@ -105,5 +95,7 @@ jobs:
           echo "Backend:"
           echo "- Image: centraloficina2acr.azurecr.io/central-oficina2:hml"
           echo "- App Service: centralOficina2-Hml"
+          echo "Frontend:"
+          echo "- Image: centraloficina2acr.azurecr.io/central-oficina2-frontend:hml"
           echo "Resource Group: CentralOficina2-Hml"
           echo "Status: Success"
