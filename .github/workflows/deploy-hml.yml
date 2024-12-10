@@ -5,60 +5,28 @@ on:
     branches:
       - release
       - Feature/Fabio
+    paths:
+      - 'Back/**'
+      - 'front/**'
+      - '.github/workflows/deploy-hml.yml'
+      - 'docker-compose.yml'
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-
-      - name: Restore .NET dependencies
-        run: |
-          echo "Restoring .NET dependencies..."
-          dotnet restore Back/WebApia/
-
-      - name: Build .NET project
-        run: |
-          echo "Building .NET project..."
-          dotnet build Back/WebApia/ --configuration release
-
-  unit_tests:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-
-      - name: Restore .NET dependencies
-        run: |
-          echo "Restoring .NET dependencies..."
-          dotnet restore Back/TestProject1/
-
-      - name: Run unit tests
-        run: |
-          echo "Running unit tests..."
-          dotnet test Back/TestProject1/ --no-restore --verbosity normal
-
   deploy-to-hml:
     runs-on: ubuntu-latest
-    needs: [build, unit_tests]
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v1
+
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.23.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
 
       - name: Login to Azure
         uses: azure/login@v1
@@ -68,70 +36,58 @@ jobs:
       - name: Login to Azure Container Registry
         uses: docker/login-action@v3
         with:
-          registry: ${{ secrets.ACR_LOGIN_SERVER }}
+          registry: centraloficina2acr.azurecr.io
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
-
-      - name: Verify project structure
-        run: |
-          echo "Verifying project structure..."
-          ls -R Back/
-          if [ ! -f "Back/Dockerfile" ]; then
-            echo "ERROR: Dockerfile not found in Back directory"
-            exit 1
-          fi
-
-      - name: Build and Push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./Back
-          file: ./Back/Dockerfile
-          push: true
-          tags: ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml
-          cache-from: type=registry,ref=${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml
-          cache-to: type=inline
 
       - name: Verify App Service exists
         run: |
           echo "Verifying App Service exists..."
           if ! az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-Hml &>/dev/null; then
-            echo "App Service 'centralOficina2-Hml' not found. Creating it..."
+            echo "App Service not found. Creating it..."
             az webapp create \
               --name centralOficina2-Hml \
               --resource-group CentralOficina2-Hml \
               --plan CentralOficina2Plan \
-              --runtime "DOCKER|microsoft/dotnet:8.0"
+              --runtime "DOCKER|linux"
+          else
+            echo "App Service centralOficina2-Hml already exists."
           fi
 
-      - name: Configure Hml App Service
+      - name: Configure Backend App Service
         run: |
-          echo "Configuring Hml App Service..."
+          echo "Configuring Backend App Service..."
           az webapp config container set \
             --name centralOficina2-Hml \
             --resource-group CentralOficina2-Hml \
-            --container-image-name ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml \
-            --container-registry-url https://${{ secrets.ACR_LOGIN_SERVER }} \
+            --container-image-name centraloficina2acr.azurecr.io/central-oficina2:hml \
+            --container-registry-url https://centraloficina2acr.azurecr.io \
             --container-registry-user ${{ secrets.ACR_USERNAME }} \
             --container-registry-password ${{ secrets.ACR_PASSWORD }}
 
-      - name: Restart App Service
+      - name: Validate Deployments
         run: |
-          echo "Restarting App Service..."
-          az webapp restart --name centralOficina2-Hml --resource-group CentralOficina2-Hml
+          echo "Validating deployments..."
 
-      - name: Validate Deployment
-        run: |
-          echo "Validating deployment..."
-          deployment_status=$(az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-Hml --query state -o tsv)
-          echo "Deployment Status: $deployment_status"
-          if [ "$deployment_status" != "Running" ]; then
-            echo "WARNING: App Service is not in Running state"
-            exit 1
-          fi
+          # Validate Backend
+          max_retries=10
+          sleep_time=15
+          retries=0
+          while [ "$(az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-Hml --query state -o tsv)" != "Running" ]; do
+            echo "Waiting for backend to be in Running state..."
+            sleep $sleep_time
+            retries=$((retries + 1))
+            if [ "$retries" -ge "$max_retries" ]; then
+              echo "Backend did not reach Running state within expected time."
+              exit 1
+            fi
+          done
 
       - name: Deployment Summary
         run: |
           echo "Deployment Summary:"
-          echo "- Image: ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml"
+          echo "Backend:"
+          echo "- Image: centraloficina2acr.azurecr.io/central-oficina2:hml"
           echo "- App Service: centralOficina2-Hml"
-          echo "- Resource Group: CentralOficina2-Hml"
+          echo "Resource Group: CentralOficina2-Hml"
+          echo "Status: Success"

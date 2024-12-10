@@ -49,7 +49,7 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
     typeof(AddWorkshopUseCase).Assembly
 ));
 
-// Configuração do CORS
+// ConfiguraÃ§Ã£o do CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowedOrigins", policy =>
@@ -63,6 +63,13 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Adicione estas linhas antes do app.UseRouting()
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
+app.UseRouting();
+app.UseCors("AllowedOrigins");
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -74,7 +81,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 
-app.UseCors("AllowedOrigins"); // Certifique-se de que UseCors seja chamado antes de UseAuthorization
 app.UseAuthorization();
 app.MapControllers();
+app.MapFallbackToFile("index.html");
+
 app.Run();

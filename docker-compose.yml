@@ -1,6 +1,20 @@
 version: '3.8'
 
 services:
+  back:
+    build:
+      context: ./Back
+      dockerfile: Dockerfile
+      args:
+        FRONTEND_BUILD_PATH: ./front/build
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_URLS=http://+:5000
+      - ASPNETCORE_ENVIRONMENT=Production
+    networks:
+      - central-network
+
   front:
     build:
       context: ./front
@@ -9,10 +23,11 @@ services:
       - "3000:80"
     depends_on:
       - back
+    environment:
+      - REACT_APP_API_URL=/api
+    networks:
+      - central-network
 
-  back:
-    build:
-      context: ./back
-      dockerfile: Dockerfile
-    ports:
-      - "5000:5000"
+networks:
+  central-network:
+    driver: bridge
