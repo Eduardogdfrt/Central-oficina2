@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Moq;
 using Xunit;
-using Ellp.Api.Application.UseCases.AddWorkshops;
 using Ellp.Api.Application.Utilities;
 using Ellp.Api.WebApi.Controllers;
+using Ellp.Api.Application.UseCases.Workshops.AddWorkshops;
+using Ellp.Api.Application.UseCases.Workshops.GetWorkshopById;
+using Microsoft.AspNetCore.Http;
 
 namespace Ellp.Api.UnitTest.Controllers
 {
@@ -50,7 +52,25 @@ namespace Ellp.Api.UnitTest.Controllers
 
             _mediatorMock.Verify(m => m.Send(It.Is<AddWorkshopInput>(i => i.Name == input.Name && i.Data == input.Data), It.IsAny<CancellationToken>()), Times.Once);
         }
+        [Fact]
+        public async Task GetWorkshopById_ShouldReturnNotFound_WhenWorkshopIsNotFound()
+        {
+            // Arrange
+            var workshopId = 1;
+            var result = GetWorkshopByIdOutput.ToOutputIfNotFound();
 
-    
+            _mediatorMock
+                .Setup(m => m.Send(It.Is<GetWorkshopByIdInput>(i => i.Id == workshopId), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(result);
+
+            // Act
+            var response = await _controller.GetWorkshopById(workshopId);
+
+            // Assert
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(response);
+            Assert.Equal(StatusCodes.Status404NotFound, notFoundResult.StatusCode);
+            Assert.Equal(result, notFoundResult.Value);
+        }
+
     }
 }

@@ -5,5 +5,7 @@ namespace Ellp.Api.Application.Interfaces
     public interface IWorkshopRepository
     {
         Task AddAsync(Workshop workshop);
+        Task<Workshop> GetWorkshopByIdAsync(int id);
+
     }
 }

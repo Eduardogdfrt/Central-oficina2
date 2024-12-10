@@ -8,9 +8,10 @@ using Moq;
 using Xunit;
 using MediatR;
 using Ellp.Api.WebApi.Controllers;
-using Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginStudent;
-using Ellp.Api.Application.UseCases.AddParticipantUsecases.AddNewStudentUseCases;
+using Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginStudent;
 using AppResponse = Ellp.Api.Application.Utilities.Response;
+using Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewStudentUseCases;
+
 
 
 namespace Ellp.Api.UnitTest.Controllers
@@ -37,7 +38,7 @@ namespace Ellp.Api.UnitTest.Controllers
             var email = "student@example.com";
             var password = "correctPassword";
             var input = new GetLoginStudentInput { Email = email, Password = password };
-            var result = new GetLoginStudentMapper
+            var result = new GetLoginStudentOutput
             {
                 Success = true,
                 StudentId = 1,
@@ -65,7 +66,7 @@ namespace Ellp.Api.UnitTest.Controllers
             var email = "student@example.com";
             var password = "wrongPassword";
             var input = new GetLoginStudentInput { Email = email, Password = password };
-            var result = new GetLoginStudentMapper
+            var result = new GetLoginStudentOutput
             {
                 Success = false,
                 Message = "Email ou senha inválidos"

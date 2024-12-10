@@ -1,9 +1,10 @@
 ﻿using Moq;
 using Microsoft.Extensions.Logging;
 using Ellp.Api.Application.Interfaces;
-using Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginProfessor;
 using Ellp.Api.Domain.Entities;
 using Xunit;
+using Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginProfessor;
+using Ellp.Api.Application.Utilities;
 
 namespace Ellp.Api.UnitTest.UseCase.ProfessorTest
 {
@@ -26,7 +27,8 @@ namespace Ellp.Api.UnitTest.UseCase.ProfessorTest
             // Arrange
             var professorId = 1;
             var password = "password";
-            var professor = new Professor(professorId, "John Doe", "Math", password, "john.doe@example.com");
+            var hashedPassword = PasswordHasher.HashPassword(password);
+            var professor = new Professor(professorId, "John Doe", "Math", hashedPassword, "john.doe@example.com");
 
             _professorRepositoryMock
                 .Setup(repo => repo.GetAllProfessorInfosAsync(professorId, password))

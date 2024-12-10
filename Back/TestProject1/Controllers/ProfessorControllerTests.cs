@@ -6,14 +6,15 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 using MediatR;
-using Ellp.Api.Application.UseCases.AddParticipantUsecases.AddNewProfessorUseCases;
-using Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginProfessor;
+using Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginProfessor;
 using Ellp.Api.WebApi.Controllers;
 using Ellp.Api.Application.Utilities;
 
 // Definir aliases para evitar ambiguidade
 using UtilitiesResponse = Ellp.Api.Application.Utilities.Response;
 using ControllersResponse = Ellp.Api.WebApi.Controllers.Response;
+using Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewProfessorUseCases;
+using Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginProfessor;
 
 namespace Ellp.Api.UnitTest.Controllers
 {
@@ -37,7 +38,7 @@ namespace Ellp.Api.UnitTest.Controllers
             var professorId = 23106789;
             var password = "Teste123";
             var input = new GetLoginProfessorInput { ProfessorId = professorId, Password = password };
-            var result = new GetLoginProfessorMapper
+            var result = new GetLoginProfessorOutput
             {
                 Success = true,
                 ProfessorId = professorId,
@@ -65,7 +66,7 @@ namespace Ellp.Api.UnitTest.Controllers
             var professorId = 1;
             var password = "wrongpassword";
             var input = new GetLoginProfessorInput { ProfessorId = professorId, Password = password };
-            var result = new GetLoginProfessorMapper { Success = false, Message = "Invalid professor ID or password" };
+            var result = new GetLoginProfessorOutput { Success = false, Message = "Invalid professor ID or password" };
 
             _mediatorMock
                 .Setup(m => m.Send(It.Is<GetLoginProfessorInput>(i => i.ProfessorId == professorId && i.Password == password), It.IsAny<CancellationToken>()))

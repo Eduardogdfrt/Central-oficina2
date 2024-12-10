@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using Ellp.Api.Application.UseCases.AddWorkshops;
 using Ellp.Api.Application.Utilities;
+using Ellp.Api.Application.UseCases.Workshops.AddWorkshops;
+using Ellp.Api.Application.UseCases.Workshops.GetWorkshopById;
 
 namespace Ellp.Api.WebApi.Controllers
 {
@@ -33,6 +34,19 @@ namespace Ellp.Api.WebApi.Controllers
             }
 
             return BadRequest(response);
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetWorkshopById(int id)
+        {
+            var input = new GetWorkshopByIdInput { Id = id };
+            var result = await _mediator.Send(input);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return NotFound(result);
         }
     }
 }

@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
-using Ellp.Api.Application.UseCases.AddWorkshops;
 using Ellp.Api.Application.Interfaces;
 using Ellp.Api.Domain.Entities;
 using Ellp.Api.Application.Utilities;
+using Ellp.Api.Application.UseCases.Workshops.AddWorkshops;
 
 namespace Ellp.Api.UnitTest.UseCase.WorkshopTest
 {

@@ -12,6 +12,7 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
+		<PackageReference Include="SpecFlow" Version="3.9.74" />
 	</ItemGroup>
 
 	<ItemGroup>
