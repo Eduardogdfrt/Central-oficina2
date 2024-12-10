@@ -73,7 +73,7 @@ jobs:
               --name centralOficina2-Hml \
               --resource-group CentralOficina2-Hml \
               --plan CentralOficina2Plan \
-              --runtime "DOCKER|microsoft/dotnet:8.0"
+              --runtime "DOCKER"
           fi
 
       - name: Configure Backend App Service
@@ -131,7 +131,7 @@ jobs:
               --name centralOficina2-frontend-hml \
               --resource-group CentralOficina2-Hml \
               --plan CentralOficina2Plan \
-              --runtime "DOCKER|node:16"
+              --runtime "DOCKER"
           fi
 
       - name: Configure Frontend App Service
