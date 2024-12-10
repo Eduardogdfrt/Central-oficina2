@@ -40,12 +40,6 @@ jobs:
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
-      - name: Use Existing Image
-        run: |
-          echo "Using existing image for deployment..."
-          docker tag centraloficina2acr.azurecr.io/central-oficina2:hml centraloficina2acr.azurecr.io/central-oficina2-frontend:hml
-          docker push centraloficina2acr.azurecr.io/central-oficina2-frontend:hml
-
       - name: Verify App Service exists
         run: |
           echo "Verifying App Service exists..."
@@ -95,7 +89,5 @@ jobs:
           echo "Backend:"
           echo "- Image: centraloficina2acr.azurecr.io/central-oficina2:hml"
           echo "- App Service: centralOficina2-Hml"
-          echo "Frontend:"
-          echo "- Image: centraloficina2acr.azurecr.io/central-oficina2-frontend:hml"
           echo "Resource Group: CentralOficina2-Hml"
           echo "Status: Success"
