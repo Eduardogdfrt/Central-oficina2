@@ -63,26 +63,38 @@ jobs:
           cache-from: type=registry,ref=${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml
           cache-to: type=inline
 
+      - name: Verify App Service exists
+        run: |
+          echo "Verifying App Service exists..."
+          if ! az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-Hml &>/dev/null; then
+            echo "App Service 'centralOficina2-Hml' not found. Creating it..."
+            az webapp create \
+              --name centralOficina2-Hml \
+              --resource-group CentralOficina2-Hml \
+              --plan CentralOficina2Plan \
+              --runtime "DOCKER|microsoft/dotnet:8.0"
+          fi
+
       - name: Configure Hml App Service
         run: |
           echo "Configuring Hml App Service..."
           az webapp config container set \
             --name centralOficina2-Hml \
-            --resource-group CentralOficina2-Dev \
-            --docker-custom-image-name ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml \
-            --docker-registry-server-url https://${{ secrets.ACR_LOGIN_SERVER }} \
-            --docker-registry-server-user ${{ secrets.ACR_USERNAME }} \
-            --docker-registry-server-password ${{ secrets.ACR_PASSWORD }}
+            --resource-group CentralOficina2-Hml \
+            --container-image-name ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml \
+            --container-registry-url https://${{ secrets.ACR_LOGIN_SERVER }} \
+            --container-registry-user ${{ secrets.ACR_USERNAME }} \
+            --container-registry-password ${{ secrets.ACR_PASSWORD }}
 
       - name: Restart App Service
         run: |
           echo "Restarting App Service..."
-          az webapp restart --name centralOficina2-Hml --resource-group CentralOficina2-Dev
+          az webapp restart --name centralOficina2-Hml --resource-group CentralOficina2-Hml
 
       - name: Validate Deployment
         run: |
           echo "Validating deployment..."
-          deployment_status=$(az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-Dev --query state -o tsv)
+          deployment_status=$(az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-Hml --query state -o tsv)
           echo "Deployment Status: $deployment_status"
           if [ "$deployment_status" != "Running" ]; then
             echo "WARNING: App Service is not in Running state"
@@ -94,5 +106,5 @@ jobs:
           echo "Deployment Summary:"
           echo "- Image: ${{ secrets.ACR_LOGIN_SERVER }}/central-oficina2:hml"
           echo "- App Service: centralOficina2-Hml"
-          echo "- Resource Group: CentralOficina2-Dev"
+          echo "- Resource Group: CentralOficina2-Hml"
           echo "- Status: Success"
