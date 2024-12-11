@@ -19,7 +19,7 @@ const Workshops = () => {
           <WorkshopCard image={card01} text="Robótica" link="/robotica" />
           <WorkshopCard image={card02} text="Lógica" link="/logica" />
           <WorkshopCard image={card03} text="Programação" link="/programacao" />
-          <Link to="/workshop-cadastro" className="workshop-add-button">
+           <Link to="/workshop-cadastro" className="workshop-add-button">
             <WorkshopCard image={card04} text="Adicionar" link="/workshop-cadastro" />
           </Link>
         </div>

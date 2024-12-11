@@ -18,15 +18,15 @@ const WorkshopCadastro = () => {
     const cadWorkshops = async (e) => {
         e.preventDefault();
 
-        // Formatar a data para o formato esperado pela API
-        const formattedDate = new Date(date).toISOString(); // Isso já vai gerar uma data no formato correto para a API
+
+        const formattedDate = new Date(date).toISOString(); 
 
         const workshopData = {
           name: name,
           data: formattedDate,
         };
 
-        console.log(workshopData); // Verifique os dados antes de enviar para a API
+        console.log(workshopData); 
     
         try {
           const response = await axios.post(
@@ -44,13 +44,10 @@ const WorkshopCadastro = () => {
         } catch (err) {
           console.error("Erro na solicitação:", err);
           if (err.response) {
-            // Erro retornado pela API
             setError(`Erro: ${err.response.data.message || 'Erro desconhecido'}`);
           } else if (err.request) {
-            // Erro de rede, se a requisição foi feita mas não obteve resposta
             setError("Erro de rede. Verifique sua conexão.");
           } else {
-            // Outros erros ao configurar a requisição
             setError("Erro ao configurar a solicitação.");
           }
         }

@@ -16,9 +16,9 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.get(`http://localhost:5000/Professor/login?professorId=${email}&password=${password}`);
+      const response = await axios.get(`https://centraloficina2-hml.azurewebsites.net/Professor/login?professorId=${email}&password=${password}`);
       
-      if (response.status === 200 && response.data.success) {
+      if (response.status === 200) {
         console.log("Login Successful:", response.data);
         navigate("/workshops");
       } else {
@@ -27,13 +27,10 @@ const Login = () => {
     } catch (err) {
       console.error("Erro na solicitação:", err);
       if (err.response) {
-        // A solicitação foi feita e o servidor respondeu com um status fora do intervalo de 2xx
         setError(`Erro: ${err.response.data.message}`);
       } else if (err.request) {
-        // A solicitação foi feita, mas nenhuma resposta foi recebida
         setError("Erro de rede. Verifique sua conexão.");
       } else {
-        // Algo aconteceu na configuração da solicitação que acionou um erro
         setError("Erro ao configurar a solicitação.");
       }
     }
