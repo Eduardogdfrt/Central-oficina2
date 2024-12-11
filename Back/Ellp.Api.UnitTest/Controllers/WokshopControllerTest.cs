@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Moq;
 using Xunit;
-using Ellp.Api.Application.Utilities;
 using Ellp.Api.WebApi.Controllers;
 using Ellp.Api.Application.UseCases.Workshops.AddWorkshops;
 using Ellp.Api.Application.UseCases.Workshops.GetWorkshopById;
@@ -25,7 +24,7 @@ namespace Ellp.Api.UnitTest.Controllers
         }
 
         [Fact]
-        public async Task AddWorkshop_ShouldReturnOk_WhenWorkshopIsCreatedSuccessfully()
+        public async Task AddWorkshop_ShouldReturnCreated_WhenWorkshopIsCreatedSuccessfully()
         {
             // Arrange
             var input = new AddWorkshopInput
@@ -34,7 +33,12 @@ namespace Ellp.Api.UnitTest.Controllers
                 Data = new DateTime(2024, 5, 20)
             };
 
-            var response = new Ellp.Api.Application.Utilities.Response { Message = "Workshop criado com sucesso" };
+            var response = new AddWorkshopOutput
+            {
+                Id = 1,
+                Name = input.Name,
+                Message = "Workshop criado com sucesso"
+            };
 
             _mediatorMock
                 .Setup(m => m.Send(It.IsAny<AddWorkshopInput>(), It.IsAny<CancellationToken>()))
@@ -44,20 +48,22 @@ namespace Ellp.Api.UnitTest.Controllers
             var result = await _controller.AddWorkshop(input);
 
             // Assert
-            var okResult = Assert.IsType<OkObjectResult>(result);
-            Assert.Equal(200, okResult.StatusCode);
-
-            var returnedResponse = Assert.IsType<Ellp.Api.Application.Utilities.Response>(okResult.Value);
-            Assert.Equal("Workshop criado com sucesso", returnedResponse.Message);
+            var createdAtActionResult = Assert.IsType<CreatedAtActionResult>(result);
+            Assert.Equal(StatusCodes.Status201Created, createdAtActionResult.StatusCode);
+            Assert.Equal(response, createdAtActionResult.Value);
+            Assert.Equal(nameof(WorkshopController.GetWorkshopById), createdAtActionResult.ActionName);
+            Assert.NotNull(createdAtActionResult.RouteValues);
+            Assert.Equal(response.Id, createdAtActionResult.RouteValues["id"]);
 
             _mediatorMock.Verify(m => m.Send(It.Is<AddWorkshopInput>(i => i.Name == input.Name && i.Data == input.Data), It.IsAny<CancellationToken>()), Times.Once);
         }
+
         [Fact]
         public async Task GetWorkshopById_ShouldReturnNotFound_WhenWorkshopIsNotFound()
         {
             // Arrange
             var workshopId = 1;
-            var result = GetWorkshopByIdOutput.ToOutputIfNotFound();
+            var result = new GetWorkshopByIdOutput { Success = false };
 
             _mediatorMock
                 .Setup(m => m.Send(It.Is<GetWorkshopByIdInput>(i => i.Id == workshopId), It.IsAny<CancellationToken>()))
@@ -71,6 +77,10 @@ namespace Ellp.Api.UnitTest.Controllers
             Assert.Equal(StatusCodes.Status404NotFound, notFoundResult.StatusCode);
             Assert.Equal(result, notFoundResult.Value);
         }
-
     }
 }
+
+
+
+
+

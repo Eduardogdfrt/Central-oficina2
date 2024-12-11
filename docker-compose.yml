@@ -1,23 +1,22 @@
 version: '3.8'
 
 services:
-  back:
+  frontend:
     build:
-      context: ./
-      dockerfile: Back/Dockerfile
+      context: .             
+      dockerfile: Dockerfile  
     ports:
-      - "5000:5000"
+      - "3000:3000"           
+    environment:
+      - CI=false
+
+  backend:
+    build:
+      context: .              
+      dockerfile: Dockerfile  
+    ports:
+      - "5000:5000"           
     environment:
       - ASPNETCORE_URLS=http://+:5000
       - ASPNETCORE_ENVIRONMENT=Production
-    networks:
-      - central-network
-    healthcheck:
-      test: curl --fail http://localhost:5000/ || exit 1
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-networks:
-  central-network:
-    driver: bridge
+          
