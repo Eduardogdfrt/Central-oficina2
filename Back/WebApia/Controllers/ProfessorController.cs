@@ -29,7 +29,7 @@ namespace Ellp.Api.WebApi.Controllers
             {
                 var response = await _mediator.Send(input, cancellationToken);
 
-                if (response.Message == "Professor criado com sucesso")
+                if (response.Message.Contains("Professor criado com sucesso"))
                 {
                     // Retorna CreatedAtAction para apontar para o método GetLoginProfessor
                     return CreatedAtAction(
@@ -49,7 +49,7 @@ namespace Ellp.Api.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ocorreu um erro ao adicionar um novo professor.");
-               return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Message = "Ocorreu um erro durante o processamento" });
             }
         }
 
@@ -69,11 +69,11 @@ namespace Ellp.Api.WebApi.Controllers
 
                 if (result.Success)
                 {
-                    return Ok(result); // Explicitamente retorna OkObjectResult
+                    return Ok(result);
                 }
                 else
                 {
-                    return BadRequest(new Response { Message = result.Message }); // Explicitamente retorna BadRequestObjectResult
+                    return BadRequest(new Response { Message = result.Message });
                 }
             }
             catch (Exception ex)
@@ -84,3 +84,4 @@ namespace Ellp.Api.WebApi.Controllers
         }
     }
 }
+
