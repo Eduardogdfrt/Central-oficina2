@@ -83,6 +83,15 @@ jobs:
             fi
           done
 
+      - name: Run Unit Tests
+        run: |
+          echo "Running unit tests..."
+          # Install .NET SDK (if necessary)
+          sudo apt-get update
+          sudo apt-get install -y dotnet-sdk-8.0
+          # Run the unit tests located in the TestProject1
+          dotnet test Back/TestProject1/TestProject1.csproj --configuration Release
+
       - name: Deployment Summary
         run: |
           echo "Deployment Summary:"
