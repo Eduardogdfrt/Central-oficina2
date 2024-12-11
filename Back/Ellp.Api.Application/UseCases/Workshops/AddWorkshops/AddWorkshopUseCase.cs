@@ -4,12 +4,11 @@ using System.Threading.Tasks;
 using MediatR;
 using Ellp.Api.Domain.Entities;
 using Ellp.Api.Application.Interfaces;
-using Ellp.Api.Application.Utilities;
 using Microsoft.Extensions.Logging;
 
 namespace Ellp.Api.Application.UseCases.Workshops.AddWorkshops
 {
-    public class AddWorkshopUseCase : IRequestHandler<AddWorkshopInput, Response>
+    public class AddWorkshopUseCase : IRequestHandler<AddWorkshopInput, AddWorkshopOutput>
     {
         private readonly ILogger<AddWorkshopUseCase> _logger;
         private readonly IWorkshopRepository _workshopRepository;
@@ -20,21 +19,36 @@ namespace Ellp.Api.Application.UseCases.Workshops.AddWorkshops
             _workshopRepository = workshopRepository;
         }
 
-        public async Task<Response> Handle(AddWorkshopInput request, CancellationToken cancellationToken)
+        public async Task<AddWorkshopOutput> Handle(AddWorkshopInput request, CancellationToken cancellationToken)
         {
             try
             {
-                var newWorkshop = AddWorkshopOutput.ToEntity(request);
+                var newWorkshop = new Workshop
+                {
+                    Name = request.Name,
+                    Data = request.Data
+                };
 
                 await _workshopRepository.AddAsync(newWorkshop);
 
-                return new Response { Message = "Workshop criado com sucesso" };
+                return new AddWorkshopOutput
+                {
+                    Id = newWorkshop.Id,
+                    Name = newWorkshop.Name,
+                    Message = "Workshop criado com sucesso"
+                };
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ocorreu um erro ao adicionar um novo workshop.");
-                return new Response { Message = "Ocorreu um erro durante o processamento" };
+                return new AddWorkshopOutput { Message = "Ocorreu um erro durante o processamento" };
             }
         }
     }
 }
+
+
+
+
+
+

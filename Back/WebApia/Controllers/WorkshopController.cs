@@ -18,7 +18,10 @@ namespace Ellp.Api.WebApi.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost]
+        [HttpPost("add")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> AddWorkshop([FromBody] AddWorkshopInput input)
         {
             if (!ModelState.IsValid)
@@ -30,12 +33,16 @@ namespace Ellp.Api.WebApi.Controllers
 
             if (response.Message == "Workshop criado com sucesso")
             {
-                return Ok(response);
+                return CreatedAtAction(nameof(GetWorkshopById), new { id = response.Id }, response);
             }
 
             return BadRequest(response);
         }
+
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetWorkshopById(int id)
         {
             var input = new GetWorkshopByIdInput { Id = id };
@@ -50,74 +57,6 @@ namespace Ellp.Api.WebApi.Controllers
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using MediatR;
-using Ellp.Api.Application.Utilities;
 
 namespace Ellp.Api.Application.UseCases.Workshops.AddWorkshops
 {
-    public class AddWorkshopInput : IRequest<Response>
+    public class AddWorkshopInput : IRequest<AddWorkshopOutput>
     {
         [Required]
         public string Name { get; set; }
@@ -14,3 +13,9 @@ namespace Ellp.Api.Application.UseCases.Workshops.AddWorkshops
         public DateTime Data { get; set; }
     }
 }
+
+
+
+
+
+
