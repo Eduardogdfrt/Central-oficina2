@@ -10,7 +10,6 @@ namespace Ellp.Api.Infra.SqlServer
             : base(options)
         {
         }
-
         public DbSet<Student> Students { get; set; }
         public DbSet<Workshop> Workshops { get; set; }
         public DbSet<Professor> Professors { get; set; }

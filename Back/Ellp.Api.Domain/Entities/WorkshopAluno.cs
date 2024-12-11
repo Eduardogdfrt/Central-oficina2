@@ -1,4 +1,4 @@
-﻿
+
 namespace Ellp.Api.Domain.Entities
 {
     public class WorkshopAluno

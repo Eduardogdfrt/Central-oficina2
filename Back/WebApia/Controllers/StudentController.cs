@@ -1,8 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginStudent;
-using Ellp.Api.Application.UseCases.AddParticipantUsecases.AddNewStudentUseCases;
+using AppResponse = Ellp.Api.Application.Utilities.Response;
+using Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewStudentUseCases;
+using Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginStudent; // Alias para evitar ambiguidades
 
 namespace Ellp.Api.WebApi.Controllers
 {
@@ -19,7 +20,6 @@ namespace Ellp.Api.WebApi.Controllers
             _mediator = mediator;
         }
 
-        // Rota para login de estudante
         [HttpGet("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -49,9 +49,10 @@ namespace Ellp.Api.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ocorreu um erro ao processar a solicitação de login.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Message = "Ocorreu um erro durante o processamento" });
+                return StatusCode(StatusCodes.Status500InternalServerError, new AppResponse { Message = "Ocorreu um erro durante o processamento" });
             }
         }
+
         [HttpPost("add")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -64,7 +65,7 @@ namespace Ellp.Api.WebApi.Controllers
 
                 if (response.Message == "Estudante criado com sucesso")
                 {
-                    return StatusCode(StatusCodes.Status201Created, response);
+                    return CreatedAtAction(nameof(GetLoginStudent), new { email = input.Email }, response);
                 }
                 else if (response.Message == "Email já está em uso")
                 {
@@ -78,14 +79,8 @@ namespace Ellp.Api.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ocorreu um erro ao adicionar um novo estudante.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Message = "Ocorreu um erro durante o processamento" });
+                return StatusCode(StatusCodes.Status500InternalServerError, new AppResponse { Message = "Ocorreu um erro durante o processamento" });
             }
         }
     }
 }
-
-
-
-
-
-

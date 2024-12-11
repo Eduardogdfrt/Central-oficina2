@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  my.api:
+    image: myapi:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - REMOVE_SWAGGER=true
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081

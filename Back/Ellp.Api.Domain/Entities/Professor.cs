@@ -1,4 +1,4 @@
-﻿
+
 namespace Ellp.Api.Domain.Entities
 {
     public class Professor
@@ -18,7 +18,6 @@ namespace Ellp.Api.Domain.Entities
         public string Email { get; set; }
     }
 }
-
 
 
 

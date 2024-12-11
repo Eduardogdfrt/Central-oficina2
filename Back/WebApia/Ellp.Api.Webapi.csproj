@@ -8,13 +8,15 @@
 
 	<ItemGroup>
 		<PackageReference Include="MediatR" Version="12.4.1" />
-		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+		<PackageReference Include="SpecFlow" Version="3.9.74" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="7.1.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\ellp.api.application\Ellp.Api.Application.csproj" />
+		<ProjectReference Include="..\Ellp.Api.Application\Ellp.Api.Application.csproj" />
 		<ProjectReference Include="..\Ellp.Infra.SqlServer\Ellp.Api.Infra.SqlServer.csproj" />
 	</ItemGroup>
 
-</Project>
+
+<!--adasds-->
+	</Project>

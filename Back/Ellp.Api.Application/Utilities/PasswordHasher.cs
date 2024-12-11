@@ -1,4 +1,4 @@
-﻿using System.Security.Cryptography;
+using System.Security.Cryptography;
 
 namespace Ellp.Api.Application.Utilities
 {
@@ -56,7 +56,6 @@ namespace Ellp.Api.Application.Utilities
         }
     }
 }
-
 
 
 

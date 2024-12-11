@@ -4,6 +4,10 @@ using Microsoft.OpenApi.Models;
 using MediatR;
 using Ellp.Api.Infra.SqlServer.Repository;
 using Ellp.Api.Infra.SqlServer;
+using Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewStudentUseCases;
+using Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginProfessor;
+using Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginStudent;
+using Ellp.Api.Application.UseCases.Workshops.AddWorkshops;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,14 +40,16 @@ builder.Services.AddDbContext<SqlServerDbContext>(options =>
 
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IProfessorRepository, ProfessorRepository>();
+builder.Services.AddScoped<IWorkshopRepository, WorkshopRepository>();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
-    typeof(Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginStudent.GetLoginStudentUseCase).Assembly,
-    typeof(Ellp.Api.Application.UseCases.GetLoginUseCases.GetLoginProfessor.GetLoginProfessorUseCase).Assembly,
-    typeof(Ellp.Api.Application.UseCases.AddParticipantUsecases.AddNewStudentUseCases.AddNewStudentUseCase).Assembly
+    typeof(GetLoginStudentUseCase).Assembly,
+    typeof(GetLoginProfessorUseCase).Assembly,
+    typeof(AddNewStudentUseCase).Assembly,
+    typeof(AddWorkshopUseCase).Assembly
 ));
 
-// Configuração do CORS
+// ConfiguraÃ§Ã£o do CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowedOrigins", policy =>
@@ -57,6 +63,13 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Adicione estas linhas antes do app.UseRouting()
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
+app.UseRouting();
+app.UseCors("AllowedOrigins");
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -68,7 +81,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 
-app.UseCors("AllowedOrigins"); // Certifique-se de que UseCors seja chamado antes de UseAuthorization
 app.UseAuthorization();
 app.MapControllers();
+app.MapFallbackToFile("index.html");
+
 app.Run();

@@ -9,15 +9,15 @@
 
 	<ItemGroup>
 		<PackageReference Include="MediatR" Version="12.4.1" />
-		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
+		<PackageReference Include="SpecFlow" Version="3.9.74" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\ellp.api.application\Ellp.Api.Application.csproj" />
-	  <ProjectReference Include="..\Ellp.api.Domain\Ellp.Api.Domain.csproj" />
+	  <ProjectReference Include="..\Ellp.Api.Application\Ellp.Api.Application.csproj" />
+	  <ProjectReference Include="..\Ellp.Api.Domain\Ellp.Api.Domain.csproj" />
 	</ItemGroup>
-
+	<!--adasds-->
 </Project>
