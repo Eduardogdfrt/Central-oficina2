@@ -91,3 +91,8 @@ jobs:
           echo "- App Service: centralOficina2-Hml"
           echo "Resource Group: CentralOficina2-Hml"
           echo "Status: Success"
+      
+      - name: Restart App Service
+        run: |
+          echo "Restarting App Service..."
+          az webapp restart --name centralOficina2-Hml --resource-group CentralOficina2-Hml
