@@ -12,7 +12,7 @@ on:
       - 'docker-compose.yml'
 
 jobs:
-  build:
+  deploy-to-hml:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,10 +28,6 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose --version
 
-  deploy_hml:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
       - name: Login to Azure
         uses: azure/login@v1
         with:
@@ -72,6 +68,7 @@ jobs:
       - name: Validate Deployments
         run: |
           echo "Validating deployments..."
+
           # Validate Backend
           max_retries=10
           sleep_time=15
@@ -85,7 +82,7 @@ jobs:
               exit 1
             fi
           done
-          
+
       - name: Deployment Summary
         run: |
           echo "Deployment Summary:"
@@ -94,4 +91,3 @@ jobs:
           echo "- App Service: centralOficina2-Hml"
           echo "Resource Group: CentralOficina2-Hml"
           echo "Status: Success"
-
