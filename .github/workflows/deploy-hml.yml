@@ -4,10 +4,12 @@ on:
   push:
     branches:
       - release
+      - Feature/Fabio
     paths:
       - 'Back/**'
-      - 'docker-compose.yml'
+      - 'front/**'
       - '.github/workflows/deploy-hml.yml'
+      - 'docker-compose.yml'
 
 jobs:
   deploy-to-hml:
@@ -38,13 +40,23 @@ jobs:
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
-      - name: Build and Push Backend
+      - name: Verify App Service exists
         run: |
-          docker-compose build back
-          docker-compose push back
+          echo "Verifying App Service exists..."
+          if ! az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-Hml &>/dev/null; then
+            echo "App Service not found. Creating it..."
+            az webapp create \
+              --name centralOficina2-Hml \
+              --resource-group CentralOficina2-Hml \
+              --plan CentralOficina2Plan \
+              --runtime "DOCKER|linux"
+          else
+            echo "App Service centralOficina2-Hml already exists."
+          fi
 
-      - name: Configure App Service
+      - name: Configure Backend App Service
         run: |
+          echo "Configuring Backend App Service..."
           az webapp config container set \
             --name centralOficina2-Hml \
             --resource-group CentralOficina2-Hml \
@@ -53,6 +65,29 @@ jobs:
             --container-registry-user ${{ secrets.ACR_USERNAME }} \
             --container-registry-password ${{ secrets.ACR_PASSWORD }}
 
-      - name: Restart App Service
+      - name: Validate Deployments
         run: |
-          az webapp restart --name centralOficina2-Hml --resource-group CentralOficina2-Hml
+          echo "Validating deployments..."
+
+          # Validate Backend
+          max_retries=10
+          sleep_time=15
+          retries=0
+          while [ "$(az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-Hml --query state -o tsv)" != "Running" ]; do
+            echo "Waiting for backend to be in Running state..."
+            sleep $sleep_time
+            retries=$((retries + 1))
+            if [ "$retries" -ge "$max_retries" ]; then
+              echo "Backend did not reach Running state within expected time."
+              exit 1
+            fi
+          done
+
+      - name: Deployment Summary
+        run: |
+          echo "Deployment Summary:"
+          echo "Backend:"
+          echo "- Image: centraloficina2acr.azurecr.io/central-oficina2:hml"
+          echo "- App Service: centralOficina2-Hml"
+          echo "Resource Group: CentralOficina2-Hml"
+          echo "Status: Success"
