@@ -10,8 +10,7 @@ Sistema de gerenciamento de presença dos alunos do projeto de extensão ELLP (E
 1- Back end  ( sem UI somente rotas como o postman )
 http://centraloficina2-hml.azurewebsites.net
 
-exemplo de como usar 
-2- Front-end
+exemplo de como usar o back-end
 https://centraloficina2-hml.azurewebsites.net/Student/login?email=problemaesonamangueira@gmail.com&password=123
 
 ## Como rodar via Docker
