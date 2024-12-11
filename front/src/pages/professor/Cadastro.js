@@ -17,7 +17,10 @@ const Cadastro = () => {
 
   const handleCadastro = async (e) => {
     e.preventDefault();
+
+    
     const professorData = {
+      professorId: 0,  
       name: name,
       email: email,
       password: password,
@@ -25,20 +28,19 @@ const Cadastro = () => {
     };
 
     console.log("Dados enviados:", professorData);
-    
 
     try {
       const response = await axios.post(
-        "https://centraloficina2-hml.azurewebsites.net/Professor/add",
+        "http://localhost:5000/Professor/add",  
         professorData
       );
       console.log("Resposta completa do servidor:", response);
       console.log("Dados do servidor:", response.data); 
 
       if (response.status === 201) {
-        const { professorId } = response.data; 
+        const { professorId, name } = response.data;  
         console.log("ID recebido:", professorId);
-        setProfessorId(professorId);
+        setProfessorId(professorId);  
         setSuccess(`Cadastro realizado com sucesso! Seu ID é ${professorId}.`);
         setError("");
       } else {
