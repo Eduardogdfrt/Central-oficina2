@@ -12,7 +12,7 @@ const Home = () => {
         <div className="content">
           <img src={qr} alt="qr" height="400px"/>
           <Title text="QR CODE" fontSize="3.5rem" />
-          <p className="text">Faça login e escaneie o QR code gerado pelo professor pra registrar sua presença</p>
+          <p className="text">Faça login e escaneie o QR code gerado pelo professor pra registrar sua presença TESTETESTESTETEETETES</p>
         </div>
         </div>
   );
