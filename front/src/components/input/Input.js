@@ -23,7 +23,7 @@ const CustomInput = ({
 
 
 CustomInput.propTypes = {
-  type: PropTypes.oneOf(['email', 'password', 'text', 'date']), 
+  type: PropTypes.oneOf(['email', 'password', 'text']), 
   placeholder: PropTypes.string, 
   value: PropTypes.string, 
   onChange: PropTypes.func.isRequired, 
