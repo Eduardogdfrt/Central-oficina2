@@ -3,7 +3,7 @@ name: Deploy to Hml on Release Changes
 on:
   push:
     branches:
-      - release
+      - main
     paths:
       - 'Back/**'
       - 'front/**'
