@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - release
-      - Feature/Fabio
     paths:
       - 'Back/**'
       - 'front/**'
@@ -96,3 +95,23 @@ jobs:
         run: |
           echo "Restarting App Service..."
           az webapp restart --name centralOficina2-Hml --resource-group CentralOficina2-Hml
+      
+      - name: Build and Push Frontend
+        run: |
+            docker-compose build front
+            docker-compose push front
+            
+      - name: Configure Frontend App Service
+        run: |
+          az webapp config container set \
+            --name centralOficina2-Frontend-Hml \
+            --resource-group CentralOficina2-Hml \
+            --container-image-name centraloficina2acr.azurecr.io/central-oficina2-frontend:hml \
+            --container-registry-url https://centraloficina2acr.azurecr.io \
+            --container-registry-user ${{ secrets.ACR_USERNAME }} \
+            --container-registry-password ${{ secrets.ACR_PASSWORD }}
+            
+      - name: Restart Frontend App Service
+        run: |
+          az webapp restart --name centralOficina2-Frontend-Hml --resource-group CentralOficina2-Hml
+       
