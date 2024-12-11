@@ -27,8 +27,11 @@ jobs:
           sudo curl -L "https://github.com/docker/compose/releases/download/v2.23.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose --version
-Deploy Hml:
- 
+
+  deploy_hml:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
       - name: Login to Azure
         uses: azure/login@v1
         with:
@@ -69,7 +72,6 @@ Deploy Hml:
       - name: Validate Deployments
         run: |
           echo "Validating deployments..."
-
           # Validate Backend
           max_retries=10
           sleep_time=15
@@ -83,7 +85,11 @@ Deploy Hml:
               exit 1
             fi
           done
- Unit test:
+
+  unit_test:
+    runs-on: ubuntu-latest
+    needs: deploy_hml
+    steps:
       - name: Run Unit Tests
         run: |
           echo "Running unit tests..."
