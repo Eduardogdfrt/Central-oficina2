@@ -33,10 +33,10 @@ const Cadastro = () => {
         professorData
       );
       console.log("Resposta completa do servidor:", response);
-      console.log("Dados do servidor:", response.data); // Mostra o corpo da resposta
+      console.log("Dados do servidor:", response.data); 
 
       if (response.status === 201) {
-        const { professorId } = response.data; // Corrigido para acessar `professorId`
+        const { professorId } = response.data; 
         console.log("ID recebido:", professorId);
         setProfessorId(professorId);
         setSuccess(`Cadastro realizado com sucesso! Seu ID é ${professorId}.`);

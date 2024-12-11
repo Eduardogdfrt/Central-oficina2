@@ -5,3 +5,7 @@
     justify-content: center;
     align-items: center;
   }
+
+  .workshop-add-button{
+    text-decoration: none;
+  }

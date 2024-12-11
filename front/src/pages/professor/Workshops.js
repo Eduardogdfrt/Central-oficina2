@@ -1,36 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Title from "../../components/title/Title";
 import Header from "../../components/header/Header";
+import card01 from "../../assets/images/card01.png";
+import card02 from "../../assets/images/card02.png";
+import card03 from "../../assets/images/card03.png";
+import card04 from "../../assets/images/card04.png";
 import WorkshopCard from "../../components/workshopCard/WorkshopCard";
+import { Link } from "react-router-dom";
 import "../../pages/professor/Workshop.css";
-import axios from "axios";
 
 const Workshops = () => {
-  const [workshops, setWorkshops] = useState([]);
-
-  useEffect(() => {
-    // Função para buscar workshops do backend
-    const fetchWorkshops = async () => {
-      try {
-        const response = await axios.get("http://localhost:5000/api/Workshop");
-        setWorkshops(response.data);
-      } catch (error) {
-        console.error("Erro ao buscar workshops:", error);
-      }
-    };
-
-    fetchWorkshops();
-  }, []);
-
   return (
     <div className="page">
       <Header title="SAIR" />
       <div className="content">
         <Title text="MEUS WORKSHOPS" fontSize="3.5rem" />
         <div className="content-workshop">
-          {workshops.map((workshop) => (
-            <WorkshopCard key={workshop.id} text={workshop.name} link={`/workshop/${workshop.id}`} />
-          ))}
+          <WorkshopCard image={card01} text="Robótica" link="/robotica" />
+          <WorkshopCard image={card02} text="Lógica" link="/logica" />
+          <WorkshopCard image={card03} text="Programação" link="/programacao" />
+           <Link to="/workshop-cadastro" className="workshop-add-button">
+            <WorkshopCard image={card04} text="Adicionar" link="/workshop-cadastro" />
+          </Link>
         </div>
       </div>
     </div>
