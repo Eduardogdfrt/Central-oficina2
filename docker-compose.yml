@@ -3,8 +3,8 @@ version: '3.8'
 services:
   back:
     build:
-      context: ./Back
-      dockerfile: Dockerfile
+      context: ./
+      dockerfile: Back/Dockerfile
     ports:
       - "5000:5000"
     environment:
