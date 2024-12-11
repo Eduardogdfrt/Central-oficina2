@@ -49,21 +49,27 @@ jobs:
       - name: Build and Push Image
         run: |
           docker-compose build --no-cache
+          VERSION_TAG="hml-$(date +%Y%m%d%H%M%S)"  # Using a timestamp-based version tag
+          docker tag centraloficina2acr.azurecr.io/central-oficina2:hml centraloficina2acr.azurecr.io/central-oficina2:$VERSION_TAG
           docker-compose push
+          echo "Pushed image with tag: $VERSION_TAG"
 
       - name: Configure App Service
         run: |
+          VERSION_TAG="hml-$(date +%Y%m%d%H%M%S)"  # Same tag used for the new image
           az webapp config container set \
             --name centralOficina2-Hml \
             --resource-group CentralOficina2-Hml \
-            --container-image-name centraloficina2acr.azurecr.io/central-oficina2:hml \
+            --container-image-name centraloficina2acr.azurecr.io/central-oficina2:$VERSION_TAG \
             --container-registry-url https://centraloficina2acr.azurecr.io \
             --container-registry-user ${{ secrets.ACR_USERNAME }} \
             --container-registry-password ${{ secrets.ACR_PASSWORD }}
+          echo "Updated Azure Web App to use image with tag: $VERSION_TAG"
 
       - name: Restart App Service
         run: |
           az webapp restart --name centralOficina2-Hml --resource-group CentralOficina2-Hml
+          echo "App Service restarted."
 
       - name: Validate Deployments
         run: |
@@ -79,3 +85,4 @@ jobs:
               exit 1
             fi
           done
+          echo "App Service is now running."
