@@ -39,6 +39,13 @@ jobs:
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
+      - name: Clean Up Old Images and Containers
+        run: |
+          echo "Removing old images and containers..."
+          docker ps -a -q | xargs -r docker rm -f || true
+          docker images -q | xargs -r docker rmi -f || true
+          docker system prune -f --volumes
+
       - name: Build and Push Image
         run: |
           docker-compose build --no-cache back
