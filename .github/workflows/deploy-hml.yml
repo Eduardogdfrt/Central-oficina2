@@ -6,8 +6,9 @@ on:
       - release
     paths:
       - 'Back/**'
-      - 'docker-compose.yml'
+      - 'front/**'
       - '.github/workflows/deploy-hml.yml'
+      - 'docker-compose.yml'
 
 jobs:
   deploy-to-hml:
@@ -38,9 +39,9 @@ jobs:
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
-      - name: Build and Push Backend
+      - name: Build and Push Image
         run: |
-          docker-compose build back
+          docker-compose build --no-cache back
           docker-compose push back
 
       - name: Configure App Service
@@ -56,3 +57,18 @@ jobs:
       - name: Restart App Service
         run: |
           az webapp restart --name centralOficina2-Hml --resource-group CentralOficina2-Hml
+
+      - name: Validate Deployments
+        run: |
+          max_retries=10
+          sleep_time=15
+          retries=0
+          while [ "$(az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-Hml --query state -o tsv)" != "Running" ]; do
+            echo "Waiting for App Service to be in Running state..."
+            sleep $sleep_time
+            retries=$((retries + 1))
+            if [ "$retries" -ge "$max_retries" ]; then
+              echo "App Service did not reach Running state within expected time."
+              exit 1
+            fi
+          done
