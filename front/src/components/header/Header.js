@@ -17,11 +17,11 @@ const Header = () => {
       linkTo = '/login';
       break;
     case '/login':
-      titleText = 'CADASTRO';
+      titleText = 'CADASTRO TESTE';
       linkTo = '/cadastro';
       break;
     case '/cadastro':
-      titleText = 'ENTRAR';
+      titleText = 'ENTRAR TESTE';
       linkTo = '/login';
       break;
     default:
