@@ -13,7 +13,7 @@ const Header = () => {
 
   switch (location.pathname) {
     case '/':
-      titleText = 'Teste';
+      titleText = 'ENTRAR';
       linkTo = '/login';
       break;
     case '/login':
