@@ -1,51 +1,92 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import "../../pages/aluno/Home.css"
+import "../../pages/aluno/Home.css";
 import Title from "../../components/title/Title";
 import Header from "../../components/header/Header";
 import Input from "../../components/input/Input";
 import Button from "../../components/button/Button";
+import axios from "axios";
 
-const Login = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+const WorkshopCadastro = () => {
+    const [name, setName] = useState('');
+    const [date, setDate] = useState('');
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
 
     const navigate = useNavigate(); 
 
-    const handleClick = () => {
+    const cadWorkshops = async (e) => {
+        e.preventDefault();
 
-        navigate('/workshops');
-    };
+        // Formatar a data para o formato esperado pela API
+        const formattedDate = new Date(date).toISOString(); // Isso já vai gerar uma data no formato correto para a API
+
+        const workshopData = {
+          name: name,
+          data: formattedDate,
+        };
+
+        console.log(workshopData); // Verifique os dados antes de enviar para a API
+    
+        try {
+          const response = await axios.post(
+            "https://centraloficina2-hml.azurewebsites.net/api/Workshop", 
+            workshopData
+          );
+          
+          if (response.status === 201) {
+            setSuccess("Cadastro do workshop realizado com sucesso!");
+            setError("");
+            navigate('/workshops');
+          } else {
+            setError("Erro ao realizar o cadastro. Tente novamente.");
+          }
+        } catch (err) {
+          console.error("Erro na solicitação:", err);
+          if (err.response) {
+            // Erro retornado pela API
+            setError(`Erro: ${err.response.data.message || 'Erro desconhecido'}`);
+          } else if (err.request) {
+            // Erro de rede, se a requisição foi feita mas não obteve resposta
+            setError("Erro de rede. Verifique sua conexão.");
+          } else {
+            // Outros erros ao configurar a requisição
+            setError("Erro ao configurar a solicitação.");
+          }
+        }
+      };
 
     return (
         <div className="page">
             <Header title="CADASTRO"/>
             <div className="content login">
-                <Title text="LOGIN" fontSize="3.5rem" margin="0px"/>
-                <p className="text">Faça login para registrar sua presença</p>
+                <Title text="WORKSHOPS" fontSize="3.5rem" margin="0px"/>
+                <p className="text">Cadastrar novos Workshops na plataforma</p>
                 <div className="inputs">
-                    <p className="text no-width">Email</p>
-                    <Input
-                    type="email"
-                    placeholder="Digite seu e-mail"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    customStyle={{ marginBottom: '10px', padding: '10px', fontSize: '16px' }}
-                    />
-                    <p className="text no-width">Senha</p>
-                    <Input
-                    type="password"
-                    placeholder="Digite sua senha"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    customStyle={{ marginBottom: '10px', padding: '10px', fontSize: '16px' }}
-                    />
+                    <form onSubmit={cadWorkshops}>
+                        <p className="text no-width">Nome</p>
+                        <Input
+                            type="text"
+                            placeholder="Digite o nome"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            customStyle={{ marginBottom: '10px', padding: '10px', fontSize: '16px' }}
+                        />
+                        <p className="text no-width">Data</p>
+                        <Input
+                            type="date" 
+                            value={date}
+                            onChange={(e) => setDate(e.target.value)}
+                            customStyle={{ marginBottom: "10px", padding: "10px", fontSize: "16px" }}
+                        />
+                        {error && <p style={{ color: "red" }}>{error}</p>}
+                        {success && <p style={{ color: "green" }}>{success}</p>}
+                        <Button text="CADASTRAR" type="submit"/>
+                    </form>
                 </div>
-                <Button text="ENTRAR" onClick={handleClick}/>
             </div>
         </div>
-
     );
 };
 
-export default Login;
+export default WorkshopCadastro;

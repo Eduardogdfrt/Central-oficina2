@@ -6,6 +6,7 @@ import card02 from "../../assets/images/card02.png";
 import card03 from "../../assets/images/card03.png";
 import card04 from "../../assets/images/card04.png";
 import WorkshopCard from "../../components/workshopCard/WorkshopCard";
+import { Link } from "react-router-dom";
 import "../../pages/professor/Workshop.css";
 
 const Workshops = () => {
@@ -18,7 +19,9 @@ const Workshops = () => {
           <WorkshopCard image={card01} text="Robótica" link="/robotica" />
           <WorkshopCard image={card02} text="Lógica" link="/logica" />
           <WorkshopCard image={card03} text="Programação" link="/programacao" />
-          <WorkshopCard image={card04} text="Adicionar" link="/workshop-cadastro" />
+          <Link to="/workshop-cadastro" className="workshop-add-button">
+            <WorkshopCard image={card04} text="Adicionar" link="/workshop-cadastro" />
+          </Link>
         </div>
       </div>
     </div>

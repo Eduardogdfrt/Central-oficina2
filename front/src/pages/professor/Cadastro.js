@@ -17,7 +17,10 @@ const Cadastro = () => {
 
   const handleCadastro = async (e) => {
     e.preventDefault();
+
+    // Enviando professorId como 0 conforme exigido pela API
     const professorData = {
+      professorId: 0,  // Professor ID é enviado como 0, conforme especificado
       name: name,
       email: email,
       password: password,
@@ -25,20 +28,19 @@ const Cadastro = () => {
     };
 
     console.log("Dados enviados:", professorData);
-    
 
     try {
       const response = await axios.post(
-        "https://centraloficina2-hml.azurewebsites.net/Professor/add",
+        "http://localhost:5000/Professor/add",  // URL da API (ajustar se necessário)
         professorData
       );
       console.log("Resposta completa do servidor:", response);
       console.log("Dados do servidor:", response.data); // Mostra o corpo da resposta
 
       if (response.status === 201) {
-        const { professorId } = response.data; // Corrigido para acessar `professorId`
+        const { professorId, name } = response.data;  // A resposta agora retorna o professorId e name
         console.log("ID recebido:", professorId);
-        setProfessorId(professorId);
+        setProfessorId(professorId);  // Define o professorId com o valor retornado da API
         setSuccess(`Cadastro realizado com sucesso! Seu ID é ${professorId}.`);
         setError("");
       } else {
