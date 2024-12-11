@@ -1,64 +1,81 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build and deploy ASP.Net Core app to Azure Web App - ELLPDSV
+name: Deploy to Hml on Release Changes
 
 on:
   push:
     branches:
-      - Release
-  workflow_dispatch:
+      - release
+    paths:
+      - 'Back/**'
+      - 'front/**'
+      - '.github/workflows/deploy-hml.yml'
+      - 'docker-compose.yml'
 
 jobs:
-  build:
-    runs-on: windows-latest
+  deploy-to-hml:
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Set up .NET Core
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.x'
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
-      - name: Build with dotnet
-        run: dotnet build --configuration Release --project ./Back/OficinaELLP.sln
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.23.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
 
-      - name: dotnet publish
-        run: dotnet publish ./Back/OficinaELLP.sln -c Release -o ${{ github.workspace }}/myapp
-
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: .net-app
-          path: ${{ github.workspace }}/myapp
-
-  deploy:
-    runs-on: windows-latest
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
-
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: .net-app
-      
       - name: Login to Azure
-        uses: azure/login@v2
+        uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_A3F197F0430B4AA08E7166072BD16DAD }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_7F6ACF4F0F554570989E3830EB1999C0 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_2640AE1780624A07B30EEDC4FEE1E876 }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
+      - name: Login to Azure Container Registry
+        uses: docker/login-action@v3
         with:
-          app-name: 'ELLPDSV'
-          slot-name: 'Production'
-          package: ${{ github.workspace }}/myapp
+          registry: centraloficina2acr.azurecr.io
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Clean Up Old Images and Containers
+        run: |
+          echo "Removing old images and containers..."
+          docker ps -a -q | xargs -r docker rm -f || true
+          docker images -q | xargs -r docker rmi -f || true
+          docker system prune -f --volumes
+
+      - name: Build and Push Image
+        run: |
+          docker-compose build --no-cache back
+          docker-compose push back
+
+      - name: Configure App Service
+        run: |
+          az webapp config container set \
+            --name centralOficina2-Hml \
+            --resource-group CentralOficina2-Hml \
+            --container-image-name centraloficina2acr.azurecr.io/central-oficina2:hml \
+            --container-registry-url https://centraloficina2acr.azurecr.io \
+            --container-registry-user ${{ secrets.ACR_USERNAME }} \
+            --container-registry-password ${{ secrets.ACR_PASSWORD }}
+
+      - name: Restart App Service
+        run: |
+          az webapp restart --name centralOficina2-Hml --resource-group CentralOficina2-Hml
+
+      - name: Validate Deployments
+        run: |
+          max_retries=10
+          sleep_time=15
+          retries=0
+          while [ "$(az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-Hml --query state -o tsv)" != "Running" ]; do
+            echo "Waiting for App Service to be in Running state..."
+            sleep $sleep_time
+            retries=$((retries + 1))
+            if [ "$retries" -ge "$max_retries" ]; then
+              echo "App Service did not reach Running state within expected time."
+              exit 1
+            fi
+          done
