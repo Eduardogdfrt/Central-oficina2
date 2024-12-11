@@ -48,8 +48,8 @@ jobs:
 
       - name: Build and Push Image
         run: |
-          docker-compose build --no-cache back
-          docker-compose push back
+          docker-compose build --no-cache
+          docker-compose push
 
       - name: Configure App Service
         run: |
