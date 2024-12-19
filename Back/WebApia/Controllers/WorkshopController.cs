@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using Ellp.Api.Application.Utilities;
 using Ellp.Api.Application.UseCases.Workshops.AddWorkshops;
 using Ellp.Api.Application.UseCases.Workshops.GetWorkshopById;
+using Ellp.Api.Application.UseCases.Workshops.GetWorkshopAll;
 
 namespace Ellp.Api.WebApi.Controllers
 {
@@ -55,8 +55,36 @@ namespace Ellp.Api.WebApi.Controllers
 
             return NotFound(result);
         }
+
+        [HttpGet("getAll")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetWorkshopsByProfessorId()
+        {
+            var input = new GetWorkshopAllInput();
+            var result = await _mediator.Send(input);
+
+            if (result.Workshops != null && result.Workshops.Count > 0)
+            {
+                return Ok(result);
+            }
+
+            return NotFound(result);
+        }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

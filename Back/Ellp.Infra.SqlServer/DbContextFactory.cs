@@ -14,7 +14,6 @@ namespace Ellp.Api.Infra.SqlServer
         public DbSet<Workshop> Workshops { get; set; }
         public DbSet<Professor> Professors { get; set; }
         public DbSet<WorkshopAluno> WorkshopStudents { get; set; }
-        public DbSet<WorkshopProfessor> WorkshopProfessors { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,7 +21,7 @@ namespace Ellp.Api.Infra.SqlServer
             modelBuilder.ApplyConfiguration(new WorkshopConfiguration());
             modelBuilder.ApplyConfiguration(new ProfessorConfiguration());
             modelBuilder.ApplyConfiguration(new WorkshopAlunoConfiguration());
-            modelBuilder.ApplyConfiguration(new WorkshopProfessorConfiguration());
+
         }
     }
 }

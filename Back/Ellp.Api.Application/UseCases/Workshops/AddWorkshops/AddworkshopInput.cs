@@ -8,9 +8,12 @@ namespace Ellp.Api.Application.UseCases.Workshops.AddWorkshops
     {
         [Required]
         public string Name { get; set; }
-
+        [Required]
+        public int ProfessorId { get; set; }
         [Required]
         public DateTime Data { get; set; }
+
+        public int HelperId { get; set; }
     }
 }
 

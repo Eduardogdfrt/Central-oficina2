@@ -26,7 +26,8 @@ namespace Ellp.Api.Application.UseCases.Workshops.AddWorkshops
                 var newWorkshop = new Workshop
                 {
                     Name = request.Name,
-                    Data = request.Data
+                    Data = request.Data,
+                    ProfessorIdW = request.ProfessorId
                 };
 
                 await _workshopRepository.AddAsync(newWorkshop);

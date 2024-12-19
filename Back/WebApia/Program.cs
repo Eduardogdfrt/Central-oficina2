@@ -31,6 +31,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api Oficina 2", Version = "v1" });
+    c.MapType<int?>(() => new OpenApiSchema { Type = "integer", Format = "int32", Nullable = true });
 });
 
 var connectionString = builder.Configuration.GetConnectionString("DbConnectionString") ?? builder.Configuration["ConnectionStrings:DbConnectionString"];
@@ -57,13 +58,13 @@ builder.Services.AddCors(options =>
         policy.WithOrigins("http://localhost:7172", "http://localhost:3000", "http://localhost:5000")
               .AllowAnyMethod()
               .AllowAnyHeader()
-              .AllowCredentials(); // Adicionado para permitir credenciais
+              .AllowCredentials(); 
     });
 });
 
 var app = builder.Build();
 
-// Adicione estas linhas antes do app.UseRouting()
+
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
@@ -86,3 +87,4 @@ app.MapControllers();
 app.MapFallbackToFile("index.html");
 
 app.Run();
+

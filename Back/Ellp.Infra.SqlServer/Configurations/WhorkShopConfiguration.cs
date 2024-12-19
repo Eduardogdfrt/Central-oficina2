@@ -16,6 +16,17 @@ namespace Ellp.Api.Infra.SqlServer.Configurations
                 .IsRequired()
                 .HasMaxLength(255);
 
+            builder.Property(x => x.ProfessorIdW)
+                  .HasColumnName("professoor")
+                  .IsRequired()
+                  .HasMaxLength(255);
+
+            builder.Property(x => x.HelperIDW)
+                  .HasColumnName("professoor")
+                  .IsRequired()
+                  .HasMaxLength(255);
+
+
             builder.Property(x => x.Data)
                 .HasColumnName("Data")
                 .IsRequired();
