@@ -56,13 +56,29 @@ namespace Ellp.Api.WebApi.Controllers
             return NotFound(result);
         }
 
-        [HttpGet("getAll")]
+        [HttpGet("FindAll")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> getWorkshopsAll()
+        {
+            var input = new GetWorkshopAllByprofessorUseCaseInput();
+            var result = await _mediator.Send(input);
+
+            if (result.Workshops != null && result.Workshops.Count > 0)
+            {
+                return Ok(result);
+            }
+
+            return NotFound(result);
+        }
+        [HttpGet("/professor/{professorId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetWorkshopsByProfessorId()
         {
-            var input = new GetWorkshopAllInput();
+            var input = new GetWorkshopAllByprofessorUseCaseInput();
             var result = await _mediator.Send(input);
 
             if (result.Workshops != null && result.Workshops.Count > 0)

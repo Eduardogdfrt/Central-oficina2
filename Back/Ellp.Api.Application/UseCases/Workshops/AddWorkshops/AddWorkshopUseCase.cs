@@ -27,7 +27,8 @@ namespace Ellp.Api.Application.UseCases.Workshops.AddWorkshops
                 {
                     Name = request.Name,
                     Data = request.Data,
-                    ProfessorIdW = request.ProfessorId
+                    ProfessorIdW = request.ProfessorId,
+                    HelperIDW = request.HelperId // Referenciar o ID existente
                 };
 
                 await _workshopRepository.AddAsync(newWorkshop);
@@ -47,9 +48,3 @@ namespace Ellp.Api.Application.UseCases.Workshops.AddWorkshops
         }
     }
 }
-
-
-
-
-
-
