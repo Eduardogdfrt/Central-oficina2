@@ -8,6 +8,7 @@ using Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewStudentUs
 using Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginProfessor;
 using Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginStudent;
 using Ellp.Api.Application.UseCases.Workshops.AddWorkshops;
+using Ellp.Api.Application.UseCases.StudentWorkshop.AddStundentWorkshop; // Adicione esta linha
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,12 +43,14 @@ builder.Services.AddDbContext<SqlServerDbContext>(options =>
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IProfessorRepository, ProfessorRepository>();
 builder.Services.AddScoped<IWorkshopRepository, WorkshopRepository>();
+builder.Services.AddScoped<IStudentWorkshopRepository, StudentWorkshopRepository>(); // Adicione esta linha
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
     typeof(GetLoginStudentUseCase).Assembly,
     typeof(GetLoginProfessorUseCase).Assembly,
     typeof(AddNewStudentUseCase).Assembly,
-    typeof(AddWorkshopUseCase).Assembly
+    typeof(AddWorkshopUseCase).Assembly,
+    typeof(AddStudentWorkshopUseCase).Assembly // Adicione esta linha
 ));
 
 // Configuração do CORS
@@ -58,12 +61,11 @@ builder.Services.AddCors(options =>
         policy.WithOrigins("http://localhost:7172", "http://localhost:3000", "http://localhost:5000")
               .AllowAnyMethod()
               .AllowAnyHeader()
-              .AllowCredentials(); 
+              .AllowCredentials();
     });
 });
 
 var app = builder.Build();
-
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
@@ -87,4 +89,3 @@ app.MapControllers();
 app.MapFallbackToFile("index.html");
 
 app.Run();
-

@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Ellp.Api.Application.UseCases.Workshops.GetWorkshopAll
 {
-    public class GetWorkshopAllByprofessorUseCase : IRequestHandler<GetWorkshopAllByprofessorUseCaseInput, GetWorkshopAllByprofessorUseCaselOutput>
+    public class GetWorkshopAllByprofessorUseCase : IRequestHandler<GetWorkshopAllByprofessorInput, GetWorkshopAllByprofessorOutput>
     {
         private readonly ILogger<GetWorkshopAllByprofessorUseCase> _logger;
         private readonly IWorkshopRepository _workshopRepository;
@@ -18,14 +18,14 @@ namespace Ellp.Api.Application.UseCases.Workshops.GetWorkshopAll
             _workshopRepository = workshopRepository;
         }
 
-        public async Task<GetWorkshopAllByprofessorUseCaselOutput> Handle(GetWorkshopAllByprofessorUseCaseInput request, CancellationToken cancellationToken)
+        public async Task<GetWorkshopAllByprofessorOutput> Handle(GetWorkshopAllByprofessorInput request, CancellationToken cancellationToken)
         {
             try
             {
                 var workshopList = await _workshopRepository.GetWorkshopAllforProfessorsAsync(request.professorId);
 
 
-                return new GetWorkshopAllByprofessorUseCaselOutput { Workshops = workshopList };
+                return new GetWorkshopAllByprofessorOutput { Workshops = workshopList };
             }
             catch (Exception ex)
             {

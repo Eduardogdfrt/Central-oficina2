@@ -17,29 +17,28 @@ namespace Ellp.Api.Infra.SqlServer.Configurations
                 .HasMaxLength(255);
 
             builder.Property(x => x.ProfessorIdW)
-                .HasColumnName("ProfessorId") 
-                .IsRequired(); 
+                .HasColumnName("ProfessorId")
+                .IsRequired();
 
             builder.Property(x => x.HelperIDW)
-                .HasColumnName("helperId")
+                .HasColumnName("HelperId")
                 .IsRequired(false);
 
             builder.Property(x => x.Data)
                 .HasColumnName("Data")
                 .IsRequired();
 
-       
             builder.HasOne(x => x.Professor)
                 .WithMany()
                 .HasForeignKey(x => x.ProfessorIdW)
                 .OnDelete(DeleteBehavior.Restrict);
 
-       
-            builder.HasOne(x => x.Student)
+            builder.HasOne(x => x.Helper)
                 .WithMany()
                 .HasForeignKey(x => x.HelperIDW)
                 .OnDelete(DeleteBehavior.Restrict)
-                .IsRequired(false); 
+                .IsRequired(false);
         }
     }
 }
+

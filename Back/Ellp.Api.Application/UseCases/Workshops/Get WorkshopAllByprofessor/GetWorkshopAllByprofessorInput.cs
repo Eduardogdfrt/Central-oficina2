@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Ellp.Api.Application.UseCases.Workshops.GetWorkshopAll
 {
-    public class GetWorkshopAllByprofessorUseCaseInput : IRequest<GetWorkshopAllByprofessorUseCaselOutput>
+    public class GetWorkshopAllByprofessorInput : IRequest<GetWorkshopAllByprofessorOutput>
     {
         public int professorId {get; set;} 
 

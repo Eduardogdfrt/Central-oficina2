@@ -3,11 +3,11 @@ using Ellp.Api.Domain.Entities;
 
 namespace Ellp.Api.Application.UseCases.Workshops.GetWorkshopAll
 {
-    public class GetWorkshopAllByprofessorUseCaselOutput
+    public class GetWorkshopAllByprofessorOutput
     {
         public List<Workshop> Workshops { get; set; }
 
-        public GetWorkshopAllByprofessorUseCaselOutput()
+        public GetWorkshopAllByprofessorOutput()
         {
             Workshops = new List<Workshop>();
         }
