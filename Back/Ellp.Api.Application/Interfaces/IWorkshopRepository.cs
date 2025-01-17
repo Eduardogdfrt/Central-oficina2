@@ -6,6 +6,8 @@ namespace Ellp.Api.Application.Interfaces
     {
         Task AddAsync(Workshop workshop);
         Task<Workshop> GetWorkshopByIdAsync(int id);
+        Task<List<Workshop>> GetWorkshopAllAsync();
+        Task<List<Workshop>> GetWorkshopAllforProfessorsAsync(int professorId);
 
     }
 }
