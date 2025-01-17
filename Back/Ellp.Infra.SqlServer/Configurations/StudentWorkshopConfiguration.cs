@@ -8,7 +8,13 @@ namespace Ellp.Api.Infra.SqlServer.Configurations
     {
         public void Configure(EntityTypeBuilder<WorkshopAluno> builder)
         {
+            builder.ToTable("Aluno_Workshop");
+
             builder.HasKey(wa => new { wa.WorkshopId, wa.StudentId });
+
+            builder.Property(wa => wa.WorkshopId).HasColumnName("WorkshopId");
+            builder.Property(wa => wa.StudentId).HasColumnName("AlunoId");
+            builder.Property(wa => wa.Certificate).HasColumnName("Certificado").HasMaxLength(255);
 
             builder.HasOne(wa => wa.Workshop)
                    .WithMany(w => w.WorkshopAlunos)
@@ -20,4 +26,6 @@ namespace Ellp.Api.Infra.SqlServer.Configurations
         }
     }
 }
+
+
 

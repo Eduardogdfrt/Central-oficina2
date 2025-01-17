@@ -22,7 +22,6 @@ namespace Ellp.Api.Application.UseCases.StudentWorkshop.AddStundentWorkshop
         {
             try
             {
-                // Adiciona o workshop ao estudante
                 await _studentWorkshopRepository.AddStudentWorkshopAsync(request.StudentId, request.WorkshopId);
 
                 return new AddStudentWorkshopOutput
