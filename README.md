@@ -5,6 +5,61 @@ Sistema de gerenciamento de presença dos alunos do projeto de extensão ELLP (E
 - Fabio Nascimento Dos Santos Junior
 - Eduardo Gabriel De Freitas
 - Jéssica Mota Pereira
+
+## URL DE HML
+1- Back end  ( sem UI somente rotas como o postman )
+http://centraloficina2-hml.azurewebsites.net
+
+exemplo de como usar o back-end
+https://centraloficina2-hml.azurewebsites.net/Student/login?email=problemaesonamangueira@gmail.com&password=123
+
+2- Rota front (Desatualizado!)
+
+https://centraloficina2-hml.azurewebsites.net/
+
+## Como rodar via Docker
+
+Para rodar o projeto utilizando Docker, siga os passos abaixo (DSV): 
+
+1- Certifique-se de ter o Docker e o Docker Compose instalados em sua máquina.
+
+2- Navegue até o diretório raiz do projeto onde o arquivo docker-compose.yml está localizado.
+
+3- Execute o seguinte comando no terminal na raiz do projeto para iniciar todos os serviços definidos no docker-compose.yml:
+
+docker-compose up
+
+4- O Docker Compose irá construir as imagens (se necessário) e iniciar os containers definidos no arquivo.
+
+OBS: No futuro, as rotas de homologação (HML) e produção (PRD) estarão configuradas no ambiente da Azure. Isso permitirá uma maior escalabilidade e gestão centralizada das aplicações.
+
+Aproveito para deixar abaixo O ideal de como as pipelines terão que rodar:
+              
+![image](https://github.com/user-attachments/assets/98cbee2c-c751-4607-b66e-e200e67f8663)
+
+
+
+
+## Como funciona o repositorio referente ao deploy
+O projeto utiliza um fluxo de trabalho baseado no GitFlow com cinco branches principais:
+
+front: Branch dedicada ao desenvolvimento do frontend.
+back: Branch dedicada ao desenvolvimento do backend.
+teste: Branch utilizada para integração e testes contínuos.
+release: Branch usada para preparar uma nova versão para deploy.
+prd: Branch principal que representa a versão de produção.
+
+## Processo de Deploy (HML e PRD)
+Desenvolvimento: O trabalho de desenvolvimento ocorre nas branches front e back, onde novas funcionalidades e correções são implementadas.
+
+Testes: Após a conclusão do desenvolvimento, as mudanças são integradas na branch teste para realização de testes contínuos e integração.
+
+Release: Quando a versão está pronta para ser lançada, as alterações são mescladas na branch release. Esta branch é responsável por subir a versão recente para os ambientes de desenvolvimento (DSV) e homologação (HML).
+
+Produção: Após a validação nos ambientes de desenvolvimento e homologação, a versão é finalmente mesclada na branch prd, que representa a versão estável de produção do sistema.
+
+Este fluxo de trabalho garante uma gestão eficiente das diferentes etapas do desenvolvimento, testes e deploy, promovendo uma maior organização e controle sobre o ciclo de vida do software
+
 ## 1. Requisitos Funcionais
 
 | ID | FUNCIONALIDADE |

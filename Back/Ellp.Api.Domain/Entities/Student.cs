@@ -19,5 +19,7 @@ namespace Ellp.Api.Domain.Entities
         public string Password { get; set; } 
         public DateTime BirthDate { get; set; }
         public bool IsAuthenticated { get; set; }
+
+        public ICollection<WorkshopAluno> WorkshopAlunos { get; set; } = new List<WorkshopAluno>();
     }
 }
