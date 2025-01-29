@@ -22,5 +22,8 @@
     <PackageReference Include="Microsoft.IdentityModel.Logging" Version="8.2.1" />
     <PackageReference Include="SpecFlow" Version="3.9.74" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="UseCases\StudentWorkshop\GetCertification\" />
+  </ItemGroup>
 
 </Project>

@@ -38,7 +38,7 @@ namespace Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewStude
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ocorreu um erro ao adicionar um novo estudante.");
-                return new Response { Message = "Ocorreu um erro durante o processamento" };
+                return new Response { Message = "Ocorreu um erro durante o processamento            "  + ex};
             }
         }
     }
