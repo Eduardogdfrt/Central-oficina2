@@ -36,7 +36,7 @@ namespace Ellp.Api.Application.UseCases.StudentWorkshop.AddStundentWorkshop
                 return new AddStudentWorkshopOutput
                 {
                     Success = false,
-                    Message = "Ocorreu um erro ao adicionar o workshop ao estudante"
+                    Message = "Ocorreu um erro ao adicionar o workshop ao estudante" + ex.Message
                 };
             }
         }

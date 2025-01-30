@@ -9,16 +9,3 @@ namespace Ellp.Api.Application.UseCases.StudentWorkshop.GetStudentWorkshop
         public WorkshopAluno Data { get; set; }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

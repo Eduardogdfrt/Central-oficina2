@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Net;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 public class Program
 {
@@ -33,7 +35,10 @@ public class Program
             serverOptions.ListenAnyIP(5000);
         });
 
-        builder.Services.AddControllers();
+        builder.Services.AddControllers().AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        });
         builder.Services.AddEndpointsApiExplorer();
 
         builder.Services.AddSwaggerGen(c =>
@@ -42,8 +47,13 @@ public class Program
             c.MapType<int?>(() => new OpenApiSchema { Type = "integer", Format = "int32", Nullable = true });
         });
 
-        // String de conex√£o injetada diretamente no c√≥digo
+        // Obter a string de conex„o exclusivamente do appsettings.json
         var connectionString = "Server=tcp:db-oficina-a.database.windows.net,1433;Initial Catalog=dboOf;Persist Security Info=False;User ID=adminer;Password=Admin123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=true;Connection Timeout=90;";
+
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            throw new InvalidOperationException("A string de conex„o 'DbConnectionString' n„o foi encontrada no appsettings.json.");
+        }
 
         builder.Services.AddDbContext<SqlServerDbContext>(options =>
             options.UseSqlServer(connectionString));
@@ -118,20 +128,6 @@ public class Program
                     })
                 };
                 await context.Response.WriteAsJsonAsync(result);
-            }
-        });
-
-        // Endpoint opcional para testar a conex√£o com o banco de dados
-        app.MapGet("/test-db", async (SqlServerDbContext dbContext) =>
-        {
-            try
-            {
-                await dbContext.Database.CanConnectAsync();
-                return Results.Ok("Conex√£o com o banco de dados funcionando!");
-            }
-            catch (Exception ex)
-            {
-                return Results.Problem($"Falha na conex√£o: {ex.Message}");
             }
         });
 

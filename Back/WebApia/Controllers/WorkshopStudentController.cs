@@ -7,6 +7,7 @@ using Ellp.Api.Application.UseCases.StudentWorkshop.GetStudentWorkshop;
 using Ellp.Api.Application.UseCases.StudentWorkshop.GetAllStudentWorkshops;
 using Ellp.Api.Application.UseCases.StudentWorkshop.GetAllStudentsForWorkshop;
 using Ellp.Api.Application.UseCases.StudentWorkshop.EmitirCertificadosEmLote;
+using Ellp.Api.Application.UseCases.StudentWorkshop.GetCertification;
 
 namespace Ellp.Api.Webapi.Controllers
 {
@@ -114,7 +115,7 @@ namespace Ellp.Api.Webapi.Controllers
             return NotFound(response);
         }
 
-        [HttpPost("emitir-certificado")]
+        [HttpPost("workshopStudent/emitir-certificado")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -133,6 +134,23 @@ namespace Ellp.Api.Webapi.Controllers
             }
 
             return BadRequest(response);
+        }
+
+        [HttpGet("workshopStudent/{studentId}/{workshopId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetCertification(int studentId, int workshopId)
+        {
+            var input = new GetCertificationInput { StudentId = studentId, WorkshopId = workshopId };
+            var result = await _mediator.Send(input);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return NotFound(result);
         }
     }
 }

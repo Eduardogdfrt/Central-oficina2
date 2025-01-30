@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Ellp.Api.Application.Interfaces;
 using Microsoft.Extensions.Logging;
+using Ellp.Api.Application.Utilities;
 
 namespace Ellp.Api.Application.UseCases.StudentWorkshop.EmitirCertificadosEmLote
 {
@@ -21,22 +22,31 @@ namespace Ellp.Api.Application.UseCases.StudentWorkshop.EmitirCertificadosEmLote
 
         public async Task<EmitirCertificadosEmLoteOutput> Handle(EmitirCertificadosEmLoteInput request, CancellationToken cancellationToken)
         {
+            var output = new EmitirCertificadosEmLoteOutput();
+
             try
             {
                 foreach (var certificado in request.Certificados)
                 {
-                    await _studentWorkshopRepository.EmitirCertificadoAsync(certificado.StudentId, certificado.WorkshopId, certificado.Certificado);
+                    var certificadoHash = GenerateCertificateHash.Generate(certificado.StudentId, certificado.WorkshopId);
+                    await _studentWorkshopRepository.EmitirCertificadoAsync(certificado.StudentId, certificado.WorkshopId, certificadoHash);
+                    output.HashCodes.Add(certificadoHash);
                 }
 
-                return new EmitirCertificadosEmLoteOutput { Success = true, Message = "Certificados emitidos com sucesso" };
+                output.Success = true;
+                output.Message = "Certificados emitidos com sucesso";
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ocorreu um erro ao emitir os certificados.");
-                return new EmitirCertificadosEmLoteOutput { Success = false, Message = "Ocorreu um erro ao emitir os certificados" };
+                output.Success = false;
+                output.Message = "Ocorreu um erro ao emitir os certificados";
             }
+
+            return output;
         }
     }
 }
+
 
 

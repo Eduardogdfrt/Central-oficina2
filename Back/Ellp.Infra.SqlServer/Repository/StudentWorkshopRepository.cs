@@ -28,24 +28,16 @@ namespace Ellp.Api.Infra.SqlServer.Repository
             };
 
             await _context.WorkshopStudents.AddAsync(studentWorkshop);
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Ocorreu um erro ao salvar as alterações no banco de dados.");
-                throw;
-            }
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<WorkshopAluno> GetStudentWorkshopAsync(int studentId, int workshopId)
+        public async Task<WorkshopAluno?> GetStudentWorkshopAsync(int studentId, int workshopId)
         {
-            return await _context.WorkshopStudents
+            var studentWorkshop = await _context.WorkshopStudents
                 .FirstOrDefaultAsync(wa => wa.StudentId == studentId && wa.WorkshopId == workshopId);
-        }
 
+            return studentWorkshop;
+        }
         public async Task DeleteStudentWorkshopAsync(WorkshopAluno studentWorkshop)
         {
             _context.WorkshopStudents.Remove(studentWorkshop);
@@ -79,6 +71,4 @@ namespace Ellp.Api.Infra.SqlServer.Repository
         }
     }
 }
-
-
 

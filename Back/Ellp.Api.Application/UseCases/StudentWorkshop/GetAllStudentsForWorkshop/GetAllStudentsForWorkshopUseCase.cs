@@ -31,7 +31,7 @@ namespace Ellp.Api.Application.UseCases.StudentWorkshop.GetAllStudentsForWorksho
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ocorreu um erro ao buscar os alunos do workshop.");
-                return new GetAllStudentsForWorkshopOutput { Success = false, Message = "Ocorreu um erro ao buscar os alunos do workshop" };
+                return new GetAllStudentsForWorkshopOutput { Success = false, Message = "Ocorreu um erro ao buscar os alunos do workshop" + ex };
             }
         }
     }

@@ -36,7 +36,7 @@ namespace Ellp.Api.Application.UseCases.StudentWorkshop.DeleteUserForWorkShop
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ocorreu um erro ao remover o aluno do workshop.");
-                return new DeleteStudentWorkshopOutput { Success = false, Message = "Ocorreu um erro ao remover o aluno do workshop" };
+                return new DeleteStudentWorkshopOutput { Success = false, Message = "Ocorreu um erro ao remover o aluno do workshop" + ex };
             }
         }
     }
