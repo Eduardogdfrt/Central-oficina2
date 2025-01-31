@@ -6,8 +6,8 @@ using Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewStudentUs
 using Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginProfessor;
 using Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginStudent;
 using Ellp.Api.Application.UseCases.Workshops.AddWorkshops;
-using Ellp.Api.Infra.SqlServer.Repository;
 using Ellp.Api.Infra.SqlServer;
+using Ellp.Api.Infra.SqlServer.Repository;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -35,12 +35,13 @@ public class Program
         var keyVaultEndpoint = builder.Configuration["KeyVault:Endpoint"];
         var secretName = builder.Configuration["KeyVault:SecretName"];
         var clientId = builder.Configuration["KeyVault:ClientId"];
-        var clientSecret = builder.Configuration["KeyVault:ClientSecret"];
+        var clientSecretId = builder.Configuration["KeyVault:ClientSecretId"];
         var tenantId = builder.Configuration["KeyVault:TenantId"];
         string connectionString = string.Empty;
         if (!string.IsNullOrEmpty(keyVaultEndpoint) && !string.IsNullOrEmpty(secretName) &&
-            !string.IsNullOrEmpty(clientId) && !string.IsNullOrEmpty(clientSecret) && !string.IsNullOrEmpty(tenantId))
+            !string.IsNullOrEmpty(clientId) && !string.IsNullOrEmpty(clientSecretId) && !string.IsNullOrEmpty(tenantId))
         {
+            var clientSecret = builder.Configuration[$"KeyVault:ClientSecrets:{clientSecretId}"];
             var credential = new ClientSecretCredential(tenantId, clientId, clientSecret);
             var client = new SecretClient(new Uri(keyVaultEndpoint), credential);
             KeyVaultSecret secret = client.GetSecret(secretName);
@@ -148,4 +149,3 @@ public class Program
         app.Run();
     }
 }
-

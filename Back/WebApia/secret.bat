@@ -17,5 +17,7 @@ echo ClientSecret a ser colocado no appsettings.json: !CLIENTSECRET!
 :: Substituir a ClientSecret no appsettings.json
 powershell -Command "(Get-Content %APPSETTINGS_FILE%) -replace '\"ClientSecret\": \"\"', '\"ClientSecret\": \"!CLIENTSECRET!\"' | Set-Content %APPSETTINGS_FILE%"
 
+powershell -Command "(Get-Content %APPSETTINGS_FILE%) -replace '\"ClientSecret\": \"\"', '\"ClientSecret\": \"!CLIENTSECRET!\"' | Set-Content %APPSETTINGS_FILE%"
+
 echo ClientSecret atualizado no appsettings.json com sucesso!
 ENDLOCAL
