@@ -39,11 +39,8 @@ namespace Ellp.Api.Application.UseCases.StudentWorkshop.GetStudentWorkshop
                         Message = "Relação entre aluno e workshop não encontrada"
                     };
                 }
-
                 var workshop = await _workshopRepository.GetWorkshopByIdAsync(request.WorkshopId);
                 var student = await _studentRepository.GetStudentByIdAsync(request.StudentId);
-
-
                 return new GetStudentWorkshopOutput
                 {
                     Success = true,
