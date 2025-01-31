@@ -31,33 +31,21 @@ namespace Ellp.Api.Application.UseCases.StudentWorkshop.GetStudentWorkshop
             try
             {
                 var studentWorkshop = await _studentWorkshopRepository.GetStudentWorkshopAsync(request.StudentId, request.WorkshopId);
-                if (studentWorkshop == null)
-                {
-                    return new GetStudentWorkshopOutput
-                    {
-                        Success = false,
-                        Message = "Relação entre aluno e workshop não encontrada"
-                    };
-                }
-                var workshop = await _workshopRepository.GetWorkshopByIdAsync(request.WorkshopId);
-                var student = await _studentRepository.GetStudentByIdAsync(request.StudentId);
-                return new GetStudentWorkshopOutput
-                {
-                    Success = true,
-                    Message = "Relação encontrada",
-                    Data = studentWorkshop,
-       
-                };
+                return studentWorkshop != null
+                    ? GetStudentWorkshopOutput.CreateOutput(true, "Relação encontrada", studentWorkshop)
+                    : GetStudentWorkshopOutput.CreateOutput(false, "Relação entre aluno e workshop não encontrada");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ocorreu um erro ao buscar a relação entre o aluno e o workshop.");
-                return new GetStudentWorkshopOutput
-                {
-                    Success = false,
-                    Message = "Ocorreu um erro ao buscar a relação entre o aluno e o workshop: " + ex.Message
-                };
+                return GetStudentWorkshopOutput.CreateOutput(false, "Ocorreu um erro ao buscar a relação entre o aluno e o workshop: " + ex.Message);
             }
         }
     }
 }
+
+
+
+
+
+

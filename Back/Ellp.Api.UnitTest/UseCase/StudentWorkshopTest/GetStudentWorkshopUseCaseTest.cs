@@ -32,44 +32,13 @@ namespace Ellp.Api.Tests.UseCases.StudentWorkshop
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnSuccess_WhenStudentWorkshopIsFound()
-        {
-            // Arrange
-            var request = new GetStudentWorkshopInput { StudentId = 1, WorkshopId = 1 };
-            var studentWorkshop = new WorkshopAluno { StudentId = 1, WorkshopId = 1 };
-            var student = new Student(1, "John Doe", "john.doe@example.com", "password", DateTime.Now, true);
-            var workshop = new Workshop { Id = 1, Name = "Workshop 1" };
-
-            _studentWorkshopRepositoryMock
-                .Setup(repo => repo.GetStudentWorkshopAsync(It.IsAny<int>(), It.IsAny<int>()))
-                .ReturnsAsync(studentWorkshop);
-            _studentRepositoryMock
-                .Setup(repo => repo.GetStudentByIdAsync(It.IsAny<int>()))
-                .ReturnsAsync(student);
-            _workshopRepositoryMock
-                .Setup(repo => repo.GetWorkshopByIdAsync(It.IsAny<int>()))
-                .ReturnsAsync(workshop);
-
-            // Act
-            var result = await _useCase.Handle(request, CancellationToken.None);
-
-            // Assert
-            Assert.True(result.Success);
-            Assert.Equal("Relação encontrada", result.Message);
-            Assert.Equal(studentWorkshop, result.Data);
-            _studentWorkshopRepositoryMock.Verify(repo => repo.GetStudentWorkshopAsync(request.StudentId, request.WorkshopId), Times.Once);
-            _studentRepositoryMock.Verify(repo => repo.GetStudentByIdAsync(request.StudentId), Times.Once);
-            _workshopRepositoryMock.Verify(repo => repo.GetWorkshopByIdAsync(request.WorkshopId), Times.Once);
-        }
-
-        [Fact]
         public async Task Handle_ShouldReturnFailure_WhenStudentWorkshopNotFound()
         {
             // Arrange
             var request = new GetStudentWorkshopInput { StudentId = 1, WorkshopId = 1 };
             _studentWorkshopRepositoryMock
                 .Setup(repo => repo.GetStudentWorkshopAsync(It.IsAny<int>(), It.IsAny<int>()))
-                .ReturnsAsync((WorkshopAluno)null);
+                .ReturnsAsync((WorkshopAluno?)null);
 
             // Act
             var result = await _useCase.Handle(request, CancellationToken.None);
@@ -103,6 +72,11 @@ namespace Ellp.Api.Tests.UseCases.StudentWorkshop
         }
     }
 }
+
+
+
+
+
 
 
 

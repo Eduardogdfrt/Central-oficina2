@@ -23,34 +23,20 @@ namespace Ellp.Api.Application.UseCases.StudentWorkshop.GetCertification
             try
             {
                 var studentWorkshop = await _studentWorkshopRepository.GetStudentWorkshopAsync(request.StudentId, request.WorkshopId);
-                if (studentWorkshop == null || string.IsNullOrEmpty(studentWorkshop.Certificate))
-                {
-                    return new GetCertificationOutput
-                    {
-                        Success = false,
-                        Message = "Certificação não encontrada"
-                    };
-                }
-
-                return new GetCertificationOutput
-                {
-                    Success = true,
-                    Message = "Certificação encontrada",
-                    Certificate = studentWorkshop.Certificate
-                };
+                return studentWorkshop != null && !string.IsNullOrEmpty(studentWorkshop.Certificate)
+                    ? GetCertificationOutput.CreateOutput(true, "Certificação encontrada", studentWorkshop.Certificate)
+                    : GetCertificationOutput.CreateOutput(false, "Certificação não encontrada");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ocorreu um erro ao buscar a certificação.");
-                return new GetCertificationOutput
-                {
-                    Success = false,
-                    Message = "Ocorreu um erro ao buscar a certificação: " + ex.Message
-                };
+                return GetCertificationOutput.CreateOutput(false, "Ocorreu um erro ao buscar a certificação: " + ex.Message);
             }
         }
     }
 }
+
+
 
 
 

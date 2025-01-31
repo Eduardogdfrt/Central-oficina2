@@ -1,3 +1,5 @@
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 using Ellp.Api.Application.Interfaces;
 using Ellp.Api.Application.UseCases.StudentWorkshop.AddStundentWorkshop;
 using Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewStudentUseCases;
@@ -10,7 +12,6 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Net;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 
 public class Program
@@ -30,6 +31,27 @@ public class Program
             builder.Configuration.AddUserSecrets<Program>();
         }
 
+        // Configurar o Azure Key Vault
+        var keyVaultEndpoint = builder.Configuration["KeyVault:Endpoint"];
+        var secretName = builder.Configuration["KeyVault:SecretName"];
+        var clientId = builder.Configuration["KeyVault:ClientId"];
+        var clientSecret = builder.Configuration["KeyVault:ClientSecret"];
+        var tenantId = builder.Configuration["KeyVault:TenantId"];
+        string connectionString = string.Empty;
+        if (!string.IsNullOrEmpty(keyVaultEndpoint) && !string.IsNullOrEmpty(secretName) &&
+            !string.IsNullOrEmpty(clientId) && !string.IsNullOrEmpty(clientSecret) && !string.IsNullOrEmpty(tenantId))
+        {
+            var credential = new ClientSecretCredential(tenantId, clientId, clientSecret);
+            var client = new SecretClient(new Uri(keyVaultEndpoint), credential);
+            KeyVaultSecret secret = client.GetSecret(secretName);
+            connectionString = secret.Value;
+        }
+
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            throw new InvalidOperationException("A string de conexão 'Db-c' não foi encontrada no Key Vault.");
+        }
+
         builder.WebHost.ConfigureKestrel(serverOptions =>
         {
             serverOptions.ListenAnyIP(5000);
@@ -46,14 +68,6 @@ public class Program
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api Oficina 2", Version = "v1" });
             c.MapType<int?>(() => new OpenApiSchema { Type = "integer", Format = "int32", Nullable = true });
         });
-
-        // Obter a string de conexão exclusivamente do appsettings.json
-        var connectionString = "Server=tcp:db-oficina-a.database.windows.net,1433;Initial Catalog=dboOf;Persist Security Info=False;User ID=adminer;Password=Admin123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=true;Connection Timeout=90;";
-
-        if (string.IsNullOrEmpty(connectionString))
-        {
-            throw new InvalidOperationException("A string de conexão 'DbConnectionString' não foi encontrada no appsettings.json.");
-        }
 
         builder.Services.AddDbContext<SqlServerDbContext>(options =>
             options.UseSqlServer(connectionString));
@@ -134,3 +148,4 @@ public class Program
         app.Run();
     }
 }
+

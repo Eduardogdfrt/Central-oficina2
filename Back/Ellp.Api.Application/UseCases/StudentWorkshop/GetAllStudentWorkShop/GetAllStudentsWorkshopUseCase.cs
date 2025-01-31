@@ -25,24 +25,17 @@ namespace Ellp.Api.Application.UseCases.StudentWorkshop.GetAllStudentWorkshops
             {
                 var workshops = await _studentWorkshopRepository.GetAllWorkshopsByStudentIdAsync(request.StudentId);
                 return workshops != null && workshops.Count > 0
-                    ? new GetAllStudentWorkshopsOutput { Success = true, Message = "Workshops encontrados", Workshops = workshops }
-                    : new GetAllStudentWorkshopsOutput { Success = false, Message = "Nenhum workshop encontrado para o aluno" };
+                    ? GetAllStudentWorkshopsOutput.CreateOutput(true, "Workshops encontrados", workshops)
+                    : GetAllStudentWorkshopsOutput.CreateOutput(false, "Nenhum workshop encontrado para o aluno");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ocorreu um erro ao buscar os workshops do aluno.");
-                return new GetAllStudentWorkshopsOutput { Success = false, Message = "Ocorreu um erro ao buscar os workshops do aluno" + ex };
+                return GetAllStudentWorkshopsOutput.CreateOutput(false, "Ocorreu um erro ao buscar os workshops do aluno: " + ex.Message);
             }
         }
     }
 }
-
-
-
-
-
-
-
 
 
 

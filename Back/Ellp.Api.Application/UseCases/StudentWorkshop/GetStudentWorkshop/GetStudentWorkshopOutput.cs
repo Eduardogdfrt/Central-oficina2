@@ -7,5 +7,19 @@ namespace Ellp.Api.Application.UseCases.StudentWorkshop.GetStudentWorkshop
         public bool Success { get; set; }
         public string Message { get; set; }
         public WorkshopAluno Data { get; set; }
+
+        public static GetStudentWorkshopOutput CreateOutput(bool success, string message, WorkshopAluno data = null)
+        {
+            return new GetStudentWorkshopOutput
+            {
+                Success = success,
+                Message = message,
+                Data = data
+            };
+        }
     }
 }
+
+
+
+
