@@ -3,7 +3,7 @@ name: Deploy to Hml on Release Changes
 on:
   push:
     branches:
-      - main
+      - release  # Alterado para a branch 'release', ajuste conforme necessário
     paths:
       - 'Back/**'
       - 'front/**'
@@ -49,26 +49,27 @@ jobs:
       - name: Build and Push Image
         run: |
           docker-compose build --no-cache
-          VERSION_TAG="hml-$(date +%Y%m%d%H%M%S)"  # Using a timestamp-based version tag
+          VERSION_TAG="hml-$(date +%Y%m%d%H%M%S)"  # Usando uma tag com base na data e hora
           docker tag centraloficina2acr.azurecr.io/central-oficina2:hml centraloficina2acr.azurecr.io/central-oficina2:$VERSION_TAG
           docker-compose push
           echo "Pushed image with tag: $VERSION_TAG"
 
       - name: Configure App Service
         run: |
-          VERSION_TAG="hml-$(date +%Y%m%d%H%M%S)"  # Same tag used for the new image
+          VERSION_TAG="hml-$(date +%Y%m%d%H%M%S)"  # Usando a mesma tag para a nova imagem
           az webapp config container set \
             --name centralOficina2-Hml \
             --resource-group CentralOficina2-Hml \
             --container-image-name centraloficina2acr.azurecr.io/central-oficina2:$VERSION_TAG \
             --container-registry-url https://centraloficina2acr.azurecr.io \
             --container-registry-user ${{ secrets.ACR_USERNAME }} \
-            --container-registry-password ${{ secrets.ACR_PASSWORD }}
+            --container-registry-password ${{ secrets.ACR_PASSWORD }} \
+            --env PORT=3000  # Configurando a variável PORT corretamente
           echo "Updated Azure Web App to use image with tag: $VERSION_TAG"
 
       - name: Restart App Service
         run: |
-          az webapp restart --name centralOficina2-Hml --resource-group CentralOficina2-Hml
+          az webapp restart --name centraloficina2 --resource-group centraloficina2rg
           echo "App Service restarted."
 
       - name: Validate Deployments
