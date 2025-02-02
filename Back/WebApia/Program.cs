@@ -35,13 +35,14 @@ public class Program
         var keyVaultEndpoint = builder.Configuration["KeyVault:Endpoint"];
         var secretName = builder.Configuration["KeyVault:SecretName"];
         var clientId = builder.Configuration["KeyVault:ClientId"];
-        var clientSecretId = builder.Configuration["KeyVault:ClientSecretId"];
+        var clientSecretPart1 = builder.Configuration["KeyVault:ClientSecretIdPart1"];
+        var clientSecretPart2 = builder.Configuration["KeyVault:ClientSecretIdPart2"];
         var tenantId = builder.Configuration["KeyVault:TenantId"];
         string connectionString = string.Empty;
         if (!string.IsNullOrEmpty(keyVaultEndpoint) && !string.IsNullOrEmpty(secretName) &&
-            !string.IsNullOrEmpty(clientId) && !string.IsNullOrEmpty(clientSecretId) && !string.IsNullOrEmpty(tenantId))
+            !string.IsNullOrEmpty(clientId) && !string.IsNullOrEmpty(clientSecretPart1) && !string.IsNullOrEmpty(clientSecretPart2) && !string.IsNullOrEmpty(tenantId))
         {
-            var clientSecret = builder.Configuration[$"KeyVault:ClientSecrets:{clientSecretId}"];
+            var clientSecret = clientSecretPart1 + clientSecretPart2;
             var credential = new ClientSecretCredential(tenantId, clientId, clientSecret);
             var client = new SecretClient(new Uri(keyVaultEndpoint), credential);
             KeyVaultSecret secret = client.GetSecret(secretName);
@@ -149,3 +150,4 @@ public class Program
         app.Run();
     }
 }
+
