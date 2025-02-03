@@ -7,7 +7,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5000:5000"
-      - "3000:3000"
     environment:
       - ASPNETCORE_URLS=http://+:5000
       - ASPNETCORE_ENVIRONMENT=Production
