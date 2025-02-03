@@ -56,7 +56,7 @@ jobs:
             az webapp config container set \
               --name centraloficina2 \
               --resource-group centraloficina2rg \
-              --container-image-name centraloficina2acr.azurecr.io/centraloficina2:$VERSION_TAG \
+              --container-image-name centraloficina2acr.azurecr.io/centraloficina2:latest \
               --container-registry-url https://centraloficina2acr.azurecr.io \
               --container-registry-user ${{ secrets.ACR_USERNAME }} \
               --container-registry-password ${{ secrets.ACR_PASSWORD }} \
