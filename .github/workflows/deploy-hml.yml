@@ -58,8 +58,8 @@ jobs:
         run: |
           VERSION_TAG="hml-$(date +%Y%m%d%H%M%S)"  # Usando a mesma tag para a nova imagem
           az webapp config container set \
-            --name centralOficina2-Hml \
-            --resource-group CentralOficina2-Hml \
+            --name centraloficina2 \
+            --resource-group centraloficina2rg \
             --container-image-name centraloficina2acr.azurecr.io/central-oficina2:$VERSION_TAG \
             --container-registry-url https://centraloficina2acr.azurecr.io \
             --container-registry-user ${{ secrets.ACR_USERNAME }} \
