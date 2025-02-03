@@ -60,8 +60,7 @@ jobs:
               --container-registry-url https://centraloficina2acr.azurecr.io \
               --container-registry-user ${{ secrets.ACR_USERNAME }} \
               --container-registry-password ${{ secrets.ACR_PASSWORD }} \
-              --env PORT=3000  # Configura a variável de ambiente PORT corretamente para o container
-            echo "Updated Azure Web App to use image with tag: $VERSION_TAG"
+              --settings PORT=3000  # Configura a variável de ambiente PORT corretamente para o container
         
 
       - name: Restart App Service
