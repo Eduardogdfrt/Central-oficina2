@@ -49,8 +49,7 @@ jobs:
       - name: Build and Push Image
         run: |
           docker build -t centraloficina2acr.azurecr.io/centraloficina2:latest . --no-cache
-          docker tag centraloficina2 centraloficina2acr.azurecr.io/centraloficina2:latest
-          docker push centraloficina2acr.azurecr.io/centraloficina2:latest
+          docker push centraloficina2acr.azurecr.io/centraloficina2:latest  # Push diretamente após o build, sem o docker tag
 
       - name: Configure App Service
         run: |
