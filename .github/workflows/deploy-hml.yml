@@ -48,19 +48,18 @@ jobs:
 
       - name: Build and Push Image
         run: |
+          VERSION_TAG=$(echo $GITHUB_SHA | cut -c1-7)
+          echo "Building and pushing image with tag: $VERSION_TAG"
           docker-compose build --no-cache
-          VERSION_TAG="hml-$(date +%Y%m%d%H%M%S)"  # Usando uma tag com base na data e hora
-          docker tag centraloficina2acr.azurecr.io/central-oficina2:hml centraloficina2acr.azurecr.io/central-oficina2:$VERSION_TAG
+          docker tag centraloficina2 centraloficina2acr.azurecr.io/centraloficina2:$VERSION_TAG
           docker-compose push
-          echo "Pushed image with tag: $VERSION_TAG"
 
       - name: Configure App Service
         run: |
-          VERSION_TAG="hml-$(date +%Y%m%d%H%M%S)"  # Usando a mesma tag para a nova imagem
           az webapp config container set \
             --name centraloficina2 \
             --resource-group centraloficina2rg \
-            --container-image-name centraloficina2acr.azurecr.io/central-oficina2:$VERSION_TAG \
+            --container-image-name centraloficina2acr.azurecr.io/centraloficina2:$VERSION_TAG \
             --container-registry-url https://centraloficina2acr.azurecr.io \
             --container-registry-user ${{ secrets.ACR_USERNAME }} \
             --container-registry-password ${{ secrets.ACR_PASSWORD }} \
