@@ -48,11 +48,9 @@ jobs:
 
       - name: Build and Push Image
         run: |
-          VERSION_TAG=$(echo $GITHUB_SHA | cut -c1-7)
-          echo "Building and pushing image with tag: $VERSION_TAG"
-          docker-compose build --no-cache
-          docker tag centraloficina2 centraloficina2acr.azurecr.io/centraloficina2:$VERSION_TAG
-          docker-compose push
+          docker build -t centraloficina2acr.azurecr.io/centraloficina2:latest . --no-cache
+          docker tag centraloficina2 centraloficina2acr.azurecr.io/centraloficina2:latest
+          docker push centraloficina2acr.azurecr.io/centraloficina2:latest
 
       - name: Configure App Service
         run: |
