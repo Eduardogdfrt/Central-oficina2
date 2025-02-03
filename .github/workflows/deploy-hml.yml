@@ -56,15 +56,16 @@ jobs:
 
       - name: Configure App Service
         run: |
-          az webapp config container set \
-            --name centraloficina2 \
-            --resource-group centraloficina2rg \
-            --container-image-name centraloficina2acr.azurecr.io/centraloficina2:$VERSION_TAG \
-            --container-registry-url https://centraloficina2acr.azurecr.io \
-            --container-registry-user ${{ secrets.ACR_USERNAME }} \
-            --container-registry-password ${{ secrets.ACR_PASSWORD }} \
-            --env PORT=3000  # Configurando a variável PORT corretamente
-          echo "Updated Azure Web App to use image with tag: $VERSION_TAG"
+            az webapp config container set \
+              --name centraloficina2 \
+              --resource-group centraloficina2rg \
+              --container-image-name centraloficina2acr.azurecr.io/centraloficina2:$VERSION_TAG \
+              --container-registry-url https://centraloficina2acr.azurecr.io \
+              --container-registry-user ${{ secrets.ACR_USERNAME }} \
+              --container-registry-password ${{ secrets.ACR_PASSWORD }} \
+              --env PORT=3000  # Configura a variável de ambiente PORT corretamente para o container
+            echo "Updated Azure Web App to use image with tag: $VERSION_TAG"
+        
 
       - name: Restart App Service
         run: |
