@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ellp.Api.Application.UseCases.StudentWorkshop.AddStundentWorkshop
 {
@@ -10,7 +6,19 @@ namespace Ellp.Api.Application.UseCases.StudentWorkshop.AddStundentWorkshop
     {
         public bool Success { get; set; }
         public string Message { get; set; }
+
+        public static AddStudentWorkshopOutput CreateOutput(bool success, string message)
+        {
+            return new AddStudentWorkshopOutput
+            {
+                Success = success,
+                Message = message
+            };
+        }
     }
 }
+
+
+
 
 

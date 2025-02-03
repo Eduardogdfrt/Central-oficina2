@@ -28,7 +28,7 @@ namespace Ellp.Api.Application.UseCases.Workshops.AddWorkshops
                     Name = request.Name,
                     Data = request.Data,
                     ProfessorIdW = request.ProfessorId,
-                    HelperIDW = request.HelperId // Referenciar o ID existente
+                    HelperIDW = request.HelperId 
                 };
 
                 await _workshopRepository.AddAsync(newWorkshop);
@@ -43,7 +43,7 @@ namespace Ellp.Api.Application.UseCases.Workshops.AddWorkshops
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ocorreu um erro ao adicionar um novo workshop.");
-                return new AddWorkshopOutput { Message = "Ocorreu um erro durante o processamento" };
+                return new AddWorkshopOutput { Message = "Ocorreu um erro durante o processamento "  + ex};
             }
         }
     }

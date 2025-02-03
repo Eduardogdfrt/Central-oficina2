@@ -1,91 +1,153 @@
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 using Ellp.Api.Application.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using MediatR;
-using Ellp.Api.Infra.SqlServer.Repository;
-using Ellp.Api.Infra.SqlServer;
+using Ellp.Api.Application.UseCases.StudentWorkshop.AddStundentWorkshop;
 using Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewStudentUseCases;
 using Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginProfessor;
 using Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginStudent;
 using Ellp.Api.Application.UseCases.Workshops.AddWorkshops;
-using Ellp.Api.Application.UseCases.StudentWorkshop.AddStundentWorkshop; // Adicione esta linha
+using Ellp.Api.Infra.SqlServer;
+using Ellp.Api.Infra.SqlServer.Repository;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using System.Net;
+using System.Text.Json.Serialization;
 
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true);
-builder.Configuration.AddEnvironmentVariables();
-
-if (builder.Environment.IsDevelopment())
+public class Program
 {
-    builder.Configuration.AddUserSecrets<Program>();
-}
-
-builder.WebHost.ConfigureKestrel(serverOptions =>
-{
-    // Escutar na porta 5000 para todas as interfaces
-    serverOptions.ListenAnyIP(5000);
-});
-
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api Oficina 2", Version = "v1" });
-    c.MapType<int?>(() => new OpenApiSchema { Type = "integer", Format = "int32", Nullable = true });
-});
-
-var connectionString = builder.Configuration.GetConnectionString("DbConnectionString") ?? builder.Configuration["ConnectionStrings:DbConnectionString"];
-
-builder.Services.AddDbContext<SqlServerDbContext>(options =>
-    options.UseSqlServer(connectionString));
-
-builder.Services.AddScoped<IStudentRepository, StudentRepository>();
-builder.Services.AddScoped<IProfessorRepository, ProfessorRepository>();
-builder.Services.AddScoped<IWorkshopRepository, WorkshopRepository>();
-builder.Services.AddScoped<IStudentWorkshopRepository, StudentWorkshopRepository>(); // Adicione esta linha
-
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
-    typeof(GetLoginStudentUseCase).Assembly,
-    typeof(GetLoginProfessorUseCase).Assembly,
-    typeof(AddNewStudentUseCase).Assembly,
-    typeof(AddWorkshopUseCase).Assembly,
-    typeof(AddStudentWorkshopUseCase).Assembly // Adicione esta linha
-));
-
-// ConfiguraÃ§Ã£o do CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowedOrigins", policy =>
+    public static void Main(string[] args)
     {
-        policy.WithOrigins("http://localhost:7172", "http://localhost:3000", "http://localhost:5000")
-              .AllowAnyMethod()
-              .AllowAnyHeader()
-              .AllowCredentials();
-    });
-});
+        var builder = WebApplication.CreateBuilder(args);
 
-var app = builder.Build();
+        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
-app.UseDefaultFiles();
-app.UseStaticFiles();
+        builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+        builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true);
+        builder.Configuration.AddEnvironmentVariables();
 
-app.UseRouting();
-app.UseCors("AllowedOrigins");
+        if (builder.Environment.IsDevelopment())
+        {
+            builder.Configuration.AddUserSecrets<Program>();
+        }
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Api Oficina 2 v1"));
+        // Configurar o Azure Key Vault
+        var keyVaultEndpoint = builder.Configuration["KeyVault:Endpoint"];
+        var secretName = builder.Configuration["KeyVault:SecretName"];
+        var clientId = builder.Configuration["KeyVault:ClientId"];
+        var clientSecretPart1 = builder.Configuration["KeyVault:ClientSecretPart1"];
+        var clientSecretPart2 = builder.Configuration["KeyVault:ClientSecretPart2"];
+        var clientSecret = clientSecretPart1 + clientSecretPart2;
+        var tenantId = builder.Configuration["KeyVault:TenantId"];
+        string connectionString = string.Empty;
+        if (!string.IsNullOrEmpty(keyVaultEndpoint) && !string.IsNullOrEmpty(secretName) &&
+            !string.IsNullOrEmpty(clientId) && !string.IsNullOrEmpty(clientSecret) && !string.IsNullOrEmpty(tenantId))
+        {
+            var credential = new ClientSecretCredential(tenantId, clientId, clientSecret);
+            var client = new SecretClient(new Uri(keyVaultEndpoint), credential);
+            KeyVaultSecret secret = client.GetSecret(secretName);
+            connectionString = secret.Value;
+        }
+
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            throw new InvalidOperationException("A string de conexão 'Db-c' não foi encontrada no Key Vault.");
+        }
+
+        builder.WebHost.ConfigureKestrel(serverOptions =>
+        {
+            serverOptions.ListenAnyIP(5000);
+        });
+
+        builder.Services.AddControllers().AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        });
+        builder.Services.AddEndpointsApiExplorer();
+
+        builder.Services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api Oficina 2", Version = "v1" });
+            c.MapType<int?>(() => new OpenApiSchema { Type = "integer", Format = "int32", Nullable = true });
+        });
+
+        builder.Services.AddDbContext<SqlServerDbContext>(options =>
+            options.UseSqlServer(connectionString));
+
+        builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+        builder.Services.AddScoped<IProfessorRepository, ProfessorRepository>();
+        builder.Services.AddScoped<IWorkshopRepository, WorkshopRepository>();
+        builder.Services.AddScoped<IStudentWorkshopRepository, StudentWorkshopRepository>();
+
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
+            typeof(GetLoginStudentUseCase).Assembly,
+            typeof(GetLoginProfessorUseCase).Assembly,
+            typeof(AddNewStudentUseCase).Assembly,
+            typeof(AddWorkshopUseCase).Assembly,
+            typeof(AddStudentWorkshopUseCase).Assembly
+        ));
+
+        builder.Services.AddHealthChecks()
+            .AddSqlServer(
+                connectionString: connectionString,
+                name: "SQL Server",
+                tags: new[] { "db", "sql", "sqlserver" });
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", policy =>
+            {
+                policy.AllowAnyOrigin()
+                      .AllowAnyMethod()
+                      .AllowAnyHeader();
+            });
+        });
+
+        var app = builder.Build();
+
+        app.UseDefaultFiles();
+        app.UseStaticFiles();
+
+        app.UseRouting();
+        app.UseCors("AllowAll");
+
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Api Oficina 2 v1"));
+        }
+
+        if (!app.Environment.IsDevelopment())
+        {
+            app.UseHttpsRedirection();
+        }
+
+        app.UseAuthorization();
+
+        app.MapControllers();
+        app.MapFallbackToFile("index.html");
+
+        app.MapHealthChecks("/health", new HealthCheckOptions
+        {
+            ResponseWriter = async (context, report) =>
+            {
+                context.Response.ContentType = "application/json";
+                var result = new
+                {
+                    status = report.Status.ToString(),
+                    checks = report.Entries.Select(entry => new
+                    {
+                        name = entry.Key,
+                        status = entry.Value.Status.ToString(),
+                        exception = entry.Value.Exception?.Message,
+                        duration = entry.Value.Duration.ToString()
+                    })
+                };
+                await context.Response.WriteAsJsonAsync(result);
+            }
+        });
+
+        app.Run();
+    }
 }
 
-if (!app.Environment.IsDevelopment())
-{
-    app.UseHttpsRedirection();
-}
-
-app.UseAuthorization();
-app.MapControllers();
-app.MapFallbackToFile("index.html");
-
-app.Run();

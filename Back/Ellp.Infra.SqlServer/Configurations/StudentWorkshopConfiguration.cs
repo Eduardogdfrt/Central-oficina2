@@ -14,7 +14,7 @@ namespace Ellp.Api.Infra.SqlServer.Configurations
 
             builder.Property(wa => wa.WorkshopId).HasColumnName("WorkshopId");
             builder.Property(wa => wa.StudentId).HasColumnName("AlunoId");
-            builder.Property(wa => wa.Certificate).HasColumnName("Certificado").HasMaxLength(255);
+            builder.Property(wa => wa.Certificate).HasColumnName("certificado").HasMaxLength(255);
 
             builder.HasOne(wa => wa.Workshop)
                    .WithMany(w => w.WorkshopAlunos)
@@ -26,6 +26,3 @@ namespace Ellp.Api.Infra.SqlServer.Configurations
         }
     }
 }
-
-
-

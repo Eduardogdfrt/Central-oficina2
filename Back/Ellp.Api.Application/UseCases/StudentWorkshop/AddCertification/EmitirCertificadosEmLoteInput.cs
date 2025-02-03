@@ -1,5 +1,4 @@
-﻿
-using MediatR;
+﻿using MediatR;
 namespace Ellp.Api.Application.UseCases.StudentWorkshop.EmitirCertificadosEmLote
 {
     public class EmitirCertificadosEmLoteInput : IRequest<EmitirCertificadosEmLoteOutput>
@@ -11,7 +10,6 @@ namespace Ellp.Api.Application.UseCases.StudentWorkshop.EmitirCertificadosEmLote
     {
         public int StudentId { get; set; }
         public int WorkshopId { get; set; }
-        public string Certificado { get; set; }
     }
 }
 
