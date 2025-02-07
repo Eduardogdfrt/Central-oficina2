@@ -1,22 +1,19 @@
 version: '3.8'
 
 services:
-  frontend:
-    build:
-      context: .             
-      dockerfile: Dockerfile  
-    ports:
-      - "3000:3000"           
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sqlserver
     environment:
-      - CI=false
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=SuaSenhaForte123
+    ports:
+      - "1433:1433"
+    volumes:
+      - ./oficina.bak:/backup/oficina.bak  # Mapear o arquivo de backup diretamente
+    networks:
+      - sqlnetwork
 
-  backend:
-    build:
-      context: .              
-      dockerfile: Dockerfile  
-    ports:
-      - "5000:5000"           
-    environment:
-      - ASPNETCORE_URLS=http://+:5000
-      - ASPNETCORE_ENVIRONMENT=Production
-          
+networks:
+  sqlnetwork:
+    driver: bridge
