@@ -3,7 +3,7 @@ name: Deploy to Hml on Release Changes
 on:
   push:
     branches:
-      - main
+      - release  # Alterado para a branch 'release', ajuste conforme necessário
     paths:
       - 'Back/**'
       - 'front/**'
@@ -48,27 +48,23 @@ jobs:
 
       - name: Build and Push Image
         run: |
-          docker-compose build --no-cache
-          VERSION_TAG="hml-$(date +%Y%m%d%H%M%S)"  # Using a timestamp-based version tag
-          docker tag centraloficina2acr.azurecr.io/central-oficina2:hml centraloficina2acr.azurecr.io/central-oficina2:$VERSION_TAG
-          docker-compose push
-          echo "Pushed image with tag: $VERSION_TAG"
+          docker build -t centraloficina2acr.azurecr.io/centraloficina2:latest . --no-cache
+          docker push centraloficina2acr.azurecr.io/centraloficina2:latest  # Push diretamente após o build, sem o docker tag
 
       - name: Configure App Service
         run: |
-          VERSION_TAG="hml-$(date +%Y%m%d%H%M%S)"  # Same tag used for the new image
-          az webapp config container set \
-            --name centralOficina2-Hml \
-            --resource-group CentralOficina2-Hml \
-            --container-image-name centraloficina2acr.azurecr.io/central-oficina2:$VERSION_TAG \
-            --container-registry-url https://centraloficina2acr.azurecr.io \
-            --container-registry-user ${{ secrets.ACR_USERNAME }} \
-            --container-registry-password ${{ secrets.ACR_PASSWORD }}
-          echo "Updated Azure Web App to use image with tag: $VERSION_TAG"
+            az webapp config container set \
+              --name centraloficina2 \
+              --resource-group centraloficina2rg \
+              --container-image-name centraloficina2acr.azurecr.io/centraloficina2:latest \
+              --container-registry-url https://centraloficina2acr.azurecr.io \
+              --container-registry-user ${{ secrets.ACR_USERNAME }} \
+              --container-registry-password ${{ secrets.ACR_PASSWORD }} \
+        
 
       - name: Restart App Service
         run: |
-          az webapp restart --name centralOficina2-Hml --resource-group CentralOficina2-Hml
+          az webapp restart --name centraloficina2 --resource-group centraloficina2rg
           echo "App Service restarted."
 
       - name: Validate Deployments
@@ -76,7 +72,7 @@ jobs:
           max_retries=10
           sleep_time=15
           retries=0
-          while [ "$(az webapp show --name centralOficina2-Hml --resource-group CentralOficina2-Hml --query state -o tsv)" != "Running" ]; do
+          while [ "$(az webapp show --name centraloficina2 --resource-group centraloficina2rg --query state -o tsv)" != "Running" ]; do
             echo "Waiting for App Service to be in Running state..."
             sleep $sleep_time
             retries=$((retries + 1))
