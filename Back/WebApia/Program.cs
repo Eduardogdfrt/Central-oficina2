@@ -24,7 +24,6 @@ public class Program
         builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true);
         builder.Configuration.AddEnvironmentVariables();
 
-        // Diretamente configurando a string de conexão no código
         string connectionString = builder.Configuration["ConnectionStrings:DefaultConnection"];
 
         if (string.IsNullOrEmpty(connectionString))
