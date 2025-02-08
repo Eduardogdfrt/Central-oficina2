@@ -1,12 +1,26 @@
 version: '3.8'
 
 services:
-  app:
+  frontend:
     build:
       context: .
       dockerfile: Dockerfile
+      target: frontend-build
+    ports:
+      - "3000:3000"
+    working_dir: /frontend
+    volumes:
+      - ./front:/frontend
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: build
     ports:
       - "5000:5000"
     environment:
       - ASPNETCORE_URLS=http://+:5000
       - ASPNETCORE_ENVIRONMENT=Production
+    volumes:
+      - ./Back:/src

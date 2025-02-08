@@ -1,5 +1,3 @@
-using Azure.Identity;
-using Azure.Security.KeyVault.Secrets;
 using Ellp.Api.Application.Interfaces;
 using Ellp.Api.Application.UseCases.StudentWorkshop.AddStundentWorkshop;
 using Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewStudentUseCases;
@@ -26,32 +24,11 @@ public class Program
         builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true);
         builder.Configuration.AddEnvironmentVariables();
 
-        if (builder.Environment.IsDevelopment())
-        {
-            builder.Configuration.AddUserSecrets<Program>();
-        }
-
-        // Configurar o Azure Key Vault
-        var keyVaultEndpoint = builder.Configuration["KeyVault:Endpoint"];
-        var secretName = builder.Configuration["KeyVault:SecretName"];
-        var clientId = builder.Configuration["KeyVault:ClientId"];
-        var clientSecretPart1 = builder.Configuration["KeyVault:ClientSecretPart1"];
-        var clientSecretPart2 = builder.Configuration["KeyVault:ClientSecretPart2"];
-        var clientSecret = clientSecretPart1 + clientSecretPart2;
-        var tenantId = builder.Configuration["KeyVault:TenantId"];
-        string connectionString = string.Empty;
-        if (!string.IsNullOrEmpty(keyVaultEndpoint) && !string.IsNullOrEmpty(secretName) &&
-            !string.IsNullOrEmpty(clientId) && !string.IsNullOrEmpty(clientSecret) && !string.IsNullOrEmpty(tenantId))
-        {
-            var credential = new ClientSecretCredential(tenantId, clientId, clientSecret);
-            var client = new SecretClient(new Uri(keyVaultEndpoint), credential);
-            KeyVaultSecret secret = client.GetSecret(secretName);
-            connectionString = secret.Value;
-        }
+        string connectionString = builder.Configuration["ConnectionStrings:DefaultConnection"];
 
         if (string.IsNullOrEmpty(connectionString))
         {
-            throw new InvalidOperationException("A string de conexão 'Db-c' não foi encontrada no Key Vault.");
+            throw new InvalidOperationException("A string de conexão não foi encontrada no appsettings.json.");
         }
 
         builder.WebHost.ConfigureKestrel(serverOptions =>
@@ -71,6 +48,7 @@ public class Program
             c.MapType<int?>(() => new OpenApiSchema { Type = "integer", Format = "int32", Nullable = true });
         });
 
+        // Configuração do DbContext com a connection string do appsettings.json
         builder.Services.AddDbContext<SqlServerDbContext>(options =>
             options.UseSqlServer(connectionString));
 
@@ -150,4 +128,3 @@ public class Program
         app.Run();
     }
 }
-
