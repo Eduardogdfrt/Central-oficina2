@@ -7,7 +7,7 @@ on:
     paths:
       - 'Back/**'
       - 'front/**'
-      - '.github/workflows/deploy-hml.yml'
+      - '.github/workflows/deploy.yml'
       - 'docker-compose.yml'
 
 jobs:
