@@ -1,5 +1,4 @@
-﻿
-using Ellp.Api.Application.Interfaces;
+﻿using Ellp.Api.Application.Interfaces;
 using Ellp.Api.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +12,6 @@ namespace Ellp.Api.Infra.SqlServer.Repository
         {
             _context = context;
         }
-
 
         public async Task AddAsync(Student student)
         {
@@ -31,9 +29,25 @@ namespace Ellp.Api.Infra.SqlServer.Repository
             return await _context.Students
                 .FirstOrDefaultAsync(s => s.Email == email && s.Password == password);
         }
+
         public async Task<Student> GetStudentByIdAsync(int id)
         {
-            return await _context.Students.FindAsync(id);   
+            return await _context.Students.FindAsync(id);
+        }
+
+        public async Task<IEnumerable<Student>> GetAllAsync()
+        {
+            try
+            {
+                return await _context.Students.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (you can use a logging framework here)
+                Console.WriteLine($"An error occurred while retrieving students: {ex.Message}");
+                throw;
+            }
         }
     }
 }
+
