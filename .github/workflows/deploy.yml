@@ -42,6 +42,7 @@ jobs:
 
       - name: Push Docker Image to Google Container Registry
         run: |
+          gcloud config set account github-actions-sa@centraloficina2.iam.gserviceaccount.com
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/centraloficina2:latest
 
       - name: Deploy to Google Cloud Run
