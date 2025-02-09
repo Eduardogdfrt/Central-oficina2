@@ -1,0 +1,69 @@
+name: Deploy to HML on Release Changes
+
+on:
+  push:
+    branches:
+      - release  # Alterado para a branch 'release', ajuste conforme necessário
+    paths:
+      - 'Back/**'
+      - 'front/**'
+      - '.github/workflows/deploy-hml.yml'
+      - 'docker-compose.yml'
+
+jobs:
+  deploy-to-hml:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.23.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
+
+      - name: Setup Google Cloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          version: 'latest'
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Authenticate with Google Cloud
+        run: echo "${{ secrets.GCP_SA_KEY }}" | gcloud auth activate-service-account --key-file=-
+
+      - name: Build Docker Image
+        run: |
+          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/centraloficina2:latest . --no-cache
+
+      - name: Push Docker Image to Google Container Registry
+        run: |
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/centraloficina2:latest
+
+      - name: Deploy to Google Cloud Run
+        run: |
+          gcloud run deploy centraloficina2 \
+            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/centraloficina2:latest \
+            --platform managed \
+            --region us-central1 \
+            --allow-unauthenticated
+
+      - name: Validate Deployments
+        run: |
+          max_retries=10
+          sleep_time=15
+          retries=0
+          while [ "$(gcloud run services describe centraloficina2 --platform managed --region us-central1 --format 'value(status.conditions[0].status)')" != "True" ]; do
+            echo "Waiting for Cloud Run service to be in Running state..."
+            sleep $sleep_time
+            retries=$((retries + 1))
+            if [ "$retries" -ge "$max_retries" ]; then
+              echo "Cloud Run service did not reach Running state within expected time."
+              exit 1
+            fi
+          done
+          echo "Cloud Run service is now running."
