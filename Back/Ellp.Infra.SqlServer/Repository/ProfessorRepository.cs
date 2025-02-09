@@ -1,6 +1,8 @@
 ﻿using Ellp.Api.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Ellp.Api.Application.Interfaces;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Ellp.Api.Infra.SqlServer.Repository
 {
@@ -24,6 +26,16 @@ namespace Ellp.Api.Infra.SqlServer.Repository
         public async Task<Professor> GetByEmailAsync(string email)
         {
             return await _context.Professors.FirstOrDefaultAsync(p => p.Email == email);
+        }
+
+        public async Task<Professor> GetProfessorByIdAsync(int id)
+        {
+            return await _context.Professors.FindAsync(id);
+        }
+
+        public async Task<IEnumerable<Professor>> GetAllAsync()
+        {
+            return await _context.Professors.ToListAsync();
         }
     }
 }

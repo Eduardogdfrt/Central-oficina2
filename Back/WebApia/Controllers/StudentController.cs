@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using AppResponse = Ellp.Api.Application.Utilities.Response;
 using Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewStudentUseCases;
-using Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginStudent; // Alias para evitar ambiguidades
+using Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginStudent;
+using Ellp.Api.Application.UseCases.Users.SearchAllStudents;
 
 namespace Ellp.Api.WebApi.Controllers
 {
@@ -26,8 +27,8 @@ namespace Ellp.Api.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetLoginStudent(
             [Required][FromQuery] string email,
-            [FromQuery] string? password = null, // Parâmetro opcional com valor padrão
-            CancellationToken cancellationToken = default) // Adicionado valor padrão
+            [FromQuery] string? password = null,
+            CancellationToken cancellationToken = default)
         {
             try
             {
@@ -82,5 +83,27 @@ namespace Ellp.Api.WebApi.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new AppResponse { Message = "Ocorreu um erro durante o processamento" });
             }
         }
+
+        [HttpGet("search")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> SearchAllStudents(
+            [FromQuery] int? studentId = null,
+            CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var input = new SearchAllStudentsInput(studentId);
+                var result = await _mediator.Send(input, cancellationToken);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ocorreu um erro ao buscar os estudantes.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new AppResponse { Message = "Ocorreu um erro durante o processamento" });
+            }
+        }
     }
 }
+

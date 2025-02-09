@@ -7,10 +7,13 @@
 
   .content {
     display: flex;
-    margin-top: 3.5rem;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+
+  .content.login {
+    margin-top: 3.5rem;
   }
 
   
@@ -30,9 +33,27 @@
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    width: 16%;
+    width: 20% !important;
   }
 
   .text.no-width {
     width: auto; 
   }
+
+  .form-container {
+    width: 100%;
+  }
+
+  .glow {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    bottom: 0;
+    left: 50%;
+    width: 100%; 
+    height: 10vh; 
+    background-color:rgba(50, 64, 196, 0.753);
+    filter: blur(280px);
+    pointer-events: none; 
+  }
+  

@@ -1,20 +1,18 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useUser } from "../../contexts/UserContext"; 
 import Title from "../../components/title/Title";
 import Header from "../../components/header/Header";
 import { Link } from "react-router-dom";
 import WorkshopCard from "../../components/workshopCard/WorkshopCard";
 import "../../pages/professor/Workshop.css";
 import { useNavigate } from "react-router-dom"; 
-import Button from "../../components/button/Button";
 
 // icones personalizados
 import card01 from "../../assets/images/card01.png"; // robótica
 import card02 from "../../assets/images/card02.png"; // lógica
 import card03 from "../../assets/images/card03.png"; // programação
 import card05 from "../../assets/images/card05.png"; // default
-
 const getWorkshopIcon = (name) => {
+
   if (name.includes("Robótica")) return card01;
   if (name.includes("Lógica")) return card02;
   if (name.includes("Programação")) return card03;
@@ -22,7 +20,6 @@ const getWorkshopIcon = (name) => {
 };
 
 const Workshops = () => {
-  const { userId } = useUser(); 
   const [workshops, setWorkshops] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -41,42 +38,27 @@ const Workshops = () => {
     }
   };
 
-  const handleAddWorkshop = () => {
-    navigate("/workshop-cadastro");
-  };
-  const handleAddCertificado = () => {
-    navigate("/certificado");
-  };
-
   useEffect(() => {
-    console.log("UserId:", userId); 
-  
-    if (userId) {
-      const fetchWorkshops = async () => {
-        try {
-          const response = await fetch(`http://localhost:5000/api/Workshop/professor/${userId}`);
-          console.log('API Response:', response); 
-          if (!response.ok) throw new Error("Erro ao carregar workshops");
-  
-          const data = await response.json();
-          console.log('Workshops Data:', data);
-  
-          if (data.workshops && Array.isArray(data.workshops)) {
-            setWorkshops(data.workshops);
-          } else {
-            setWorkshops([]);
-          }
-        } catch (err) {
-          console.error('Erro ao buscar workshops:', err);
-          setError(err.message);
-        } finally {
-          setLoading(false);
+    const fetchWorkshops = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/Workshop/FindAll");
+        if (!response.ok) throw new Error("Erro ao carregar workshops");
+
+        const data = await response.json();
+        if (data.workshops && Array.isArray(data.workshops)) {
+          setWorkshops(data.workshops);
+        } else {
+          setWorkshops([]);
         }
-      };
-  
-      fetchWorkshops();
-    }
-  }, [userId]);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWorkshops();
+  }, []);
 
   return (
     <div className="page">
@@ -103,10 +85,6 @@ const Workshops = () => {
             )}
           </div>
           <button className="carousel-btn right" onClick={() => scrollCarousel("right")}>&#10095;</button>
-        </div>
-        <div className="inputs">
-          <Button text="CADASTRAR NOVO" onClick={handleAddWorkshop}/>
-          <Button text="GERAR CERTIFICADO" onClick={handleAddCertificado}/>
         </div>
       </div>
     </div>

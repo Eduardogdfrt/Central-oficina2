@@ -61,11 +61,11 @@ const Cadastro = () => {
   return (
     <div className="page">
       <Header title="CADASTRO" />
-      <div className="content login">
+      <div className="content">
         <Title text="CADASTRO" fontSize="3.5rem" margin="0px" />
         <p className="text">Cadastre-se para acessar a plataforma</p>
         <div className="inputs">
-          <form onSubmit={handleCadastro}>
+          <form onSubmit={handleCadastro} className="form-container">
             <p className="text no-width">Nome completo</p>
             <Input
               type="text"
