@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Ellp.Api.Application.UseCases.Users.GetLoginUseCases.GetLoginProfessor;
 using Ellp.Api.Application.UseCases.Users.AddParticipantUsecases.AddNewProfessorUseCases;
+using Ellp.Api.Application.UseCases.Users.SearchAllProfessors;
 
 namespace Ellp.Api.WebApi.Controllers
 {
@@ -79,6 +80,35 @@ namespace Ellp.Api.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ocorreu um erro ao processar a solicitação de login.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Message = "Ocorreu um erro durante o processamento" });
+            }
+        }
+
+        [HttpGet("search")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> SearchAllProfessors(
+            [FromQuery] int? professorId = null,
+            CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var input = new SearchAllProfessorsInput(professorId);
+                var result = await _mediator.Send(input, cancellationToken);
+
+                if (result.Any())
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return NotFound(new Response { Message = "Nenhum professor encontrado" });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ocorreu um erro ao buscar os professores.");
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Message = "Ocorreu um erro durante o processamento" });
             }
         }
