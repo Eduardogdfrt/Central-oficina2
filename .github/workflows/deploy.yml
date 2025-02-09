@@ -27,14 +27,12 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose --version
 
-      - name: Setup Google Cloud CLI
-        uses: google-github-actions/setup-gcloud@v2
+      - name: Set up GCloud
+        uses: google-github-actions/setup-gcloud@v0.4.0
         with:
-          version: 'latest'
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-
-      - name: Authenticate with Google Cloud
-        run: echo "${{ secrets.GCP_SA_KEY }}" | gcloud auth activate-service-account --key-file="C:\Users\fnjun\Downloads\centraloficina2-dc23de524e49.json"
+            project_id: ${{ secrets.GCP_PROJECT_ID }}
+            service_account_key: ${{ secrets.GCP_SA_KEY }}
+            export_default_credentials: true
 
       - name: Build Docker Image
         run: |
