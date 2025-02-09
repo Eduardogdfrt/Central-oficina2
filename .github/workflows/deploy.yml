@@ -34,7 +34,7 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Authenticate with Google Cloud
-        run: echo "${{ secrets.GCP_SA_KEY }}" | gcloud auth activate-service-account --key-file=${{ secrets.GCP_SA_KEY }}
+        run: echo "${{ secrets.GCP_SA_KEY }}" | gcloud auth activate-service-account --key-file="C:\Users\fnjun\Downloads\centraloficina2-dc23de524e49.json"
 
       - name: Build Docker Image
         run: |
