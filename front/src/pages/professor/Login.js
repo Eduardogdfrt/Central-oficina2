@@ -6,24 +6,49 @@ import Header from "../../components/header/Header";
 import Input from "../../components/input/Input";
 import Button from "../../components/button/Button";
 import axios from "axios";
+import { useUser } from "../../contexts/UserContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(""); // Estado para erros
+  const [error, setError] = useState(""); 
   const navigate = useNavigate();
+  const { setUserId } = useUser();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.get(`https://centraloficina2-hml.azurewebsites.net/Professor/login?professorId=${email}&password=${password}`);
-      
+      let isProfessor = false;
+      let loginUrl = "";
+
+      if (!email.includes('@')) {
+        // caso o login seja feito com o ID do professor
+        isProfessor = true;
+        loginUrl = `http://localhost:5000/Professor/login?professorId=${email}&password=${password}`;
+      } else {
+        // caso o login seja feito com o e-mail do aluno
+        loginUrl = `http://localhost:5000/Student/login?email=${email}&password=${password}`;
+      }
+
+      const response = await axios.get(loginUrl);
+
       if (response.status === 200) {
         console.log("Login Successful:", response.data);
-        navigate("/workshops");
+        const userId = response.data.professorId; 
+        
+  
+        setUserId(userId);
+
+       
+        if (isProfessor) {
+          navigate("/workshops"); 
+        } else {
+          navigate("/workshops-aluno"); 
+        }
       } else {
         setError("Login falhou. Verifique suas credenciais.");
       }
+      
     } catch (err) {
       console.error("Erro na solicitação:", err);
       if (err.response) {
@@ -43,11 +68,11 @@ const Login = () => {
         <Title text="LOGIN" fontSize="3.5rem" margin="0px" />
         <p className="text">Faça login para utilizar a plataforma</p>
         <div className="inputs">
-          <form onSubmit={handleLogin}>
-            <p className="text no-width">Id do Professor</p>
+          <form onSubmit={handleLogin} className="form-container">
+            <p className="text no-width">ID do Professor ou Email</p>
             <Input
               type="text"
-              placeholder="Digite seu e-mail"
+              placeholder="Informe o ID do professor ou seu e-mail"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               customStyle={{

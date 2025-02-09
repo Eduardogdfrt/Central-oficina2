@@ -7,7 +7,6 @@
 
   .content {
     display: flex;
-    margin-top: 3.5rem;
     flex-direction: column;
     justify-content: center;
     align-items: center;
