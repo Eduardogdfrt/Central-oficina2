@@ -1,4 +1,4 @@
-FROM node:22.13.1 AS frontend-build
+FROM node:16-alpine AS frontend-build
 WORKDIR /frontend
 COPY front/package*.json ./
 RUN npm install
