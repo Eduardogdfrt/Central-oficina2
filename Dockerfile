@@ -25,6 +25,7 @@ COPY --from=build /app/publish .
 
 
 COPY --from=frontend-build /frontend/build /app/wwwroot
+COPY front/public/models /app/wwwroot/models
 
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 ENV ASPNETCORE_URLS=http://+:5000
