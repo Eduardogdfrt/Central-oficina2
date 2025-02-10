@@ -32,7 +32,8 @@ ENV ASPNETCORE_URLS=http://+:8080
 ENV ASPNETCORE_ENVIRONMENT=Production
 
 
-EXPOSE 8080
+EXPOSE 5000
+EXPOSE 3000
 
 # Configuração para rodar o backend .NET
 ENTRYPOINT ["dotnet", "Ellp.Api.Webapi.dll"]

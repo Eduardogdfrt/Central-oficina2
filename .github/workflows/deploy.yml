@@ -55,7 +55,7 @@ jobs:
               --platform managed \
               --region us-central1 \
               --allow-unauthenticated \
-              --port 8080
+              --port 5000
       
 
       - name: Validate Deployments
