@@ -20,7 +20,7 @@ const GerarCertificado = () => {
   useEffect(() => {
     const fetchWorkshopData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/Workshop/${workshopId}`);
+        const response = await axios.get(`https://centraloficina2-327755630538.us-central1.run.app/api/Workshop/${workshopId}`);
         if (response.status === 200) {
           setWorkshop(response.data.workshop);
         } else {
@@ -43,7 +43,7 @@ const GerarCertificado = () => {
   const handleGenerateCertificate = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/api/WorkshopStudent/workshopStudent/emitir-certificado", {
+      const response = await axios.post("https://centraloficina2-327755630538.us-central1.run.app/api/WorkshopStudent/workshopStudent/emitir-certificado", {
         certificados: [
           {
             studentId,

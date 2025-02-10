@@ -16,7 +16,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.get(`https://centraloficina2-hml.azurewebsites.net/Student/login?email=${email}&password=${password}`);
+      const response = await axios.get(`https://centraloficina2-327755630538.us-central1.run.app/Student/login?email=${email}&password=${password}`);
       
       if (response.status === 200) {
         console.log("Login Successful:", response.data);

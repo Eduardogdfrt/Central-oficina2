@@ -27,12 +27,13 @@ COPY --from=build /app/publish .
 COPY --from=frontend-build /frontend/build /app/wwwroot
 
 
-ENV ASPNETCORE_URLS=http://+:5000
+RUN apk add --no-cache icu-libs
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=0
+ENV DOTNET_RUNNING_IN_CONTAINER=true
+ENV ASPNETCORE_URLS=http://+:${PORT:-5000}  
 ENV ASPNETCORE_ENVIRONMENT=Production
 
-
 EXPOSE 5000
-EXPOSE 3000
 
-# Configuração para rodar o backend .NET
+
 ENTRYPOINT ["dotnet", "Ellp.Api.Webapi.dll"]
