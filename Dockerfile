@@ -25,15 +25,14 @@ COPY --from=build /app/publish .
 
 
 COPY --from=frontend-build /frontend/build /app/wwwroot
-COPY front/public/models /app/wwwroot/models
+RUN mkdir -p /app/wwwroot/models && cp -r /app/wwwroot/models /app/wwwroot
+
 
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
-ENV ASPNETCORE_URLS=http://+:5000
+ENV ASPNETCORE_URLS=http://+:${PORT:-5000}  
 ENV ASPNETCORE_ENVIRONMENT=Production
 
-
 EXPOSE 5000
-EXPOSE 3000
 
-# Configuração para rodar o backend .NET
+
 ENTRYPOINT ["dotnet", "Ellp.Api.Webapi.dll"]
