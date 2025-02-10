@@ -27,7 +27,9 @@ COPY --from=build /app/publish .
 COPY --from=frontend-build /frontend/build /app/wwwroot
 
 
-ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+RUN apk add --no-cache icu-libs
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=0
+ENV DOTNET_RUNNING_IN_CONTAINER=true
 ENV ASPNETCORE_URLS=http://+:${PORT:-5000}  
 ENV ASPNETCORE_ENVIRONMENT=Production
 
