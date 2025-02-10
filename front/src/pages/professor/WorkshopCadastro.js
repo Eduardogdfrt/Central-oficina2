@@ -36,7 +36,7 @@ const WorkshopCadastro = () => {
         console.log(workshopData); 
     
         try {
-            const response = await axios.post("http://localhost:5000/api/Workshop/add", workshopData);
+            const response = await axios.post("https://centraloficina2-327755630538.us-central1.run.app/api/Workshop/add", workshopData);
             
             if (response.status === 201) {
                 setSuccess("Cadastro do workshop realizado com sucesso!");

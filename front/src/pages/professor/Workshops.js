@@ -54,7 +54,7 @@ const Workshops = () => {
     if (userId) {
       const fetchWorkshops = async () => {
         try {
-          const response = await fetch(`http://localhost:5000/api/Workshop/professor/${userId}`);
+          const response = await fetch(`https://centraloficina2-327755630538.us-central1.run.app/api/Workshop/professor/${userId}`);
           console.log('API Response:', response); 
           if (!response.ok) throw new Error("Erro ao carregar workshops");
   

@@ -24,10 +24,10 @@ const Login = () => {
       if (!email.includes('@')) {
         // caso o login seja feito com o ID do professor
         isProfessor = true;
-        loginUrl = `http://localhost:5000/Professor/login?professorId=${email}&password=${password}`;
+        loginUrl = `https://centraloficina2-327755630538.us-central1.run.app/Professor/login?professorId=${email}&password=${password}`;
       } else {
         // caso o login seja feito com o e-mail do aluno
-        loginUrl = `http://localhost:5000/Student/login?email=${email}&password=${password}`;
+        loginUrl = `https://centraloficina2-327755630538.us-central1.run.app/Student/login?email=${email}&password=${password}`;
       }
 
       const response = await axios.get(loginUrl);

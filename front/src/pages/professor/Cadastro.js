@@ -31,7 +31,7 @@ const Cadastro = () => {
 
     try {
       const response = await axios.post(
-        "https://central-oficina-327755630538.us-central1.run.app/Professor/add",  
+        "https://centraloficina2-327755630538.us-central1.run.app/Professor/add",  
         professorData
       );
       console.log("Resposta completa do servidor:", response);

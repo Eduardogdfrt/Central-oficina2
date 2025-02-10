@@ -41,7 +41,7 @@ const Workshops = () => {
   useEffect(() => {
     const fetchWorkshops = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/Workshop/FindAll");
+        const response = await fetch("https://centraloficina2-327755630538.us-central1.run.app/api/Workshop/FindAll");
         if (!response.ok) throw new Error("Erro ao carregar workshops");
 
         const data = await response.json();

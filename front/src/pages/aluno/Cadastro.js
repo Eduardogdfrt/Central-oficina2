@@ -26,7 +26,7 @@ const Cadastro = () => {
     console.log(studentData);
 
     try {
-      const response = await axios.post("https://central-oficina-327755630538.us-central1.run.app/Student/add", studentData);
+      const response = await axios.post("https://centraloficina2-327755630538.us-central1.run.app/Student/add", studentData);
 
       if (response.status === 201) {
         setSuccess("Cadastro realizado com sucesso!");
