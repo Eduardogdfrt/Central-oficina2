@@ -25,7 +25,6 @@ COPY --from=build /app/publish .
 
 
 COPY --from=frontend-build /frontend/build /app/wwwroot
-RUN mkdir -p /app/wwwroot/models && cp -r /app/wwwroot/models /app/wwwroot
 
 
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
