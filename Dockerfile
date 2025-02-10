@@ -22,18 +22,17 @@ RUN dotnet publish "Ellp.Api.Webapi.csproj" -c Release -o /app/publish
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS runtime
 WORKDIR /app
 COPY --from=build /app/publish .
+COPY --from=frontend-build /frontend/build /app/wwwroot  
 
-
-COPY --from=frontend-build /frontend/build /app/wwwroot
-
-
+# Instala suporte a globalização no Alpine
 RUN apk add --no-cache icu-libs
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=0
 ENV DOTNET_RUNNING_IN_CONTAINER=true
-ENV ASPNETCORE_URLS=http://+:${PORT:-5000}  
+
+# Define a porta para o Cloud Run
+ENV ASPNETCORE_URLS=http://+:8080  
 ENV ASPNETCORE_ENVIRONMENT=Production
 
-EXPOSE 5000
-
+EXPOSE 8080  
 
 ENTRYPOINT ["dotnet", "Ellp.Api.Webapi.dll"]
