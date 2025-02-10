@@ -28,7 +28,7 @@ public class Program
 
         if (string.IsNullOrEmpty(connectionString))
         {
-            throw new InvalidOperationException("A string de conexão não foi encontrada no appsettings.json.");
+            throw new InvalidOperationException("A string de conexï¿½o nï¿½o foi encontrada no appsettings.json.");
         }
 
         builder.WebHost.ConfigureKestrel(serverOptions =>
@@ -48,7 +48,7 @@ public class Program
             c.MapType<int?>(() => new OpenApiSchema { Type = "integer", Format = "int32", Nullable = true });
         });
 
-        // Configuração do DbContext com a connection string do appsettings.json
+        // Configuraï¿½ï¿½o do DbContext com a connection string do appsettings.json
         builder.Services.AddDbContext<SqlServerDbContext>(options =>
             options.UseSqlServer(connectionString));
 
@@ -101,6 +101,9 @@ public class Program
         }
 
         app.UseAuthorization();
+        app.UseDefaultFiles();
+        app.UseStaticFiles();
+        app.MapFallbackToFile("index.html"); // Garante que as rotas do React funcionem
 
         app.MapControllers();
         app.MapFallbackToFile("index.html");
