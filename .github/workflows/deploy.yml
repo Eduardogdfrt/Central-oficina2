@@ -9,6 +9,7 @@ on:
       - 'front/**'
       - '.github/workflows/deploy.yml'
       - 'docker-compose.yml'
+#teste
 
 jobs:
   deploy-to-hml:
