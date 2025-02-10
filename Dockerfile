@@ -28,12 +28,11 @@ COPY --from=frontend-build /frontend/build /app/wwwroot
 COPY front/public/models /app/wwwroot/models
 
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
-ENV ASPNETCORE_URLS=http://+:5000
+ENV ASPNETCORE_URLS=http://+:8080
 ENV ASPNETCORE_ENVIRONMENT=Production
 
 
-EXPOSE 5000
-EXPOSE 3000
+EXPOSE 8080
 
 # Configuração para rodar o backend .NET
 ENTRYPOINT ["dotnet", "Ellp.Api.Webapi.dll"]
