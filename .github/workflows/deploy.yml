@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - release  # Alterado para a branch 'release', ajuste conforme necessário
+      - feature/Fabio
     paths:
       - 'Back/**'
       - 'front/**'
