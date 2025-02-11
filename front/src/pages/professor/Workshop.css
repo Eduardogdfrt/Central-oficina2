@@ -1,17 +1,67 @@
+.page {
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  
+}
+
+.inputs {
+  display: flex;
+  gap: 20px; 
+  justify-content: flex-start;
+  margin-bottom: 60px;
+  flex-direction: row;
+  margin-left: 90px;
+}
+
+.workshop-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start; 
+  align-items: center;
+}
+
+.workshop-card {
+  flex: 0 0 auto;
+  width: 200px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.workshop-card img {
+  width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.workshop-card p {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
 .content-workshop {
-    display: flex;
-    flex-direction: row;
-    margin-top: 10%;
-    justify-content: space-evenly;
-    align-items: center;
-    width: 70%;
-    overflow: hidden;
-  }
+  display: flex;
+  flex-direction: row;
+  margin-top: 10%;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 70%;
+  overflow: hidden;
+}
 
-  .workshop-add-button{
-    text-decoration: none;
-  }
-
+.workshop-add-button {
+  text-decoration: none;
+}
 
 .carousel-container {
   position: relative;
@@ -26,20 +76,19 @@
 
 .workshop-carousel {
   display: flex;
-  gap: 30px; 
-  overflow-x: auto; 
+  gap: 30px;
+  overflow-x: auto;
   scroll-behavior: smooth;
   white-space: nowrap;
   padding: 10px;
   width: 70%;
-  scrollbar-width: none; 
+  scrollbar-width: none;
   margin-top: 3%;
 }
 
 .workshop-carousel::-webkit-scrollbar {
-  display: none; 
+  display: none;
 }
-
 
 .carousel-btn {
   background-color: #131335;
@@ -68,21 +117,18 @@
   right: 10%;
 }
 
-
 .workshop-add-button {
   text-decoration: none;
 }
 
 .workshop-carousel > * {
-  flex: 0 0 auto; 
+  flex: 0 0 auto;
 }
 
 .nav {
   width: 30%;
 }
 
-.workshop-details{
+.workshop-details {
   margin: 2% 0% 2% 0%;
 }
-  
-  

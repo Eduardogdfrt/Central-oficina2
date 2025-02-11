@@ -1,6 +1,5 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useUser } from "../../contexts/UserContext"; 
-import Title from "../../components/title/Title";
 import Header from "../../components/header/Header";
 import { Link } from "react-router-dom";
 import WorkshopCard from "../../components/workshopCard/WorkshopCard";
@@ -26,20 +25,8 @@ const Workshops = () => {
   const [workshops, setWorkshops] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const carouselRef = useRef(null);
 
   const navigate = useNavigate();
-
-  const scrollCarousel = (direction) => {
-    if (carouselRef.current) {
-      const scrollAmount = 300; 
-      if (direction === "left") {
-        carouselRef.current.scrollLeft -= scrollAmount;
-      } else {
-        carouselRef.current.scrollLeft += scrollAmount;
-      }
-    }
-  };
 
   const handleAddWorkshop = () => {
     navigate("/workshop-cadastro");
@@ -49,31 +36,34 @@ const Workshops = () => {
   };
 
   useEffect(() => {
-    console.log("UserId:", userId); 
-  
+    const storedUserId = localStorage.getItem("userId");
     if (userId) {
-      const fetchWorkshops = async () => {
-        try {
-          const response = await fetch(`http://localhost:5000/api/Workshop/professor/${userId}`);
-          console.log('API Response:', response); 
-          if (!response.ok) throw new Error("Erro ao carregar workshops");
-  
-          const data = await response.json();
-          console.log('Workshops Data:', data);
-  
-          if (data.workshops && Array.isArray(data.workshops)) {
-            setWorkshops(data.workshops);
-          } else {
-            setWorkshops([]);
-          }
-        } catch (err) {
-          console.error('Erro ao buscar workshops:', err);
-          setError(err.message);
-        } finally {
-          setLoading(false);
+      localStorage.setItem("userId", userId);
+    }
+
+    const fetchWorkshops = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/Workshop/professor/${storedUserId || userId}`);
+        console.log('API Response:', response); 
+        if (!response.ok) throw new Error("Erro ao carregar workshops");
+
+        const data = await response.json();
+        console.log('Workshops Data:', data);
+
+        if (data.workshops && Array.isArray(data.workshops)) {
+          setWorkshops(data.workshops);
+        } else {
+          setWorkshops([]);
         }
-      };
-  
+      } catch (err) {
+        console.error('Erro ao buscar workshops:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (storedUserId || userId) {
       fetchWorkshops();
     }
   }, [userId]);
@@ -81,32 +71,27 @@ const Workshops = () => {
   return (
     <div className="page">
       <Header title="SAIR" />
+      <div className="inputs" >
+          <Button text="MEUS WORKSHOPS" onClick={() => {}}/>
+          <Button text="CADASTRAR NOVO" onClick={handleAddWorkshop}/>
+        </div>
       <div className="content">
-        <Title text="MEUS WORKSHOPS" fontSize="3.5rem" />
         {loading && <p>Carregando workshops...</p>}
         {error && <p className="error">Erro: {error}</p>}
 
-        <div className="carousel-container">
-          <button className="carousel-btn left" onClick={() => scrollCarousel("left")}>&#10094;</button>
-          <div className="workshop-carousel" ref={carouselRef}>
-            {Array.isArray(workshops) && workshops.length > 0 ? (
-              workshops.map((workshop, index) => (
-                <Link to={`/workshop/${workshop.id}`} key={index} style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <WorkshopCard
-                    text={workshop.name}
-                    icon={getWorkshopIcon(workshop.name)} 
-                  />
-                </Link>
-              ))
-            ) : (
-              !loading && <p>Nenhum workshop encontrado.</p>
-            )}
-          </div>
-          <button className="carousel-btn right" onClick={() => scrollCarousel("right")}>&#10095;</button>
-        </div>
-        <div className="inputs">
-          <Button text="CADASTRAR NOVO" onClick={handleAddWorkshop}/>
-          <Button text="GERAR CERTIFICADO" onClick={handleAddCertificado}/>
+        <div className="workshop-cards">
+          {Array.isArray(workshops) && workshops.length > 0 ? (
+            workshops.map((workshop, index) => (
+              <Link to={`/workshop/${workshop.id}`} key={index} style={{ textDecoration: 'none', color: 'inherit' }}>
+                <WorkshopCard
+                  text={workshop.name}
+                  icon={getWorkshopIcon(workshop.name)} 
+                />
+              </Link>
+            ))
+          ) : (
+            !loading && <p>Nenhum workshop encontrado.</p>
+          )}
         </div>
       </div>
     </div>
