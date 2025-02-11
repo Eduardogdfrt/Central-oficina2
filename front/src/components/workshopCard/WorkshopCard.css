@@ -4,6 +4,7 @@
     align-items: center; 
     justify-content: center; 
     text-align: center; 
+    margin-right: 60px;
 }
 
 .card{
@@ -15,6 +16,7 @@
     height: 183px;
     background: linear-gradient(110deg, #18183f 0%, #010113 130%);
     border-radius: 10px 60px 10px 100px;
+    margin-right: 60px;
 }
 
 .img-card{

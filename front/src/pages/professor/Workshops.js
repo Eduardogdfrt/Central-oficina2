@@ -85,7 +85,8 @@ const Workshops = () => {
               <Link to={`/workshop/${workshop.id}`} key={index} style={{ textDecoration: 'none', color: 'inherit' }}>
                 <WorkshopCard
                   text={workshop.name}
-                  icon={getWorkshopIcon(workshop.name)} 
+                  icon={getWorkshopIcon(workshop.name)}
+                  style={{ marginRight: "20vh" }} 
                 />
               </Link>
             ))
