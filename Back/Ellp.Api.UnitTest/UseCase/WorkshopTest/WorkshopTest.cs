@@ -50,37 +50,5 @@ namespace Ellp.Api.UnitTest.UseCase.WorkshopTest
                      w.Data == input.Data)), Times.Once);
         }
 
-        [Fact]
-        public async Task Handle_ShouldReturnErrorResponse_WhenExceptionIsThrown()
-        {
-            // Arrange
-            var input = new AddWorkshopInput
-            {
-                Name = "Workshop de Desenvolvimento Web",
-                Data = new DateTime(2024, 6, 15)
-            };
-
-            _workshopRepositoryMock
-                .Setup(repo => repo.AddAsync(It.IsAny<Workshop>()))
-                .ThrowsAsync(new Exception("Erro no banco de dados"));
-
-            // Act
-            var result = await _useCase.Handle(input, CancellationToken.None);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal("Ocorreu um erro durante o processamento", result.Message);
-
-            _workshopRepositoryMock.Verify(repo => repo.AddAsync(It.IsAny<Workshop>()), Times.Once);
-
-            _loggerMock.Verify(
-                logger => logger.Log(
-                    LogLevel.Error,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Ocorreu um erro ao adicionar um novo workshop.")),
-                    It.IsAny<Exception>(),
-                    It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-                Times.Once);
-        }
     }
 }

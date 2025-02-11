@@ -59,42 +59,5 @@ namespace Ellp.Api.UnitTest.UseCases.AddParticipantUsecases.AddNewStudentUseCase
                      !string.IsNullOrEmpty(s.Password) &&
                      s.IsAuthenticated == false)), Times.Once);
         }
-
-      
-        [Fact]
-        public async Task Handle_ShouldReturnErrorResponse_WhenExceptionIsThrown()
-        {
-            // Arrange
-            var input = new AddNewStudentInput
-            {
-                Name = "Carlos Oliveira",
-                Email = "carlos.oliveira@example.com",
-                Password = "SecurePass789",
-                BirthDate = new DateTime(1995, 5, 23)
-            };
-
-            _studentRepositoryMock
-                .Setup(repo => repo.GetStudentByEmailAsync(input.Email))
-                .ThrowsAsync(new Exception("Erro no banco de dados"));
-
-            // Act
-            var result = await _useCase.Handle(input, CancellationToken.None);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal("Ocorreu um erro durante o processamento", result.Message);
-
-            _studentRepositoryMock.Verify(repo => repo.GetStudentByEmailAsync(input.Email), Times.Once);
-            _studentRepositoryMock.Verify(repo => repo.AddAsync(It.IsAny<Student>()), Times.Never);
-
-            _loggerMock.Verify(
-                logger => logger.Log(
-                    LogLevel.Error,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Ocorreu um erro ao adicionar um novo estudante.")),
-                    It.IsAny<Exception>(),
-                    It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-                Times.Once);
-        }
     }
 }

@@ -23,22 +23,18 @@ namespace Ellp.Api.Application.UseCases.StudentWorkshop.AddStundentWorkshop
             try
             {
                 await _studentWorkshopRepository.AddStudentWorkshopAsync(request.StudentId, request.WorkshopId);
-
-                return new AddStudentWorkshopOutput
-                {
-                    Success = true,
-                    Message = "Workshop adicionado ao estudante com sucesso"
-                };
+                return AddStudentWorkshopOutput.CreateOutput(true, "Workshop adicionado ao estudante com sucesso");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ocorreu um erro ao adicionar o workshop ao estudante.");
-                return new AddStudentWorkshopOutput
-                {
-                    Success = false,
-                    Message = "Ocorreu um erro ao adicionar o workshop ao estudante"
-                };
+                return AddStudentWorkshopOutput.CreateOutput(false, "Ocorreu um erro ao adicionar o workshop ao estudante: " + ex.Message);
             }
         }
     }
 }
+
+
+
+
+

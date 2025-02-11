@@ -21,7 +21,7 @@ namespace Ellp.Api.Infra.SqlServer.Configurations
                 .IsRequired();
 
             builder.Property(x => x.HelperIDW)
-                .HasColumnName("HelperId")
+                .HasColumnName("AlunoId")
                 .IsRequired(false);
 
             builder.Property(x => x.Data)

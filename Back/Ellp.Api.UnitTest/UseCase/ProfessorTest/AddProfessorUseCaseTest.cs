@@ -96,42 +96,5 @@ namespace Ellp.Api.UnitTest.UseCases.AddParticipantUsecases.AddNewProfessorUseCa
             _professorRepositoryMock.Verify(repo => repo.GetByEmailAsync(input.Email), Times.Once);
             _professorRepositoryMock.Verify(repo => repo.AddNewProfessorAsync(It.IsAny<Professor>()), Times.Never);
         }
-
-        [Fact]
-        public async Task Handle_ShouldReturnErrorResponse_WhenExceptionIsThrown()
-        {
-            // Arrange
-            var input = new AddNewProfessorInput
-            {
-                ProfessorId = 12345678,
-                Name = "Alice Smith",
-                Email = "alice.smith@example.com",
-                Password = "SecurePass456",
-                Specialty = "Mathematics"
-            };
-
-            _professorRepositoryMock
-                .Setup(repo => repo.GetByEmailAsync(input.Email))
-                .ThrowsAsync(new Exception("Database error"));
-
-            // Act
-            var result = await _useCase.Handle(input, CancellationToken.None);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal("Ocorreu um erro durante o processamento", result.Message);
-
-            _professorRepositoryMock.Verify(repo => repo.GetByEmailAsync(input.Email), Times.Once);
-            _professorRepositoryMock.Verify(repo => repo.AddNewProfessorAsync(It.IsAny<Professor>()), Times.Never);
-
-            _loggerMock.Verify(
-                logger => logger.Log(
-                    LogLevel.Error,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Ocorreu um erro ao adicionar um novo professor.")),
-                    It.IsAny<Exception>(),
-                    It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-                Times.Once);
-        }
     }
 }

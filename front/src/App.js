@@ -7,20 +7,34 @@ import Workshops from "./pages/professor/Workshops";
 import WorkshopCadastro from "./pages/professor/WorkshopCadastro";
 import AlunoLogin from "./pages/aluno/Login"
 import AlunoCad from "./pages/aluno/Cadastro"
+import Certificado from "./pages/professor/Certificado";
+import WorkshopDetails from "./pages/professor/WorkshopDetails";
+import WorkshopsAluno from "./pages/aluno/WorkshopsAluno";
+import { UserProvider } from "./contexts/UserContext";
+import { AuthProvider } from "./contexts/AuthContext";
+import GerarCertificado from "./pages/professor/GerarCertificado";
 
 const App = () => {
     return (
-        <Router>
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/cadastro" element={<Cadastro />} />
-                <Route path="/workshops" element={<Workshops />} />
-                <Route path="/workshop-cadastro" element={<WorkshopCadastro />} />
-                <Route path="/aluno-login" element={<AlunoLogin />} />
-                <Route path="/aluno-cadastro" element={<AlunoCad />} />
-            </Routes>
-        </Router>
+        <AuthProvider>
+        <UserProvider>
+            <Router>
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/cadastro" element={<Cadastro />} />
+                    <Route path="/workshops" element={<Workshops />} />
+                    <Route path="/workshops-aluno" element={<WorkshopsAluno />} />
+                    <Route path="/workshop-cadastro" element={<WorkshopCadastro />} />
+                    <Route path="/workshop/:id" element={<WorkshopDetails />} />
+                    <Route path="/gerar-certificado" element={<Certificado />} />
+                    <Route path="/certificado" element={<GerarCertificado />} />
+                    <Route path="/aluno-login" element={<AlunoLogin />} />
+                    <Route path="/aluno-cadastro" element={<AlunoCad />} />
+                </Routes>
+            </Router>'
+        </UserProvider>
+        </AuthProvider>
     );
 };
 

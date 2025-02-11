@@ -26,7 +26,7 @@ const Cadastro = () => {
     console.log(studentData);
 
     try {
-      const response = await axios.post("https://centraloficina2-hml.azurewebsites.net/Student/add", studentData);
+      const response = await axios.post("http://localhost:5000/Student/add", studentData);
 
       if (response.status === 201) {
         setSuccess("Cadastro realizado com sucesso!");

@@ -10,11 +10,19 @@ namespace Ellp.Api.Application.UseCases.StudentWorkshop.GetStudentWorkshop
     public class GetStudentWorkshopUseCase : IRequestHandler<GetStudentWorkshopInput, GetStudentWorkshopOutput>
     {
         private readonly IStudentWorkshopRepository _studentWorkshopRepository;
+        private readonly IStudentRepository _studentRepository;
+        private readonly IWorkshopRepository _workshopRepository;
         private readonly ILogger<GetStudentWorkshopUseCase> _logger;
 
-        public GetStudentWorkshopUseCase(IStudentWorkshopRepository studentWorkshopRepository, ILogger<GetStudentWorkshopUseCase> logger)
+        public GetStudentWorkshopUseCase(
+            IStudentWorkshopRepository studentWorkshopRepository,
+            IStudentRepository studentRepository,
+            IWorkshopRepository workshopRepository,
+            ILogger<GetStudentWorkshopUseCase> logger)
         {
             _studentWorkshopRepository = studentWorkshopRepository;
+            _studentRepository = studentRepository;
+            _workshopRepository = workshopRepository;
             _logger = logger;
         }
 
@@ -24,24 +32,17 @@ namespace Ellp.Api.Application.UseCases.StudentWorkshop.GetStudentWorkshop
             {
                 var studentWorkshop = await _studentWorkshopRepository.GetStudentWorkshopAsync(request.StudentId, request.WorkshopId);
                 return studentWorkshop != null
-                    ? new GetStudentWorkshopOutput { Success = true, Message = "Relação encontrada", Data = studentWorkshop }
-                    : new GetStudentWorkshopOutput { Success = false, Message = "Relação entre aluno e workshop não encontrada" };
+                    ? GetStudentWorkshopOutput.CreateOutput(true, "Relação encontrada", studentWorkshop)
+                    : GetStudentWorkshopOutput.CreateOutput(false, "Relação entre aluno e workshop não encontrada");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ocorreu um erro ao buscar a relação entre o aluno e o workshop.");
-                return new GetStudentWorkshopOutput { Success = false, Message = "Ocorreu um erro ao buscar a relação entre o aluno e o workshop" };
+                return GetStudentWorkshopOutput.CreateOutput(false, "Ocorreu um erro ao buscar a relação entre o aluno e o workshop: " + ex.Message);
             }
         }
     }
 }
-
-
-
-
-
-
-
 
 
 
