@@ -7,12 +7,6 @@ const TabelaCertificado = ({ students, handleStudentSelection, selectedStudentId
     { field: "id", headerName: "ID do Aluno", width: 150 },
     { field: "name", headerName: "Nome do Aluno", width: 300 },
     { field: "email", headerName: "Email", width: 300 },
-    { 
-      field: "birthDate", 
-      headerName: "Data de Nascimento", 
-      width: 200, 
-      valueGetter: (params) => new Date(params.value).toLocaleDateString() 
-    },
   ];
 
   const rows = students.map(student => ({
