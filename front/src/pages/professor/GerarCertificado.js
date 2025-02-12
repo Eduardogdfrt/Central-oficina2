@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom"; 
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useAuth } from "../../contexts/AuthContext"; 
+import { useAuth } from "../../contexts/AuthContext";
 import Title from "../../components/title/Title";
 import Button from "../../components/button/Button";
 import Header from "../../components/header/Header";
 import TabelaCertificado from "../../components/TabelaCertificado/TabelaCertificado";
 
 const GerarCertificado = () => {
-  const location = useLocation(); 
-  const workshopId = location.state?.workshopId; 
-  const { setToken } = useAuth(); 
+  const location = useLocation();
+  const workshopId = location.state?.workshopId;
+  const { setToken } = useAuth();
   const [workshop, setWorkshop] = useState(null);
   const [students, setStudents] = useState([]);
   const [selectedStudentIds, setSelectedStudentIds] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const API_BASE_URL = process.env.DSV;
 
@@ -65,13 +65,15 @@ const GerarCertificado = () => {
         workshopId
       }));
 
+      console.log("Certificados Gerados:", certificados);
+
       const response = await axios.post(`http://localhost:5000/api/WorkshopStudent/workshopStudent/emitir-certificado`, {
         certificados
       });
 
       if (response.status === 200) {
-        const generatedToken = response.data.token; 
-        setToken(generatedToken); 
+        const generatedToken = response.data.token;
+        setToken(generatedToken);
         navigate("/gerar-certificado", { state: { token: generatedToken } });
       } else {
         setError("Falha ao gerar certificado.");
@@ -81,12 +83,8 @@ const GerarCertificado = () => {
     }
   };
 
-  const handleStudentSelection = (studentId) => {
-    setSelectedStudentIds(prevSelected => 
-      prevSelected.includes(studentId) 
-        ? prevSelected.filter(id => id !== studentId) 
-        : [...prevSelected, studentId]
-    );
+  const handleStudentSelection = (newSelection) => {
+    setSelectedStudentIds(newSelection);
   };
 
   if (loading) {
@@ -94,22 +92,33 @@ const GerarCertificado = () => {
   }
 
   return (
-    <div className="page" style={{ width: "100vw", height: "100vh", margi: 0}}>
+    <div className="page" style={{ width: "100vw", height: "100vh", margin: 0 }}>
       <Header title="Gerar Certificado" />
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center"}}>
-        <Title text={workshop?.name } fontSize="3.5rem" style={{ margin: 0 }} />
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <Title text={workshop?.name} fontSize="3.5rem" style={{ margin: 0 }} />
         <p className="text">{workshop ? new Date(workshop.data).toLocaleString() : ""}</p>
-        <p className="text no-width" style={{ whiteSpace: "nowrap", margin: 0 }}>Selecione os alunos para gerar os certificado:</p>
-        <div style={{display:'flex', alignItems : 'flex-start', justifyContent:'space-between'}}>
-          <div style={{marginRight: "20vh", marginBottom:"20px"}}>
-            <Button text="Gerar Certificado" onClick={handleGenerateCertificate} disabled={selectedStudentIds.length === 0} style={{ marginRight: "30px", width: "10vh" }} />
+        <p className="text no-width" style={{ whiteSpace: "nowrap", margin: 0 }}>
+          Selecione os alunos para gerar os certificados:
+        </p>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+          <div style={{ marginRight: "5vh", marginBottom: "20px" }}>
+            <Button
+              text="Gerar Certificado"
+              onClick={handleGenerateCertificate}
+              disabled={selectedStudentIds.length === 0}
+              style={{ marginRight: "30px", width: "15vh" }}
+            />
           </div>
           <div>
-            <Button text="Voltar para Workshops" onClick={() => navigate("/workshops")} style={{ width: "10vh" }} />
+            <Button text="Voltar para Workshops" onClick={() => navigate("/workshops")} style={{ width: "15vh" }} />
           </div>
         </div>
         <div style={{ width: "70vw", overflowY: "auto", display: "flex", justifyContent: "center" }}>
-          <TabelaCertificado students={students} handleStudentSelection={handleStudentSelection} selectedStudentIds={selectedStudentIds} />
+          <TabelaCertificado
+            students={students}
+            handleStudentSelection={handleStudentSelection}
+            selectedStudentIds={selectedStudentIds}
+          />
         </div>
       </div>
     </div>

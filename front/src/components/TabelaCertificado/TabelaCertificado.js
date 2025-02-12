@@ -1,49 +1,43 @@
-import React from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import React from "react";
+import { DataGrid } from "@mui/x-data-grid";
+import Paper from "@mui/material/Paper";
 
-const TabelaCertificado = ({ students, setSelectedStudentId }) => {
+const TabelaCertificado = ({ students, handleStudentSelection, selectedStudentIds }) => {
+  const columns = [
+    { field: "id", headerName: "ID do Aluno", width: 150 },
+    { field: "name", headerName: "Nome do Aluno", width: 300 },
+    { field: "email", headerName: "Email", width: 300 },
+    { 
+      field: "birthDate", 
+      headerName: "Data de Nascimento", 
+      width: 200, 
+      valueGetter: (params) => new Date(params.value).toLocaleDateString() 
+    },
+  ];
+
+  const rows = students.map(student => ({
+    id: student.id,
+    name: student.name,
+    email: student.email,
+    birthDate: student.birthDate,
+  }));
+
+  const handleSelectionChange = (newSelection) => {
+    handleStudentSelection(newSelection);
+  };
+
   return (
-    <TableContainer component={Paper} style={{ width: "100%", overflowX: "auto" }}>
-      <Table style={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>ID do Aluno</TableCell>
-            <TableCell>Nome do Aluno</TableCell>
-            <TableCell>Selecionar</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {students.length > 0 ? (
-            students.map((student) => (
-              <TableRow key={student.id}>
-                <TableCell>{student.id}</TableCell>
-                <TableCell>{student.name}</TableCell>
-                <TableCell>
-                  <input
-                    type="radio"
-                    name="selectedStudent"
-                    value={student.id}
-                    onChange={() => setSelectedStudentId(student.id)}
-                  />
-                </TableCell>
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={3} style={{ color: "black", fontSize: "2rem", textAlign: "center" }}>
-                NÃO HÁ ALUNOS NO WORKSHOP
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Paper sx={{ height: 500, width: "70%" }}>
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        pageSizeOptions={[5, 10]}
+        checkboxSelection
+        onRowSelectionModelChange={(newSelection) => handleSelectionChange(newSelection)}
+        rowSelectionModel={selectedStudentIds}
+        sx={{ border: 0, overflowX: "hidden" }}
+      />
+    </Paper>
   );
 };
 

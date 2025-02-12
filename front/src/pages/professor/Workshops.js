@@ -86,7 +86,7 @@ const Workshops = () => {
                 <WorkshopCard
                   text={workshop.name}
                   icon={getWorkshopIcon(workshop.name)}
-                  style={{ marginRight: "20vh" }} 
+
                 />
               </Link>
             ))
