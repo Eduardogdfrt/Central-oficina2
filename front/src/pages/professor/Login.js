@@ -34,16 +34,14 @@ const Login = () => {
 
       if (response.status === 200) {
         console.log("Login Successful:", response.data);
-        const userId = response.data.professorId; 
+        const userId = isProfessor ? response.data.professorId : response.data.studentId;
         
-  
         setUserId(userId);
 
-       
         if (isProfessor) {
           navigate("/workshops"); 
         } else {
-          navigate("/workshops-aluno"); 
+          navigate("/workshops-aluno", { state: { studentId: userId } }); 
         }
       } else {
         setError("Login falhou. Verifique suas credenciais.");
