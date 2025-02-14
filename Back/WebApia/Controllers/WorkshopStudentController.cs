@@ -115,7 +115,7 @@ namespace Ellp.Api.Webapi.Controllers
             return NotFound(response);
         }
 
-        [HttpPost("workshopStudent/emitir-certificado")]
+        [HttpPut("workshopStudent/emitir-certificado")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
