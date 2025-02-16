@@ -23,12 +23,13 @@ namespace Ellp.Api.Application.UseCases.Workshops.AddWorkshops
         {
             try
             {
+               
                 var newWorkshop = new Workshop
                 {
                     Name = request.Name,
                     Data = request.Data,
                     ProfessorIdW = request.ProfessorId,
-                    HelperIDW = request.HelperId 
+                    HelperIDW = request.HelperId
                 };
 
                 await _workshopRepository.AddAsync(newWorkshop);

@@ -19,12 +19,13 @@ namespace Ellp.Api.Infra.SqlServer.Repository
             _logger = logger;
         }
 
-        public async Task AddStudentWorkshopAsync(int studentId, int workshopId)
+        public async Task AddStudentWorkshopAsync(int studentId, int workshopId, int certificadoDefault)
         {
             var studentWorkshop = new WorkshopAluno
             {
                 StudentId = studentId,
-                WorkshopId = workshopId
+                WorkshopId = workshopId,
+                Certificate = certificadoDefault.ToString()
             };
 
             await _context.WorkshopStudents.AddAsync(studentWorkshop);

@@ -22,7 +22,7 @@ namespace Ellp.Api.Application.UseCases.StudentWorkshop.AddStundentWorkshop
         {
             try
             {
-                await _studentWorkshopRepository.AddStudentWorkshopAsync(request.StudentId, request.WorkshopId);
+                await _studentWorkshopRepository.AddStudentWorkshopAsync(request.StudentId, request.WorkshopId, 0);
                 return AddStudentWorkshopOutput.CreateOutput(true, "Workshop adicionado ao estudante com sucesso");
             }
             catch (Exception ex)

@@ -2,7 +2,7 @@
 
 public interface IStudentWorkshopRepository
 {
-    Task AddStudentWorkshopAsync(int studentId, int workshopId);
+    Task AddStudentWorkshopAsync(int studentId, int workshopId,  int certificadoDefault);
     Task<WorkshopAluno?> GetStudentWorkshopAsync(int studentId, int workshopId);
     Task DeleteStudentWorkshopAsync(WorkshopAluno studentWorkshop);
     Task<List<Workshop>> GetAllWorkshopsByStudentIdAsync(int studentId);
