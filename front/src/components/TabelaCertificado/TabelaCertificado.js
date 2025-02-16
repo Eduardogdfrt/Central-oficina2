@@ -2,14 +2,18 @@ import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
 
-const TabelaCertificado = ({ students, handleStudentSelection, selectedStudentIds }) => {
+const TabelaCertificado = ({
+  students,
+  handleStudentSelection,
+  selectedStudentIds,
+}) => {
   const columns = [
     { field: "id", headerName: "ID do Aluno", width: 150 },
     { field: "name", headerName: "Nome do Aluno", width: 300 },
     { field: "email", headerName: "Email", width: 300 },
   ];
 
-  const rows = students.map(student => ({
+  const rows = students.map((student) => ({
     id: student.id,
     name: student.name,
     email: student.email,
@@ -27,7 +31,9 @@ const TabelaCertificado = ({ students, handleStudentSelection, selectedStudentId
         columns={columns}
         pageSizeOptions={[5, 10]}
         checkboxSelection
-        onRowSelectionModelChange={(newSelection) => handleSelectionChange(newSelection)}
+        onRowSelectionModelChange={(newSelection) =>
+          handleSelectionChange(newSelection)
+        }
         rowSelectionModel={selectedStudentIds}
         sx={{ border: 0, overflowX: "hidden" }}
       />

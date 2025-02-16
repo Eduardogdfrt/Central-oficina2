@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./ImageButton.css"; 
+import "./ImageButton.css";
 
 const ImageButton = () => {
   const [fileName, setFileName] = useState("");
@@ -18,7 +18,7 @@ const ImageButton = () => {
         id="file-input"
         className="file-input"
         onChange={handleFileChange}
-        style={{ display: "none" }} 
+        style={{ display: "none" }}
       />
       <input
         type="text"
@@ -27,7 +27,10 @@ const ImageButton = () => {
         className="file-name-display"
         placeholder="Nenhum arquivo selecionado"
       />
-      <button className="upload-button" onClick={() => document.getElementById('file-input').click()}>
+      <button
+        className="upload-button"
+        onClick={() => document.getElementById("file-input").click()}
+      >
         Carregar
       </button>
     </div>

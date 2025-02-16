@@ -12,16 +12,15 @@ import card03 from "../../assets/images/card03.png"; // programação
 import card04 from "../../assets/images/card04.png"; // icone padrão
 
 const getWorkshopIcon = (name) => {
-
   if (name.includes("Robótica")) return card01;
   if (name.includes("Lógica")) return card02;
   if (name.includes("Programação")) return card03;
-  return card04; 
+  return card04;
 };
 
 const WorkshopDetails = () => {
-  const { id } = useParams(); 
-  const navigate = useNavigate(); 
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [workshop, setWorkshop] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -29,12 +28,14 @@ const WorkshopDetails = () => {
   useEffect(() => {
     const fetchWorkshop = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/Workshop/${id}`);
+        const response = await fetch(
+          `http://localhost:5000/api/Workshop/${id}`
+        );
         if (!response.ok) throw new Error("Erro ao carregar dados do workshop");
 
         const data = await response.json();
         if (data.success) {
-          setWorkshop(data.workshop); 
+          setWorkshop(data.workshop);
         } else {
           setError("Workshop não encontrado");
         }
@@ -56,7 +57,6 @@ const WorkshopDetails = () => {
     return <p className="error">{error}</p>;
   }
 
-
   const formattedDate = new Date(workshop.data);
   const day = formattedDate.getDate().toString().padStart(2, "0");
   const month = (formattedDate.getMonth() + 1).toString().padStart(2, "0");
@@ -66,11 +66,8 @@ const WorkshopDetails = () => {
   const formattedDateString = `${day}.${month}.${year} - ${hours}H`;
 
   const handleGenerateCertificate = () => {
-
     navigate("/certificado", { state: { workshopId: id } });
   };
-  
-  
 
   return (
     <div className="page">
@@ -87,11 +84,16 @@ const WorkshopDetails = () => {
           <p className="text no-width">Data: {formattedDateString}</p>
         </div>
         <p className="text no-width">
-          Deseja validar a presença dos alunos nas oficinas gerando um certificado?
+          Deseja validar a presença dos alunos nas oficinas gerando um
+          certificado?
         </p>
-         <div className="inputs">
-          <Button text="GERAR NOVO CERTIFICADO" onClick={handleGenerateCertificate} width="50%"/>
-          </div>
+        <div className="inputs">
+          <Button
+            text="GERAR NOVO CERTIFICADO"
+            onClick={handleGenerateCertificate}
+            width="50%"
+          />
+        </div>
       </div>
     </div>
   );

@@ -67,7 +67,7 @@ const GerarCertificado = () => {
 
       console.log("Certificados Gerados:", certificados);
 
-      const response = await axios.post(`http://localhost:5000/api/WorkshopStudent/workshopStudent/emitir-certificado`, {
+      const response = await axios.put(`http://localhost:5000/api/WorkshopStudent/workshopStudent/emitir-certificado`, {
         certificados
       });
 
@@ -113,7 +113,7 @@ const GerarCertificado = () => {
             <Button text="Voltar para Workshops" onClick={() => navigate("/workshops")} style={{ width: "15vh" }} />
           </div>
         </div>
-        <div style={{ width: "70vw", overflowY: "auto", display: "flex", justifyContent: "center" }}>
+        <div style={{ height: "40vh", width: "70vw", overflow: "hidden", display: "flex", justifyContent: "center" }}>
           <TabelaCertificado
             students={students}
             handleStudentSelection={handleStudentSelection}

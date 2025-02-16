@@ -10,6 +10,11 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding: 0px !important;
+  }
+
+  .content.login {
+    margin-top: 1rem;
   }
 
   
@@ -19,19 +24,37 @@
     font-style: normal;
     font-size: 20px;
     color: #CECECE;
-    width: 20%;
+    width: 20.5%;
     text-align: center;
   }
 
   .inputs {
     display: flex;
-    margin-top: 1.5rem;
+    margin-top: 1rem;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    width: 16%;
+    width: 20% !important;
   }
 
   .text.no-width {
     width: auto; 
   }
+
+  .form-container {
+    width: 100%;
+  }
+
+  .glow {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    bottom: 0;
+    left: 50%;
+    width: 100%; 
+    height: 10vh; 
+    background-color:rgba(50, 64, 196, 0.753);
+    filter: blur(280px);
+    pointer-events: none; 
+  }
+  
