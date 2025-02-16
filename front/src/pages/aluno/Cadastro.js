@@ -10,7 +10,7 @@ const Cadastro = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [birthDate, setBirthDate] = useState(""); 
+  const [birthDate, setBirthDate] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -20,13 +20,16 @@ const Cadastro = () => {
       name: name,
       email: email,
       password: password,
-      birthDate: birthDate, 
+      birthDate: birthDate,
     };
 
     console.log(studentData);
 
     try {
-      const response = await axios.post("http://localhost:5000/Student/add", studentData);
+      const response = await axios.post(
+        "http://localhost:5000/Student/add",
+        studentData
+      );
 
       if (response.status === 201) {
         setSuccess("Cadastro realizado com sucesso!");
@@ -53,18 +56,24 @@ const Cadastro = () => {
   return (
     <div className="page">
       <Header title="LOGIN" />
-      <div className="content login">
+      <div className="content" style={{ padding: "0" }}>
         <Title text="CADASTRO" fontSize="3.5rem" margin="0px" />
-        <p className="text">Cadastre-se para acessar a plataforma e registrar sua presença</p>
+        <p className="text">
+          Cadastre-se para acessar a plataforma e registrar sua presença
+        </p>
         <div className="inputs">
-          <form onSubmit={handleCadastro}>
+          <form onSubmit={handleCadastro} className="form-container">
             <p className="text no-width">Nome completo</p>
             <Input
               type="text"
               placeholder="Digite seu nome"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              customStyle={{ marginBottom: "10px", padding: "10px", fontSize: "16px" }}
+              customStyle={{
+                marginBottom: "10px",
+                padding: "10px",
+                fontSize: "16px",
+              }}
             />
             <p className="text no-width">Email</p>
             <Input
@@ -72,7 +81,11 @@ const Cadastro = () => {
               placeholder="Digite seu e-mail"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              customStyle={{ marginBottom: "10px", padding: "10px", fontSize: "16px" }}
+              customStyle={{
+                marginBottom: "10px",
+                padding: "10px",
+                fontSize: "16px",
+              }}
             />
             <p className="text no-width">Senha</p>
             <Input
@@ -80,14 +93,22 @@ const Cadastro = () => {
               placeholder="Digite sua senha"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              customStyle={{ marginBottom: "10px", padding: "10px", fontSize: "16px" }}
+              customStyle={{
+                marginBottom: "10px",
+                padding: "10px",
+                fontSize: "16px",
+              }}
             />
             <p className="text no-width">Data de Nascimento</p>
             <Input
-              type="date" 
+              type="date"
               value={birthDate}
               onChange={(e) => setBirthDate(e.target.value)}
-              customStyle={{ marginBottom: "10px", padding: "10px", fontSize: "16px" }}
+              customStyle={{
+                marginBottom: "10px",
+                padding: "10px",
+                fontSize: "16px",
+              }}
             />
             {error && <p style={{ color: "red" }}>{error}</p>}
             {success && <p style={{ color: "green" }}>{success}</p>}

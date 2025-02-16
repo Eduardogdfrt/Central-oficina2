@@ -32,7 +32,7 @@ const App = () => {
                     <Route path="/aluno-login" element={<AlunoLogin />} />
                     <Route path="/aluno-cadastro" element={<AlunoCad />} />
                 </Routes>
-            </Router>
+            </Router>'
         </UserProvider>
         </AuthProvider>
     );

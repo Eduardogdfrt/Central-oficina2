@@ -1,32 +1,31 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import './Header.css';
-import logo from '../../assets/images/logo.png';
-import Title from '../title/Title';
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
+import "./Header.css";
+import logo from "../../assets/images/logo.png";
+import Title from "../title/Title";
 
 const Header = () => {
-  const location = useLocation(); 
+  const location = useLocation();
 
-
-  let titleText = '';
-  let linkTo = '';
+  let titleText = "";
+  let linkTo = "";
 
   switch (location.pathname) {
-    case '/':
-      titleText = 'ENTRAR';
-      linkTo = '/login';
+    case "/":
+      titleText = "ENTRAR";
+      linkTo = "/login";
       break;
-    case '/login':
-      titleText = 'CADASTRO';
-      linkTo = '/cadastro';
+    case "/login":
+      titleText = "CADASTRO";
+      linkTo = "/cadastro";
       break;
-    case '/cadastro':
-      titleText = 'ENTRAR';
-      linkTo = '/login';
+    case "/cadastro":
+      titleText = "ENTRAR";
+      linkTo = "/login";
       break;
     default:
-      titleText = 'SAIR';
-      linkTo = '/';
+      titleText = "SAIR";
+      linkTo = "/";
   }
 
   return (

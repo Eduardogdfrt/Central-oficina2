@@ -18,9 +18,8 @@ const Cadastro = () => {
   const handleCadastro = async (e) => {
     e.preventDefault();
 
-    
     const professorData = {
-      professorId: 0,  
+      professorId: 0,
       name: name,
       email: email,
       password: password,
@@ -31,16 +30,16 @@ const Cadastro = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/Professor/add",  
+        "http://localhost:5000/Professor/add",
         professorData
       );
       console.log("Resposta completa do servidor:", response);
-      console.log("Dados do servidor:", response.data); 
+      console.log("Dados do servidor:", response.data);
 
       if (response.status === 201) {
-        const { professorId, name } = response.data;  
+        const { professorId, name } = response.data;
         console.log("ID recebido:", professorId);
-        setProfessorId(professorId);  
+        setProfessorId(professorId);
         setSuccess(`Cadastro realizado com sucesso! Seu ID é ${professorId}.`);
         setError("");
       } else {
@@ -61,7 +60,7 @@ const Cadastro = () => {
   return (
     <div className="page">
       <Header title="CADASTRO" />
-      <div className="content">
+      <div className="content" style={{ padding: 0 }}>
         <Title text="CADASTRO" fontSize="3.5rem" margin="0px" />
         <p className="text">Cadastre-se para acessar a plataforma</p>
         <div className="inputs">

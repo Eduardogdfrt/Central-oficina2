@@ -3,7 +3,7 @@
   flex-direction: column;
 }
 
-.content {
+.content-workshops {
   width: 100%;
   padding: 20px;
   display: flex;
@@ -11,13 +11,14 @@
   
 }
 
-.inputs {
+.inputs-workshop {
   display: flex;
   gap: 20px; 
   justify-content: flex-start;
   margin-bottom: 60px;
   flex-direction: row;
   margin-left: 90px;
+  width: 60%;
 }
 
 .workshop-cards {
@@ -26,6 +27,7 @@
   gap: 20px;
   justify-content: flex-start; 
   align-items: center;
+  width: 60%;
 }
 
 .workshop-card {
