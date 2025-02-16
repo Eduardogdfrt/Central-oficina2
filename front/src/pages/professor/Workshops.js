@@ -71,14 +71,13 @@ const Workshops = () => {
   return (
     <div className="page">
       <Header title="SAIR" />
-      <div className="inputs" >
-          <Button text="MEUS WORKSHOPS" onClick={() => {}}/>
-          <Button text="CADASTRAR NOVO" onClick={handleAddWorkshop}/>
+      <div className="inputs-workshop" >
+          <Button text="MEUS WORKSHOPS" onClick={() => {}} width="10%"/>
+          <Button text="CADASTRAR NOVO" onClick={handleAddWorkshop}  width="10%"/>
         </div>
       <div className="content">
         {loading && <p>Carregando workshops...</p>}
         {error && <p className="error">Erro: {error}</p>}
-
         <div className="workshop-cards">
           {Array.isArray(workshops) && workshops.length > 0 ? (
             workshops.map((workshop, index) => (

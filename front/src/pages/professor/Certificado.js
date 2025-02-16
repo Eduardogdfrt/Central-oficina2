@@ -19,7 +19,7 @@ const Certificado = () => {
     return (
         <div className="page">
           <Header title="ENTRAR"/>
-          <div className="content">
+          <div className="content-workshops">
             <Title text="QR CODE" fontSize="3.5rem" />
             <img src={done} alt="Descrição da imagem" width={400}/>
               <p className="text">

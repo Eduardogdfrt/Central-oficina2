@@ -11,8 +11,8 @@ const Home = () => {
         <Header title="ENTRAR"/>
         <div className="content">
           <Scene/>
-          <Title text="QR CODE" fontSize="3.5rem" />
-            <p className="text">Gerar um QR code temporário pra confirmar a presença dos alunos nas oficinas</p>
+          <Title text="Certificado" fontSize="3.5rem" />
+            <p className="text">Gere um certificado temporário e confirme a presença na oficina</p>
           <div className="glow">
             <p>a</p>
           </div>

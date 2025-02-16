@@ -61,7 +61,7 @@ const Cadastro = () => {
   return (
     <div className="page">
       <Header title="CADASTRO" />
-      <div className="content">
+      <div className="content" style={{padding: 0}}>
         <Title text="CADASTRO" fontSize="3.5rem" margin="0px" />
         <p className="text">Cadastre-se para acessar a plataforma</p>
         <div className="inputs">

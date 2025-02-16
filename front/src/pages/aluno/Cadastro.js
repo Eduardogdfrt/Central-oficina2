@@ -53,11 +53,11 @@ const Cadastro = () => {
   return (
     <div className="page">
       <Header title="LOGIN" />
-      <div className="content login">
+      <div className="content" style={{padding:"0"}}>
         <Title text="CADASTRO" fontSize="3.5rem" margin="0px" />
         <p className="text">Cadastre-se para acessar a plataforma e registrar sua presença</p>
         <div className="inputs">
-          <form onSubmit={handleCadastro}>
+          <form onSubmit={handleCadastro} className="form-container">
             <p className="text no-width">Nome completo</p>
             <Input
               type="text"

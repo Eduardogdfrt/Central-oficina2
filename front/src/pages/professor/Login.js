@@ -59,6 +59,11 @@ const Login = () => {
     }
   };
 
+    const  handleRegister = () => {
+
+      navigate("/aluno-cadastro");
+    };
+
   return (
     <div className="page">
       <Header title="CADASTRO" />
@@ -93,6 +98,7 @@ const Login = () => {
             />
             {error && <p style={{ color: "red" }}>{error}</p>}
             <Button text="ENTRAR" type="submit" />
+            <Button text="CADASTRO ALUNO" onClick={handleRegister} />
           </form>
         </div>
       </div>

@@ -54,7 +54,7 @@ const WorkshopCadastro = () => {
     return (
         <div className="page">
             <Header title="CADASTRO" />
-            <div className="content login">
+            <div className="content-workshops login">
                 <Title text="WORKSHOPS" fontSize="3.5rem" margin="0px" />
                 <p className="text">Cadastrar novos Workshops na plataforma</p>
 
@@ -96,7 +96,7 @@ const WorkshopCadastro = () => {
 
                         {step === 3 && (
                             <>
-                                <p className="text no-width">IDs dos Alunos (separados por vírgula)</p>
+                                <p className="text no-width">IDs dos Alunos</p>
                                 <Input
                                     type="text"
                                     placeholder="Ex: 101, 102, 103"
