@@ -13,4 +13,3 @@ const Title = ({ text, fontSize = "2rem" }) => {
 };
 
 export default Title;
-

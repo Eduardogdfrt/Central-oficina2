@@ -1,11 +1,11 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import './Input.css'; 
+import React from "react";
+import PropTypes from "prop-types";
+import "./Input.css";
 
 const CustomInput = ({
-  type = 'text',
-  placeholder = '',
-  value = '',
+  type = "text",
+  placeholder = "",
+  value = "",
   onChange,
   customStyle = {},
 }) => {
@@ -21,13 +21,12 @@ const CustomInput = ({
   );
 };
 
-
 CustomInput.propTypes = {
-  type: PropTypes.oneOf(['email', 'password', 'text', 'date']), 
-  placeholder: PropTypes.string, 
-  value: PropTypes.string, 
-  onChange: PropTypes.func.isRequired, 
-  customStyle: PropTypes.object, 
+  type: PropTypes.oneOf(["email", "password", "text", "date"]),
+  placeholder: PropTypes.string,
+  value: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
+  customStyle: PropTypes.object,
 };
 
 export default CustomInput;

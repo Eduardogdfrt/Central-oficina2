@@ -11,7 +11,7 @@ import { useUser } from "../../contexts/UserContext";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(""); 
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const { setUserId } = useUser();
 
@@ -21,7 +21,7 @@ const Login = () => {
       let isProfessor = false;
       let loginUrl = "";
 
-      if (!email.includes('@')) {
+      if (!email.includes("@")) {
         // caso o login seja feito com o ID do professor
         isProfessor = true;
         loginUrl = `http://localhost:5000/Professor/login?professorId=${email}&password=${password}`;
@@ -34,19 +34,20 @@ const Login = () => {
 
       if (response.status === 200) {
         console.log("Login Successful:", response.data);
-        const userId = isProfessor ? response.data.professorId : response.data.studentId;
-        
+        const userId = isProfessor
+          ? response.data.professorId
+          : response.data.studentId;
+
         setUserId(userId);
 
         if (isProfessor) {
-          navigate("/workshops"); 
+          navigate("/workshops");
         } else {
-          navigate("/workshops-aluno", { state: { studentId: userId } }); 
+          navigate("/workshops-aluno", { state: { studentId: userId } });
         }
       } else {
         setError("Login falhou. Verifique suas credenciais.");
       }
-      
     } catch (err) {
       console.error("Erro na solicitação:", err);
       if (err.response) {
@@ -59,10 +60,9 @@ const Login = () => {
     }
   };
 
-    const  handleRegister = () => {
-
-      navigate("/aluno-cadastro");
-    };
+  const handleRegister = () => {
+    navigate("/aluno-cadastro");
+  };
 
   return (
     <div className="page">

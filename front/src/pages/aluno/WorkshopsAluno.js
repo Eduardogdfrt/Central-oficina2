@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useUser } from "../../contexts/UserContext"; 
+import { useUser } from "../../contexts/UserContext";
 import Header from "../../components/header/Header";
 import { Link } from "react-router-dom";
 import WorkshopCard from "../../components/workshopCard/WorkshopCard";
 import "../../pages/professor/Workshop.css";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import Button from "../../components/button/Button";
 
 // icones personalizados
@@ -17,11 +17,11 @@ const getWorkshopIcon = (name) => {
   if (name.includes("Robótica")) return card01;
   if (name.includes("Lógica")) return card02;
   if (name.includes("Programação")) return card03;
-  return card05; 
+  return card05;
 };
 
 const WorkshopsAluno = () => {
-  const { userId } = useUser(); 
+  const { userId } = useUser();
   const [workshops, setWorkshops] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -36,12 +36,16 @@ const WorkshopsAluno = () => {
 
     const fetchWorkshops = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/WorkshopStudent/${storedUserId || userId}/workshops`);
-        console.log('API Response:', response); 
+        const response = await fetch(
+          `http://localhost:5000/api/WorkshopStudent/${
+            storedUserId || userId
+          }/workshops`
+        );
+        console.log("API Response:", response);
         if (!response.ok) throw new Error("Erro ao carregar workshops");
 
         const data = await response.json();
-        console.log('Workshops Data:', data);
+        console.log("Workshops Data:", data);
 
         if (data.workshops && Array.isArray(data.workshops)) {
           setWorkshops(data.workshops);
@@ -49,7 +53,7 @@ const WorkshopsAluno = () => {
           setWorkshops([]);
         }
       } catch (err) {
-        console.error('Erro ao buscar workshops:', err);
+        console.error("Erro ao buscar workshops:", err);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -64,26 +68,28 @@ const WorkshopsAluno = () => {
   return (
     <div className="page">
       <Header title="SAIR" />
-      <div className="inputs" >
-          <Button text="MEUS WORKSHOPS" onClick={() => {}}/>
+      <div className="inputs">
+        <Button text="MEUS WORKSHOPS" onClick={() => {}} />
       </div>
       <div className="content">
         {loading && <p>Carregando workshops...</p>}
         {error && <p className="error">Erro: {error}</p>}
 
         <div className="workshop-cards">
-          {Array.isArray(workshops) && workshops.length > 0 ? (
-            workshops.map((workshop, index) => (
-              <Link to={`/workshop/${workshop.id}`} key={index} style={{ textDecoration: 'none', color: 'inherit' }}>
-                <WorkshopCard
-                  text={workshop.name}
-                  icon={getWorkshopIcon(workshop.name)}
-                />
-              </Link>
-            ))
-          ) : (
-            !loading && <p>Nenhum workshop encontrado.</p>
-          )}
+          {Array.isArray(workshops) && workshops.length > 0
+            ? workshops.map((workshop, index) => (
+                <Link
+                  to={`/workshop/${workshop.id}`}
+                  key={index}
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <WorkshopCard
+                    text={workshop.name}
+                    icon={getWorkshopIcon(workshop.name)}
+                  />
+                </Link>
+              ))
+            : !loading && <p>Nenhum workshop encontrado.</p>}
         </div>
       </div>
     </div>
