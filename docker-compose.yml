@@ -3,7 +3,7 @@ version: '3.8'
 services:
   # Serviço de Banco de Dados
   db:
-    image: eduardogdfrt/oficina:latest
+    image: eduardogdfrt/oficina-v2:latest
     container_name: db-container
     environment:
       SA_PASSWORD: yourStrong!Passw0rd
