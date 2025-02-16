@@ -1,6 +1,6 @@
 ﻿using Ellp.Api.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
 
 namespace Ellp.Api.Infra.SqlServer.Configurations
 {
@@ -13,7 +13,8 @@ namespace Ellp.Api.Infra.SqlServer.Configurations
 
             builder.Property(x => x.ProfessorId)
                 .HasColumnName("Id")
-                .IsRequired();
+                .IsRequired()
+                .ValueGeneratedOnAdd(); 
 
             builder.Property(x => x.Name)
                 .HasColumnName("Nome")
@@ -37,7 +38,3 @@ namespace Ellp.Api.Infra.SqlServer.Configurations
         }
     }
 }
-
-
-
-

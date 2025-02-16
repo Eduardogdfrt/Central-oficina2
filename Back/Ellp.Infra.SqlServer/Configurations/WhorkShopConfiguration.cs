@@ -11,6 +11,11 @@ namespace Ellp.Api.Infra.SqlServer.Configurations
             builder.ToTable("Workshop");
             builder.HasKey(x => x.Id);
 
+            builder.Property(x => x.Id)
+                .HasColumnName("Id")
+                .IsRequired()
+                .ValueGeneratedOnAdd(); 
+
             builder.Property(x => x.Name)
                 .HasColumnName("Nome")
                 .IsRequired()
@@ -41,4 +46,3 @@ namespace Ellp.Api.Infra.SqlServer.Configurations
         }
     }
 }
-

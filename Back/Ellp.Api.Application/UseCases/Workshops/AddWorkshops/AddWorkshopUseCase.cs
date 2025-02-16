@@ -23,9 +23,13 @@ namespace Ellp.Api.Application.UseCases.Workshops.AddWorkshops
         {
             try
             {
-               
+          
+                Random random = new Random();
+                int randomId = random.Next(101, int.MaxValue);
+
                 var newWorkshop = new Workshop
                 {
+                    Id = randomId, 
                     Name = request.Name,
                     Data = request.Data,
                     ProfessorIdW = request.ProfessorId,
@@ -44,7 +48,7 @@ namespace Ellp.Api.Application.UseCases.Workshops.AddWorkshops
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ocorreu um erro ao adicionar um novo workshop.");
-                return new AddWorkshopOutput { Message = "Ocorreu um erro durante o processamento "  + ex};
+                return new AddWorkshopOutput { Message = "Ocorreu um erro durante o processamento " + ex };
             }
         }
     }

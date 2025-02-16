@@ -20,6 +20,7 @@ namespace Ellp.Api.Infra.SqlServer.Repository
             await _context.Set<Workshop>().AddAsync(workshop);
             await _context.SaveChangesAsync();
         }
+
         public async Task<Workshop> GetWorkshopByIdAsync(int id)
         {
             return await _context.Workshops.FindAsync(id);
